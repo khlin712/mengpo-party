@@ -115,7 +115,7 @@ export function createArchitecture({box,mesh,tree}){
   }else if(t.kind==='trophy'){
    base(g,.98,.86);box(g,0,.4,-.05,.7,.24,.62,'#e9dfc8');box(g,0,.64,-.05,.54,.14,.48,'#d1c5a8');box(g,0,.46,.265,.36,.11,.02,'#9c7f4f');
    // 孟婆島：摩天輪取代獎盃，是整張地圖的地標（對應「參加後的繽紛世界」）。群組仍叫 trophy-cup，沿用原本的發光與點擊行為。
-   const cupG=new THREE.Group();cupG.name='trophy-cup';cupG.position.set(0,.98,-.05);cupG.scale.setScalar(1.5);g.add(cupG);
+   const cupG=new THREE.Group();cupG.name='trophy-cup';cupG.position.set(0,1.25,-.22);cupG.scale.setScalar(2.1);g.add(cupG);
    const wheelGold=new THREE.MeshStandardMaterial({color:'#f2c14e',roughness:.4,metalness:.2,emissive:'#ffb52e',emissiveIntensity:0});
    const rimA=mesh(cupG,new THREE.TorusGeometry(1,.035,8,40),'#f2c14e',0,0,0,.42,.42,1.6);rimA.material=wheelGold;const rimB=mesh(cupG,new THREE.TorusGeometry(1,.02,8,40),'#f6e3a0',0,0,0,.26,.26,1.6);rimB.material=wheelGold;
    for(let i=0;i<10;i++){const sp=box(cupG,0,0,0,.012,.42,.012,'#f6e3a0');sp.rotation.z=i/10*Math.PI;}
@@ -124,6 +124,13 @@ export function createArchitecture({box,mesh,tree}){
    colors.forEach((c,i)=>{const a=i/colors.length*Math.PI*2,x=Math.cos(a)*.42,y=Math.sin(a)*.42;box(cupG,x,y-.045,0,.08,.07,.07,c);box(cupG,x,y+.0,0,.012,.03,.012,'#8a6a48');});
    for(const side of [-1,1]){const leg=box(cupG,side*.2,-.5,0,.03,.7,.03,'#c4612f');leg.rotation.z=side*-.3;}
    box(cupG,0,-.78,0,.62,.04,.14,'#a37a4a');
+   steps(g,0,.62,.5);
+   // 遊樂園：旋轉木馬、氣球與彩旗，把「參加後的繽紛世界」做得鮮豔。
+   {const cx=.55,cz=-.6;mesh(g,geo.cylinder,'#fff1c9',cx,.3,cz,.3,.06,.3);
+    for(let i=0;i<6;i++){const a=i/6*Math.PI*2;box(g,cx+Math.cos(a)*.22,.45,cz+Math.sin(a)*.22,.012,.3,.012,'#f2c14e');}
+    const roofC=mesh(g,new THREE.ConeGeometry(1,1,12),'#ff7eb6',cx,.72,cz,.34,.22,.34);roofC.castShadow=true;box(g,cx,.86,cz,.02,.08,.02,'#f2c14e');}
+   [['#ff5c7a',.62,.2,.5],['#5ec8ff',.74,.3,.2],['#ffd23f',.5,.35,.35],['#b58cff',-.2,.42,-.45]].forEach(([c,x,z,h])=>{box(g,x,.25+h*.45,z,.008,h*.9,.008,'#ffffff');mesh(g,geo.ball,c,x,.25+h*.9+.08,z,.08,.1,.08);});
+   for(let i=0;i<7;i++){const c=['#ff5c7a','#ffd23f','#5ec8ff','#b58cff','#8fd77a'][i%5];const t=i/6,x=-.9+1.8*t,y=.62+Math.sin(t*Math.PI)*-.12;const f=box(g,x,y,-.8,.09,.1,.01,c);f.rotation.z=.4;}
   }else if(t.kind==='university'){
    // 回饋島：粉色牆面、藍色屋頂的小宮殿，象徵客戶回饋（只是意象，沒有名稱或標誌）。
    const brick='#e59aae',stone='#f7eadb',tile='#7fb4c8',dark='#5a4a55';
@@ -141,12 +148,15 @@ export function createArchitecture({box,mesh,tree}){
    // ① 崎嶇島：火山、尖石與一座彎曲的山（不做地獄場景，太恐怖）。象徵「人生遇到很多困境」。
    const rockC='#6b5a50',rockD='#8a7766';
    // 火山：圓錐加上發光的火口，放在島的後方，不擋住前緣的路。
-   const cone=mesh(g,new THREE.ConeGeometry(1,1,10),rockC,-.28,.62,-.35,.5,.78,.5);cone.castShadow=true;
-   const crater=mesh(g,new THREE.CylinderGeometry(1,1,1,14),'#ff7a2a',-.28,.99,-.35,.16,.03,.16);crater.material=lava;crater.castShadow=false;
-   for(const [x,z,h] of [[-.28,-.35,.2],[-.22,-.32,.14]]){const puff=mesh(g,geo.ball,'#e8e0d8',x,1.12+h,z,.07+h*.2,.05,.07+h*.2);puff.material.transparent=true;puff.material.opacity=.7;puff.castShadow=false;}
+   const cone=mesh(g,new THREE.ConeGeometry(1,1,10),rockC,-.22,.78,-.28,.5,1.05,.5);cone.castShadow=true;
+   const crater=mesh(g,new THREE.CylinderGeometry(1,1,1,14),'#ff7a2a',-.22,1.31,-.28,.17,.04,.17);crater.material=lava;crater.castShadow=false;
+   for(const [x,z,h] of [[-.22,-.28,.34],[-.14,-.24,.22]]){const puff=mesh(g,geo.ball,'#e8e0d8',x,1.5+h,z,.09+h*.2,.05,.07+h*.2);puff.material.transparent=true;puff.material.opacity=.7;puff.castShadow=false;}
    // 崎嶇的山脊與尖石：一座彎彎曲曲的山。
-   for(const [x,z,r,h] of [[.42,-.5,.28,.55],[.62,-.28,.2,.38],[.2,-.62,.22,.42]]){const m=mesh(g,new THREE.ConeGeometry(1,1,6),rockD,x,.25+h/2,z,r,h,r);m.rotation.z=(x>.4?-.12:.1);}
    for(const [x,z,r] of [[-.7,.1,.1],[-.58,.3,.08],[.7,.1,.09],[.55,.34,.07]])mesh(g,new THREE.DodecahedronGeometry(1,0),'#7d6c5e',x,.29,z,r,r*.9,r);
+   // 岩漿流：沿火山側面往下的發光細條。
+   for(const [x,z,r] of [[.02,-.06,.3],[-.44,-.02,-.35],[-.22,.06,0]]){const st=mesh(g,geo.cylinder,'#ff7a2a',x,.62,z,.035,.55,.035);st.material=lava;st.rotation.z=r;st.castShadow=false;}
+   // 彎彎曲曲的山：一串逐漸偏轉的錐形岩塊，像一條蜿蜒的山脊。
+   for(let i=0;i<5;i++){const t=i/4,x=.12+t*.5,z=-.45+Math.sin(t*Math.PI*1.4)*.26,h=.7-Math.abs(t-.4)*.45;const m=mesh(g,new THREE.ConeGeometry(1,1,6),i%2?'#8a7766':'#7a6a5c',x,.25+h/2,z,.15,h,.15);m.rotation.z=(t-.4)*.5;}
    lamp(g,.22,.58);
    // 路牌：「人生卡住了嗎？」
    for(const x of [.22,.7])box(g,x,.25,-.68,.04,.7,.04,'#8a6a48');box(g,.46,.7,-.69,.58,.36,.02,'#8a6a48');const sign=box(g,.46,.7,-.675,.52,.3,.01,'#fff4d6');sign.material=signMat;sign.userData.textSign=true;

@@ -3,8 +3,8 @@ import {random} from './sky.js';
 
 // Green life on every island so none looks bare: shrubs and grass round the rim, flowers in between, and vines trailing over the
 // edge. Nothing is placed where a walkway, the bridge, the slide or the climb meets an island. Instanced, so it costs a few draws.
-const LEAVES=['#6f9a5c','#7fae64','#5d8a52','#8cbc6e','#6a9f71'],BLOOMS=['#f2c14e','#e8798a','#ffffff','#9a7bb8','#f08c5a'];
-export function createDecor({scene,centers,graph,skip=()=>false,count={bush:9,tuft:14,flower:10,vine:6}}){
+const LEAVES=['#6f9a5c','#7fae64','#5d8a52','#8cbc6e','#6a9f71'],BLOOMS=['#ff7eb6','#ffd23f','#ffffff','#b58cff','#ff8a3d','#5ec8ff','#ff5c7a'];
+export function createDecor({scene,centers,graph,skip=()=>false,count={bush:9,tuft:14,flower:34,vine:6}}){
  const group=new THREE.Group();group.name='greenery';scene.add(group);
  // Where paths touch each island: keep those spots clear.
  const ends=[];for(const e of graph?.edges||[])ends.push(e.pts[0],e.pts.at(-1));
@@ -20,7 +20,7 @@ export function createDecor({scene,centers,graph,skip=()=>false,count={bush:9,tu
  const leaf=new THREE.MeshStandardMaterial({color:'#ffffff',roughness:.9,flatShading:true});
  inst(new THREE.IcosahedronGeometry(1,0),leaf,bushes,(o,it)=>{o.position.copy(it.p);o.rotation.set(0,it.s*40,0);o.scale.set(it.s*1.2,it.s,it.s*1.2);});
  inst(new THREE.ConeGeometry(.03,.12,4).translate(0,.06,0),leaf,tufts,(o,it)=>{o.position.copy(it.p).setY(it.p.y-.05);o.rotation.set(it.tilt,it.s*9,0);o.scale.setScalar(it.s);});
- inst(new THREE.SphereGeometry(.028,6,4),new THREE.MeshStandardMaterial({color:'#ffffff',roughness:.6}),flowers,(o,it)=>{o.position.copy(it.p);o.rotation.set(0,0,0);o.scale.setScalar(it.s);});
+ inst(new THREE.SphereGeometry(.045,8,6),new THREE.MeshStandardMaterial({color:'#ffffff',roughness:.6}),flowers,(o,it)=>{o.position.copy(it.p);o.rotation.set(0,0,0);o.scale.setScalar(it.s);});
  const vineMat=new THREE.MeshStandardMaterial({color:'#5d8a52',roughness:.95,flatShading:true});
  inst(new THREE.ConeGeometry(.07,.42,5).rotateX(Math.PI).translate(0,-.21,0),vineMat,vines,(o,it)=>{o.position.copy(it.p);o.rotation.set(0,it.s*7,0);o.scale.set(it.s,it.s*1.2,it.s);});
  return {group,counts:{bushes:bushes.length,tufts:tufts.length,flowers:flowers.length,vines:vines.length}};
