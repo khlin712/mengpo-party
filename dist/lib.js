@@ -2,7 +2,7 @@ import { ISLANDS } from './content.js';
 // 與 three.js 無關的純計算：六角格座標、天空色彩、曲線。Node 可直接測試。
 export const SQ3 = Math.sqrt(3);
 export const R = 2.0; // 六角格外接圓半徑（尖頂朝 ±z）
-export const D = 5.6; // 相鄰島中心距離（> √3·R，留出水道給橋）
+export const D = 10.5; // 相鄰島中心距離（> √3·R，留出水道給橋）
 export const TOP = 0.5; // 島面高度
 export const BRIDGE_ARCH = { plain: 0.1, scary: 0.12, naihe: 0.5 }; // 橋面的弧度（人物走路也用）
 export const NEIGHBORS = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, -1], [-1, 1]];
