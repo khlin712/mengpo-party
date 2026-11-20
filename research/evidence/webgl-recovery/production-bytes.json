@@ -1,0 +1,30 @@
+{
+  "world.js": {
+    "equal": true,
+    "sha256": "90ae4d22f37feceba198281cee29b56a4942d8e27c640906e3da8f724f6ae0b0"
+  },
+  "recovery.js": {
+    "equal": true,
+    "sha256": "44d2664c6772e79a9e9cce5606b057e55d11bfb195ce9bdd59f54229cb06cb5a"
+  },
+  "resolution.js": {
+    "equal": true,
+    "sha256": "d8dcfc478e1bb8ca4c23b191b08060cb9e9106975f4cf83eea9a1b3020d0858b"
+  },
+  "weather.js": {
+    "equal": true,
+    "sha256": "a2e1125f5f49b2511140663bc6dd9e0918e79c2b103624e9aea9888d77cea39d"
+  },
+  "app.js": {
+    "equal": true,
+    "sha256": "a0094ecdea33c15c073843f70aa5f62468e7fdb70fcebd0c9817020871818d55"
+  },
+  "index.html": {
+    "equal": true,
+    "sha256": "4d8d9342c783ef08b45560a9d1a3694e5e10217dee4f7d9cd34ff8ff161ff3e2"
+  },
+  "cast.css": {
+    "equal": true,
+    "sha256": "3651bb785b8ffdb87a2c86ec2f66a8f82db42e85a36d869f96593e2668b93f79"
+  }
+}

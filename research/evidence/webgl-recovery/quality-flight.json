@@ -1,0 +1,357 @@
+{
+  "method": "Artificial 35ms main-thread delay forces downscale, then flight to nearby sign",
+  "before": {
+    "target": [
+      2.76,
+      1.6,
+      -0.78
+    ],
+    "position": [
+      4.78,
+      18.99,
+      18.16
+    ],
+    "distance": 25.79,
+    "drawCalls": 969,
+    "triangles": 196952,
+    "azimuth": 0.11,
+    "pixelRatio": 1.75,
+    "held": false,
+    "signLock": false,
+    "flying": false,
+    "qualityChanges": 1,
+    "viewportChanges": 1,
+    "lowLoad": false,
+    "shadows": true,
+    "recovery": {
+      "phase": "ready",
+      "lowPower": false,
+      "contextLost": false,
+      "losses": 0,
+      "events": []
+    },
+    "polar": 0.83
+  },
+  "flightSamples": [
+    {
+      "target": [
+        2.77,
+        1.52,
+        -0.23
+      ],
+      "position": [
+        4.51,
+        17.31,
+        17.15
+      ],
+      "distance": 23.54,
+      "drawCalls": 969,
+      "triangles": 196952,
+      "azimuth": 0.1,
+      "pixelRatio": 1.75,
+      "held": false,
+      "signLock": false,
+      "flying": true,
+      "qualityChanges": 1,
+      "viewportChanges": 1,
+      "lowLoad": false,
+      "shadows": true,
+      "recovery": {
+        "phase": "ready",
+        "lowPower": false,
+        "contextLost": false,
+        "losses": 0,
+        "events": []
+      },
+      "polar": 0.84
+    },
+    {
+      "target": [
+        2.78,
+        1.46,
+        0.2
+      ],
+      "position": [
+        4.31,
+        16,
+        16.35
+      ],
+      "distance": 21.78,
+      "drawCalls": 968,
+      "triangles": 196916,
+      "azimuth": 0.09,
+      "pixelRatio": 1.75,
+      "held": false,
+      "signLock": false,
+      "flying": true,
+      "qualityChanges": 1,
+      "viewportChanges": 1,
+      "lowLoad": false,
+      "shadows": true,
+      "recovery": {
+        "phase": "ready",
+        "lowPower": false,
+        "contextLost": false,
+        "losses": 0,
+        "events": []
+      },
+      "polar": 0.84
+    },
+    {
+      "target": [
+        2.81,
+        1.26,
+        1.62
+      ],
+      "position": [
+        3.61,
+        11.64,
+        13.72
+      ],
+      "distance": 15.96,
+      "drawCalls": 877,
+      "triangles": 183880,
+      "azimuth": 0.07,
+      "pixelRatio": 1.75,
+      "held": false,
+      "signLock": false,
+      "flying": true,
+      "qualityChanges": 1,
+      "viewportChanges": 1,
+      "lowLoad": false,
+      "shadows": true,
+      "recovery": {
+        "phase": "ready",
+        "lowPower": false,
+        "contextLost": false,
+        "losses": 0,
+        "events": []
+      },
+      "polar": 0.86
+    },
+    {
+      "target": [
+        2.83,
+        1.14,
+        2.54
+      ],
+      "position": [
+        3.16,
+        8.8,
+        12
+      ],
+      "distance": 12.17,
+      "drawCalls": 762,
+      "triangles": 169468,
+      "azimuth": 0.04,
+      "pixelRatio": 1.75,
+      "held": false,
+      "signLock": false,
+      "flying": true,
+      "qualityChanges": 1,
+      "viewportChanges": 1,
+      "lowLoad": false,
+      "shadows": true,
+      "recovery": {
+        "phase": "ready",
+        "lowPower": false,
+        "contextLost": false,
+        "losses": 0,
+        "events": []
+      },
+      "polar": 0.89
+    },
+    {
+      "target": [
+        2.84,
+        1.04,
+        3.26
+      ],
+      "position": [
+        2.82,
+        6.59,
+        10.67
+      ],
+      "distance": 9.26,
+      "drawCalls": 597,
+      "triangles": 157202,
+      "azimuth": 0,
+      "pixelRatio": 1.75,
+      "held": false,
+      "signLock": false,
+      "flying": true,
+      "qualityChanges": 1,
+      "viewportChanges": 1,
+      "lowLoad": false,
+      "shadows": true,
+      "recovery": {
+        "phase": "ready",
+        "lowPower": false,
+        "contextLost": false,
+        "losses": 0,
+        "events": []
+      },
+      "polar": 0.93
+    },
+    {
+      "target": [
+        2.85,
+        0.96,
+        3.78
+      ],
+      "position": [
+        2.56,
+        5,
+        9.7
+      ],
+      "distance": 7.17,
+      "drawCalls": 520,
+      "triangles": 148002,
+      "azimuth": -0.05,
+      "pixelRatio": 1.75,
+      "held": false,
+      "signLock": false,
+      "flying": true,
+      "qualityChanges": 1,
+      "viewportChanges": 1,
+      "lowLoad": false,
+      "shadows": true,
+      "recovery": {
+        "phase": "ready",
+        "lowPower": false,
+        "contextLost": false,
+        "losses": 0,
+        "events": []
+      },
+      "polar": 0.97
+    },
+    {
+      "target": [
+        2.86,
+        0.89,
+        4.3
+      ],
+      "position": [
+        2.31,
+        3.4,
+        8.74
+      ],
+      "distance": 5.13,
+      "drawCalls": 383,
+      "triangles": 129888,
+      "azimuth": -0.12,
+      "pixelRatio": 1.75,
+      "held": false,
+      "signLock": false,
+      "flying": true,
+      "qualityChanges": 1,
+      "viewportChanges": 1,
+      "lowLoad": false,
+      "shadows": true,
+      "recovery": {
+        "phase": "ready",
+        "lowPower": false,
+        "contextLost": false,
+        "losses": 0,
+        "events": []
+      },
+      "polar": 1.06
+    },
+    {
+      "target": [
+        2.86,
+        0.86,
+        4.48
+      ],
+      "position": [
+        2.22,
+        2.84,
+        8.39
+      ],
+      "distance": 4.43,
+      "drawCalls": 361,
+      "triangles": 128874,
+      "azimuth": -0.16,
+      "pixelRatio": 1.75,
+      "held": false,
+      "signLock": false,
+      "flying": true,
+      "qualityChanges": 1,
+      "viewportChanges": 1,
+      "lowLoad": false,
+      "shadows": true,
+      "recovery": {
+        "phase": "ready",
+        "lowPower": false,
+        "contextLost": false,
+        "losses": 0,
+        "events": []
+      },
+      "polar": 1.11
+    },
+    {
+      "target": [
+        2.86,
+        0.86,
+        4.54
+      ],
+      "position": [
+        2.19,
+        2.66,
+        8.29
+      ],
+      "distance": 4.22,
+      "drawCalls": 372,
+      "triangles": 129128,
+      "azimuth": -0.18,
+      "pixelRatio": 1.75,
+      "held": false,
+      "signLock": false,
+      "flying": true,
+      "qualityChanges": 1,
+      "viewportChanges": 1,
+      "lowLoad": false,
+      "shadows": true,
+      "recovery": {
+        "phase": "ready",
+        "lowPower": false,
+        "contextLost": false,
+        "losses": 0,
+        "events": []
+      },
+      "polar": 1.13
+    }
+  ],
+  "after": {
+    "target": [
+      2.86,
+      0.86,
+      4.54
+    ],
+    "position": [
+      2.19,
+      2.65,
+      8.28
+    ],
+    "distance": 4.2,
+    "drawCalls": 376,
+    "triangles": 130420,
+    "azimuth": -0.18,
+    "pixelRatio": 2,
+    "held": false,
+    "signLock": true,
+    "flying": false,
+    "qualityChanges": 2,
+    "viewportChanges": 1,
+    "lowLoad": false,
+    "shadows": true,
+    "recovery": {
+      "phase": "ready",
+      "lowPower": false,
+      "contextLost": false,
+      "losses": 0,
+      "events": []
+    },
+    "polar": 1.13
+  }
+}

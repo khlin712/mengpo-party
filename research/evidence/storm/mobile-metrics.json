@@ -1,0 +1,80 @@
+{
+  "before": {
+    "target": [
+      1.05,
+      1.27,
+      -0.18
+    ],
+    "position": [
+      2.13,
+      19.23,
+      16.88
+    ],
+    "distance": 24.8,
+    "drawCalls": 728,
+    "triangles": 164442,
+    "azimuth": 0.06,
+    "polar": 0.76
+  },
+  "pinch": {
+    "target": [
+      1.02,
+      0.95,
+      -1.36
+    ],
+    "position": [
+      1.75,
+      12.97,
+      10.06
+    ],
+    "distance": 16.6,
+    "drawCalls": 522,
+    "triangles": 137572,
+    "azimuth": 0.06,
+    "polar": 0.76
+  },
+  "rotate": {
+    "target": [
+      1.69,
+      0.9,
+      -1.71
+    ],
+    "position": [
+      5.29,
+      12.12,
+      8.35
+    ],
+    "distance": 15.49,
+    "drawCalls": 412,
+    "triangles": 133688,
+    "azimuth": 0.34,
+    "polar": 0.76
+  },
+  "pan": {
+    "target": [
+      1.18,
+      0.9,
+      -1.95
+    ],
+    "position": [
+      4.78,
+      12.12,
+      8.11
+    ],
+    "distance": 15.49,
+    "drawCalls": 403,
+    "triangles": 129966,
+    "azimuth": 0.34,
+    "polar": 0.76
+  },
+  "signupPoint": {
+    "x": 125.55227678538331,
+    "y": 385.29782044741825
+  },
+  "mobile": {
+    "width": 390,
+    "scroll": 390,
+    "index": "index sheet-peek"
+  },
+  "errors": []
+}

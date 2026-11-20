@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {placeLabels,overlaps,fitDistance,sheetGesture} from '../dist/layout.js';
+const bounds={left:0,right:120,top:0,bottom:100};
+const item=(id,priority=1)=>({id,priority,order:0,x:60,y:50,width:200,height:30,badgeWidth:28,badgeHeight:28});
+test('完整標籤放不下時縮成編號，仍在地圖邊界內',()=>{const [p]=placeLabels([item('a')],bounds);assert.equal(p.compact,true);assert.equal(p.visible,true);assert.ok(p.box.left>=0&&p.box.right<=120);});
+test('選取優先且標籤不能互相重疊或覆蓋障礙',()=>{const result=placeLabels([item('b'),item('a',0)],bounds);assert.equal(result[0].id,'a');const visible=result.filter(p=>p.visible);for(let i=0;i<visible.length;i++)for(let j=i+1;j<visible.length;j++)assert.equal(overlaps(visible[i].box,visible[j].box),false);assert.equal(placeLabels([item('a')],bounds,[bounds])[0].visible,false);});
+test('大島、窄畫面及卡片遮擋需要更遠的鏡頭距離',()=>{const normal=fitDistance(1.5,38,1.5);assert.ok(fitDistance(2.5,38,1.5)>normal);assert.ok(fitDistance(1.5,38,.5)>normal);assert.ok(fitDistance(1.5,38,1.5,1,.4)>normal);assert.equal(fitDistance(100,38,.2),32);});
+test('把手小幅移動不切換，上拉展開，下拉收合後才關閉',()=>{assert.equal(sheetGesture(false,20),null);assert.equal(sheetGesture(false,-50),'full');assert.equal(sheetGesture(true,50),'peek');assert.equal(sheetGesture(false,50),'close');});
+test('手機清單面板：上拉展開、下拉收成細條而不是關閉',()=>{assert.equal(sheetGesture(false,-80),'full');assert.equal(sheetGesture(true,80),'peek');assert.equal(sheetGesture(false,80),'close');});

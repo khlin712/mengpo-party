@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "change_id": "clock-delay",
+  "gate": "predeploy",
+  "reviewer_independent": true,
+  "code_review": {
+    "status": "pass",
+    "evidence": [
+      "review.md",
+      "tests.log",
+      "browser.log"
+    ]
+  },
+  "report_review": {
+    "status": "not_applicable",
+    "reason": "本變更無對外報告或需要查證的數字",
+    "evidence": []
+  },
+  "regression_tests": {
+    "status": "pass",
+    "evidence": [
+      "review.md",
+      "tests.log",
+      "browser.log"
+    ]
+  },
+  "failure_tests": {
+    "status": "pass",
+    "evidence": [
+      "review.md",
+      "tests.log",
+      "browser.log"
+    ]
+  },
+  "security_review": {
+    "status": "pass",
+    "evidence": [
+      "review.md",
+      "tests.log",
+      "browser.log"
+    ]
+  },
+  "data_safety": {
+    "status": "pass",
+    "evidence": [
+      "review.md",
+      "tests.log",
+      "browser.log"
+    ]
+  },
+  "findings": {
+    "unresolved_p0": 0,
+    "unresolved_p1": 0,
+    "unresolved_p2": 0,
+    "p2_exception_approved": false,
+    "p2_exception_evidence": []
+  },
+  "deployment": {
+    "status": "not_run",
+    "evidence": []
+  },
+  "production_smoke": {
+    "status": "not_run",
+    "evidence": []
+  },
+  "human_acceptance": {
+    "status": "not_run",
+    "evidence": []
+  }
+}

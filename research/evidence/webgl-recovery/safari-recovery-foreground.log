@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/private/tmp/fork-browser/safari-recovery.py", line 30, in <module>
+    out['samples']['waiting']=wait(w,lambda s:s['view']['recovery']['phase']=='waiting')
+                              ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/fork-browser/safari-recovery.py", line 18, in wait
+    raise TimeoutError(str(get(w)))
+TimeoutError: {'origin': 1794883118744, 'view': {'target': [2.25, 1.22, -0.38], 'position': [4.07, 16.86, 16.65], 'distance': 23.19, 'drawCalls': 0, 'triangles': 0, 'azimuth': 0.11, 'pixelRatio': 1, 'held': False, 'signLock': False, 'flying': False, 'qualityChanges': 1, 'viewportChanges': 1, 'lowLoad': True, 'shadows': False, 'recovery': {'phase': 'manual', 'lowPower': True, 'contextLost': True, 'losses': 2, 'events': [{'type': 'context-lost', 'at': 2184, 'phase': 'waiting'}, {'type': 'context-restored', 'at': 2277, 'phase': 'recovering'}, {'type': 'context-lost', 'at': 2279, 'phase': 'manual'}]}, 'polar': 0.83}, 'glLost': True}

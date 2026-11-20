@@ -1,0 +1,40 @@
+✔ 各類角色在斷橋上跌落、隱藏後仍重生，導覽與訪客恢復原目的地 (126.030958ms)
+✔ 指引牌入場落點分散，行走狀態長時間保持有限且不增生人物 (837.65225ms)
+✔ 跌落中以最後一次移動為準，暫停傳送會取消跌落；召回導覽員不再被舊狀態蓋過 (48.270833ms)
+✔ 開場兩條橋已有人，露天講堂有老師與八位坐姿學生，總學生仍47 (41.414958ms)
+✔ 大雨可將錯誤橋上的人物沖落，不會沖落正確橋人物 (41.671291ms)
+✔ 每位學生步速不同，途中能短暫停下，恢復後繼續走 (72.250167ms)
+✔ 導覽員在錯誤橋途中要求返回，保留有效行走並最後抵達指引牌 (355.462042ms)
+✔ 導覽員重生後若無法規劃恢復路線，回報安全起點供介面重新開始 (51.738541ms)
+✔ 每次刷新建立的16位錯誤橋學生皆沿指引牌→懸崖→攀岩入口向前走 (155.83125ms)
+✔ 完整錯誤橋被雨沖落時先移到橋側，再下降，不能在橋中央縮小消失 (52.194875ms)
+✔ 跳過走路可立即抵達，清除舊路線、跌落、排程與出生縮放 (180.075875ms)
+✖ 連續行走的橋頭、橋尾和轉角不突然橫跳，單幀位移有界 (438.375ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 11
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2654.390791
+
+✖ failing tests:
+
+test at tests/walker-recovery.test.js:105:1
+✖ 連續行走的橋頭、橋尾和轉角不突然橫跳，單幀位移有界 (438.375ms)
+  AssertionError [ERR_ASSERTION]: 人物單幀橫移0.040，上限0.025
+      at TestContext.<anonymous> (file:///private/tmp/island-forward-students/tests/walker-recovery.test.js:109:164)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

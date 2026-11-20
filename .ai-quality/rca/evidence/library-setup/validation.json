@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "scope": "文件、索引與證據一致性；不是事故修復驗收",
+  "cases": 13,
+  "relative_links_checked": 27,
+  "case_index_coverage": "all",
+  "safari_samples": 10,
+  "runtime_changes": false,
+  "browser_fault_injection": "NOT_RUN：本輪僅整理病例庫",
+  "github_sync": {
+    "authorization": "使用者已明確允許將病例庫、錯誤提示截圖及去識別監測數值同步至GitHub。",
+    "delivery_record": "實際推送與合併結果以本分支的GitHub PR及main提交為準。",
+    "previous_block": "先前push因未明確授權上傳證據而被審核拒絕，當時僅完成本機提交；後續已取得上述授權。"
+  }
+}

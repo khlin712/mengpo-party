@@ -1,0 +1,272 @@
+{
+  "out": [
+    {
+      "kind": "desktop",
+      "links": [
+        {
+          "href": "https://line.me/ti/p/2rcgyFdA-b",
+          "label": "用 LINE 問老師，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 41,
+            "y": 421.125,
+            "width": 320,
+            "height": 87.59375,
+            "top": 421.125,
+            "right": 361,
+            "bottom": 508.71875,
+            "left": 41
+          }
+        },
+        {
+          "href": "https://www.facebook.com/0kh127",
+          "label": "Facebook，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 175.890625,
+            "y": 524.71875,
+            "width": 59.25,
+            "height": 60,
+            "top": 524.71875,
+            "right": 235.140625,
+            "bottom": 584.71875,
+            "left": 175.890625
+          }
+        },
+        {
+          "href": "https://www.threads.com/@0kh127",
+          "label": "Threads，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 241.140625,
+            "y": 524.71875,
+            "width": 54,
+            "height": 60,
+            "top": 524.71875,
+            "right": 295.140625,
+            "bottom": 584.71875,
+            "left": 241.140625
+          }
+        },
+        {
+          "href": "https://www.instagram.com/0kh127",
+          "label": "Instagram，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 301.140625,
+            "y": 524.71875,
+            "width": 59.859375,
+            "height": 60,
+            "top": 524.71875,
+            "right": 361,
+            "bottom": 584.71875,
+            "left": 301.140625
+          }
+        },
+        {
+          "href": "https://classroom.google.com/",
+          "label": "Google Classroom，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 41,
+            "y": 628.515625,
+            "width": 320,
+            "height": 84.390625,
+            "top": 628.515625,
+            "right": 361,
+            "bottom": 712.90625,
+            "left": 41
+          }
+        }
+      ],
+      "bounds": {
+        "width": 358,
+        "scroll": 358
+      }
+    },
+    {
+      "kind": "mobile",
+      "links": [
+        {
+          "href": "https://line.me/ti/p/2rcgyFdA-b",
+          "label": "用 LINE 問老師，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 29,
+            "y": 421.40625,
+            "width": 332,
+            "height": 83.59375,
+            "top": 421.40625,
+            "right": 361,
+            "bottom": 505,
+            "left": 29
+          }
+        },
+        {
+          "href": "https://www.facebook.com/0kh127",
+          "label": "Facebook，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 29,
+            "y": 578.78125,
+            "width": 106.65625,
+            "height": 60,
+            "top": 578.78125,
+            "right": 135.65625,
+            "bottom": 638.78125,
+            "left": 29
+          }
+        },
+        {
+          "href": "https://www.threads.com/@0kh127",
+          "label": "Threads，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 141.65625,
+            "y": 578.78125,
+            "width": 106.671875,
+            "height": 60,
+            "top": 578.78125,
+            "right": 248.328125,
+            "bottom": 638.78125,
+            "left": 141.65625
+          }
+        },
+        {
+          "href": "https://www.instagram.com/0kh127",
+          "label": "Instagram，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 254.328125,
+            "y": 578.78125,
+            "width": 106.671875,
+            "height": 60,
+            "top": 578.78125,
+            "right": 361,
+            "bottom": 638.78125,
+            "left": 254.328125
+          }
+        },
+        {
+          "href": "https://classroom.google.com/",
+          "label": "Google Classroom，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 29,
+            "y": 682.578125,
+            "width": 332,
+            "height": 80.390625,
+            "top": 682.578125,
+            "right": 361,
+            "bottom": 762.96875,
+            "left": 29
+          }
+        }
+      ],
+      "bounds": {
+        "width": 372,
+        "scroll": 372
+      }
+    },
+    {
+      "kind": "small",
+      "links": [
+        {
+          "href": "https://line.me/ti/p/2rcgyFdA-b",
+          "label": "用 LINE 問老師，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 29,
+            "y": 427.0625,
+            "width": 262,
+            "height": 83.59375,
+            "top": 427.0625,
+            "right": 291,
+            "bottom": 510.65625,
+            "left": 29
+          }
+        },
+        {
+          "href": "https://www.facebook.com/0kh127",
+          "label": "Facebook，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 29,
+            "y": 584.4375,
+            "width": 83.328125,
+            "height": 60,
+            "top": 584.4375,
+            "right": 112.328125,
+            "bottom": 644.4375,
+            "left": 29
+          }
+        },
+        {
+          "href": "https://www.threads.com/@0kh127",
+          "label": "Threads，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 118.328125,
+            "y": 584.4375,
+            "width": 83.34375,
+            "height": 60,
+            "top": 584.4375,
+            "right": 201.671875,
+            "bottom": 644.4375,
+            "left": 118.328125
+          }
+        },
+        {
+          "href": "https://www.instagram.com/0kh127",
+          "label": "Instagram，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 207.671875,
+            "y": 584.4375,
+            "width": 83.328125,
+            "height": 60,
+            "top": 584.4375,
+            "right": 291,
+            "bottom": 644.4375,
+            "left": 207.671875
+          }
+        },
+        {
+          "href": "https://classroom.google.com/",
+          "label": "Google Classroom，在新視窗開啟",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "rect": {
+            "x": 29,
+            "y": 688.234375,
+            "width": 262,
+            "height": 101.1875,
+            "top": 688.234375,
+            "right": 291,
+            "bottom": 789.421875,
+            "left": 29
+          }
+        }
+      ],
+      "bounds": {
+        "width": 302,
+        "scroll": 302
+      }
+    }
+  ],
+  "errors": []
+}

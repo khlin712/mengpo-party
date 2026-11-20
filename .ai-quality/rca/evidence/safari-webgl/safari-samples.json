@@ -1,0 +1,118 @@
+{
+  "source": "本對話中，AppleScript 只讀當前 Safari 課程島分頁所得資料的選定欄位；保留原始數值，省略 URL/頁名等非必要資訊。",
+  "sample_count": 10,
+  "span_seconds": 29.40096688270569,
+  "limits": "非持續逐幀監控；未涵蓋使用者最初黑屏時段。",
+  "samples": [
+    {
+      "sampled_at": "2026-11-17T00:56:12.808299+08:00",
+      "time_origin_ms": 1794847845837,
+      "page_elapsed_ms": 326952,
+      "pixel_ratio": 1.5,
+      "sign_lock": true,
+      "draw_calls": 687,
+      "context_lost": false,
+      "visibility": "visible",
+      "read_error": ""
+    },
+    {
+      "sampled_at": "2026-11-17T00:56:21.502529+08:00",
+      "time_origin_ms": 1794847845837,
+      "page_elapsed_ms": 335316,
+      "pixel_ratio": 1.5,
+      "sign_lock": true,
+      "draw_calls": 691,
+      "context_lost": false,
+      "visibility": "visible",
+      "read_error": ""
+    },
+    {
+      "sampled_at": "2026-11-17T00:56:24.586450+08:00",
+      "time_origin_ms": 1794847845837,
+      "page_elapsed_ms": 338741,
+      "pixel_ratio": 1.5,
+      "sign_lock": true,
+      "draw_calls": 709,
+      "context_lost": false,
+      "visibility": "visible",
+      "read_error": ""
+    },
+    {
+      "sampled_at": "2026-11-17T00:56:27.073218+08:00",
+      "time_origin_ms": 1794847845837,
+      "page_elapsed_ms": 341230,
+      "pixel_ratio": 1.5,
+      "sign_lock": true,
+      "draw_calls": 716,
+      "context_lost": false,
+      "visibility": "visible",
+      "read_error": ""
+    },
+    {
+      "sampled_at": "2026-11-17T00:56:29.599740+08:00",
+      "time_origin_ms": 1794847845837,
+      "page_elapsed_ms": 343756,
+      "pixel_ratio": 1.5,
+      "sign_lock": true,
+      "draw_calls": 718,
+      "context_lost": false,
+      "visibility": "visible",
+      "read_error": ""
+    },
+    {
+      "sampled_at": "2026-11-17T00:56:32.067964+08:00",
+      "time_origin_ms": 1794847845837,
+      "page_elapsed_ms": 346225,
+      "pixel_ratio": 1.5,
+      "sign_lock": true,
+      "draw_calls": 714,
+      "context_lost": false,
+      "visibility": "visible",
+      "read_error": ""
+    },
+    {
+      "sampled_at": "2026-11-17T00:56:34.638180+08:00",
+      "time_origin_ms": 1794847845837,
+      "page_elapsed_ms": 348794,
+      "pixel_ratio": 1.5,
+      "sign_lock": true,
+      "draw_calls": 702,
+      "context_lost": false,
+      "visibility": "visible",
+      "read_error": ""
+    },
+    {
+      "sampled_at": "2026-11-17T00:56:37.454182+08:00",
+      "time_origin_ms": 1794847845836,
+      "page_elapsed_ms": 351599,
+      "pixel_ratio": 1.5,
+      "sign_lock": true,
+      "draw_calls": 690,
+      "context_lost": false,
+      "visibility": "visible",
+      "read_error": ""
+    },
+    {
+      "sampled_at": "2026-11-17T00:56:39.716061+08:00",
+      "time_origin_ms": 1794847845836,
+      "page_elapsed_ms": 353875,
+      "pixel_ratio": 1.5,
+      "sign_lock": true,
+      "draw_calls": 701,
+      "context_lost": false,
+      "visibility": "visible",
+      "read_error": ""
+    },
+    {
+      "sampled_at": "2026-11-17T00:56:42.209266+08:00",
+      "time_origin_ms": 1794847845836,
+      "page_elapsed_ms": 356368,
+      "pixel_ratio": 1.5,
+      "sign_lock": true,
+      "draw_calls": 698,
+      "context_lost": false,
+      "visibility": "visible",
+      "read_error": ""
+    }
+  ]
+}

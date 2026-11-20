@@ -1,0 +1,68 @@
+{
+  "initial": {
+    "kind": "avatar",
+    "island": "start",
+    "target": null,
+    "key": null,
+    "mode": "auto",
+    "walking": 0,
+    "speed": 0.62,
+    "resting": false,
+    "seated": false,
+    "falling": false,
+    "fallKind": null,
+    "visible": true,
+    "position": [
+      0.17,
+      0.25,
+      6.58
+    ],
+    "sliding": false,
+    "hidden": false
+  },
+  "first": {
+    "kind": "avatar",
+    "island": "teacher",
+    "target": null,
+    "key": null,
+    "mode": "auto",
+    "walking": 0.47,
+    "speed": 0.62,
+    "resting": false,
+    "seated": false,
+    "falling": false,
+    "fallKind": null,
+    "visible": true,
+    "position": [
+      -1.01,
+      0.25,
+      2.17
+    ],
+    "sliding": false,
+    "hidden": false
+  },
+  "second": {
+    "kind": "avatar",
+    "island": "teaching",
+    "target": null,
+    "key": null,
+    "mode": "auto",
+    "walking": 1,
+    "speed": 0.62,
+    "resting": false,
+    "seated": false,
+    "falling": false,
+    "fallKind": null,
+    "visible": true,
+    "position": [
+      -2.44,
+      0.25,
+      -0.33
+    ],
+    "sliding": false,
+    "hidden": false
+  },
+  "automaticToasts": [],
+  "manualToast": "你的角色抵達「起點」",
+  "errors": []
+}

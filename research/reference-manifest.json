@@ -1,0 +1,42 @@
+{
+  "captured_at_utc": "2026-11-14T19:53:54.221799+00:00",
+  "reference_url": "https://puma.taipei/heart-island",
+  "reference_script_url": "https://puma.taipei/heart-island-assets/app.js?v=20261112-4",
+  "rea_version": "6.9.0",
+  "rea_evidence_id": "ev_9c751e9e4e1b576dd9a1f7a76d95e0b15e125f5c7622174d29b95c3eabb4f198",
+  "command": "npx -y rea-agents@6.9.0 analyze-javascript-application /tmp/heart-island-reference-20261115 --json",
+  "base_commit": "6aed538b55f4355e5daa0e92f628174422187b8b",
+  "same_app_sha_as_previous_capture": true,
+  "files": [
+    {
+      "file": "index.html",
+      "sha256": "a56fca5faf40ecb9d184cff6e767d14f3e0282883acfe0a9fe8b975d7bf8a6e2",
+      "bytes": 14004
+    },
+    {
+      "file": "app.js",
+      "sha256": "4fe75baed4a50408c47725bc32814e7d84d8363cb679a2372f6b6c49adfddbfe",
+      "bytes": 166242
+    },
+    {
+      "file": "ui.css",
+      "sha256": "cadbfc0a59a1a312e958b6a9bbf36f099a3f74fd1f9db3cab8663c4ad00782e4",
+      "bytes": 62800
+    },
+    {
+      "file": "policies.json",
+      "sha256": "43f1f87dedca9d69757e7b82876a53c32b5b3c0b15f6a9247de9a820d0bff443",
+      "bytes": 217871
+    }
+  ],
+  "limitations": [
+    "CommonJS and ESM binding relationships were recovered from inert syntax and resolved only within the inventoried artifact container.",
+    "Graph coverage is incomplete; unavailable facts remain explicit and must not be read as absence.",
+    "JavaScript and HTML were parsed as inert text; bundle bootstrap code was never executed.",
+    "Static imports, entrypoints, workers, endpoints, and storage relationships do not prove runtime execution.",
+    "Static paths and relationships may remain unresolved when expressions are dynamic or obfuscated.",
+    "Webpack/Rspack factories were recovered from AST literals; REA did not invoke push handlers or bundle bootstrap code.",
+    "index.html has 2 inline JavaScript bodies starting at lines 6, 34 that were not analyzed; endpoints, storage, imports and other facts in them are absent from the evidence."
+  ],
+  "raw_evidence_location": "/tmp/heart-island-reference-20261115-rea.json"
+}

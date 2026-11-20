@@ -1,0 +1,1265 @@
+{
+  "before": {
+    "target": [
+      2.34,
+      1.6,
+      -0.91
+    ],
+    "position": [
+      6.15,
+      14.39,
+      17.6
+    ],
+    "distance": 22.82,
+    "drawCalls": 943,
+    "triangles": 187386,
+    "azimuth": 0.2,
+    "polar": 0.98
+  },
+  "pan": {
+    "target": [
+      0.16,
+      1.6,
+      -2.15
+    ],
+    "position": [
+      3.97,
+      14.39,
+      16.35
+    ],
+    "distance": 22.82,
+    "drawCalls": 916,
+    "triangles": 183106,
+    "azimuth": 0.2,
+    "polar": 0.98
+  },
+  "rotate": {
+    "target": [
+      0.16,
+      1.6,
+      -2.15
+    ],
+    "position": [
+      -7.45,
+      18.97,
+      10.52
+    ],
+    "distance": 22.82,
+    "drawCalls": 828,
+    "triangles": 170358,
+    "azimuth": -0.54,
+    "polar": 0.71
+  },
+  "zoom": {
+    "target": [
+      3.03,
+      1.21,
+      -3.09
+    ],
+    "position": [
+      -2.45,
+      13.43,
+      5.55
+    ],
+    "distance": 15.94,
+    "drawCalls": 464,
+    "triangles": 139760,
+    "azimuth": -0.56,
+    "polar": 0.7
+  },
+  "guideStart": {
+    "kind": "guide",
+    "island": "start",
+    "target": "fork",
+    "key": null,
+    "mode": null,
+    "walking": 0.46,
+    "speed": 1.6,
+    "resting": false,
+    "seated": false,
+    "falling": false,
+    "fallKind": null,
+    "visible": true,
+    "position": [
+      0.02,
+      0.25,
+      6.71
+    ],
+    "sliding": false,
+    "hidden": false
+  },
+  "guideArrived": {
+    "kind": "guide",
+    "island": "fork",
+    "target": null,
+    "key": null,
+    "mode": null,
+    "walking": 0.23,
+    "speed": 1.6,
+    "resting": false,
+    "seated": false,
+    "falling": false,
+    "fallKind": null,
+    "visible": true,
+    "position": [
+      2.67,
+      0.25,
+      5.85
+    ],
+    "sliding": false,
+    "hidden": false
+  },
+  "hazards": {
+    "breaks": 2,
+    "spans": [
+      {
+        "phase": "safe",
+        "age": 30.263899999999815,
+        "left": 6.04,
+        "center": 0.44381588747164813
+      },
+      {
+        "phase": "broken",
+        "age": 0.11670000000000437,
+        "left": 7.51,
+        "center": 0.4731767995406608
+      },
+      {
+        "phase": "broken",
+        "age": 0.06670000000000437,
+        "left": 6.01,
+        "center": 0.35835722202372144
+      }
+    ]
+  },
+  "people": {
+    "count": 54,
+    "visible": 54,
+    "walking": 36,
+    "guide": {
+      "kind": "guide",
+      "island": "fork",
+      "target": null,
+      "key": null,
+      "mode": null,
+      "walking": 0,
+      "speed": 1.6,
+      "resting": false,
+      "seated": false,
+      "falling": false,
+      "fallKind": null,
+      "visible": true,
+      "position": [
+        2.67,
+        0.25,
+        5.85
+      ],
+      "sliding": false,
+      "hidden": false
+    },
+    "me": {
+      "kind": "avatar",
+      "island": "teacher",
+      "target": "teacher",
+      "key": null,
+      "mode": "stroll",
+      "walking": 1,
+      "speed": 0.62,
+      "resting": false,
+      "seated": false,
+      "falling": false,
+      "fallKind": null,
+      "visible": true,
+      "position": [
+        -0.66,
+        0.25,
+        0.91
+      ],
+      "sliding": false,
+      "hidden": false
+    },
+    "selected": null,
+    "messengers": [
+      {
+        "kind": "messenger",
+        "island": null,
+        "target": null,
+        "key": "teacher:teaching",
+        "mode": null,
+        "walking": 1,
+        "speed": 0.25,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -1.88,
+          0.25,
+          0.25
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "messenger",
+        "island": null,
+        "target": null,
+        "key": "questions:teacher",
+        "mode": null,
+        "walking": 1,
+        "speed": 0.315,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -0.4,
+          0.25,
+          0.15
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "messenger",
+        "island": null,
+        "target": null,
+        "key": "questions:teaching",
+        "mode": null,
+        "walking": 1,
+        "speed": 0.38,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -0.99,
+          0.25,
+          -1.01
+        ],
+        "sliding": false,
+        "hidden": false
+      }
+    ],
+    "students": [
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "stories",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.22,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          3.57,
+          1.41,
+          -3.33
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "start",
+        "target": "fork",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.275,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          2.39,
+          0.25,
+          5.19
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "start",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.33,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          0.12,
+          0.25,
+          4.91
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "wallfoot",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.385,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          5.21,
+          0.89,
+          4.21
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "wallfoot",
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.44,
+        "resting": true,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          5.71,
+          0.94,
+          3.39
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "stories",
+        "target": "university",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.495,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -4.67,
+          2.25,
+          -4.35
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "university",
+        "key": null,
+        "mode": null,
+        "walking": 0.01,
+        "speed": 0.55,
+        "resting": true,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          4.53,
+          1.04,
+          -1.01
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "start",
+        "target": "fork",
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.22,
+        "resting": true,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          1.18,
+          0.25,
+          5.52
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "start",
+        "target": "teacher",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.275,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          -0.83,
+          0.25,
+          2.74
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "wallfoot",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.33,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          2.63,
+          0.25,
+          5.13
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "stories",
+        "target": "university",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.385,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -2.23,
+          2.25,
+          -5.18
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "wallfoot",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.44,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          4.34,
+          0.58,
+          4.62
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "wallfoot",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.495,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          6.31,
+          0.95,
+          1.94
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "questions",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.55,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          0.26,
+          0.25,
+          -0.24
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "pass2",
+        "target": "pass1",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.22,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          6.63,
+          1.01,
+          1.32
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "stories",
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.275,
+        "resting": true,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -0.92,
+          2.2,
+          -5.99
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "university",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.33,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          3.8,
+          0.4,
+          3.26
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "start",
+        "target": "teaching",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.385,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          -0.7,
+          0.25,
+          2.37
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "wallfoot",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.44,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          3.85,
+          0.37,
+          4.51
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "wallfoot",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.495,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": "cliff",
+        "visible": true,
+        "position": [
+          4.41,
+          0.61,
+          4.61
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "pass2",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.55,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          6.28,
+          0.95,
+          1.92
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "teacher",
+        "target": "start",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.22,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -0.47,
+          0.25,
+          4.04
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "teaching",
+        "target": "fork",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.275,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -0.39,
+          0.25,
+          1.27
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "teaching",
+        "target": "calendar",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.33,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -0.83,
+          0.25,
+          0.92
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "wallfoot",
+        "key": null,
+        "mode": null,
+        "walking": 0.99,
+        "speed": 0.385,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          3.63,
+          0.26,
+          4.59
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "calendar",
+        "target": "fork",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.44,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          0.29,
+          0.25,
+          5.32
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "wallfoot",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.495,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          4.77,
+          0.78,
+          4.37
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "wallfoot",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.55,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          4.99,
+          0.84,
+          4.33
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "teacher",
+        "target": "signup",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.22,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -1.61,
+          0.25,
+          5.82
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "teaching",
+        "target": "start",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.275,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -0.73,
+          0.25,
+          3.09
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "questions",
+        "target": "fork",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.33,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          2.11,
+          0.25,
+          4.78
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "contact",
+        "target": "start",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.385,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -1.43,
+          0.25,
+          5.82
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "calendar",
+        "target": "fork",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.44,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -0.65,
+          0.25,
+          5.62
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "fork",
+        "target": "pass1",
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.495,
+        "resting": true,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          5.66,
+          0.94,
+          3.34
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "calendar",
+        "target": "fork",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.55,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -6.43,
+          0.25,
+          2.46
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "teacher",
+        "target": "teacher",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.22,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -0.78,
+          0.25,
+          2.29
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "signup",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.275,
+        "resting": false,
+        "seated": true,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -5.75,
+          0.19,
+          4.43
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "signup",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.33,
+        "resting": false,
+        "seated": true,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -5.51,
+          0.19,
+          4.43
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "signup",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.385,
+        "resting": false,
+        "seated": true,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -5.27,
+          0.19,
+          4.43
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "signup",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.44,
+        "resting": false,
+        "seated": true,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -5.03,
+          0.19,
+          4.43
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "signup",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.495,
+        "resting": false,
+        "seated": true,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -5.75,
+          0.22,
+          4.79
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "signup",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.55,
+        "resting": false,
+        "seated": true,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -5.51,
+          0.22,
+          4.79
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "signup",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.22,
+        "resting": false,
+        "seated": true,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -5.27,
+          0.22,
+          4.79
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "student",
+        "island": "signup",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.275,
+        "resting": false,
+        "seated": true,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -5.03,
+          0.22,
+          4.79
+        ],
+        "sliding": false,
+        "hidden": false
+      }
+    ],
+    "studentCount": 47,
+    "parents": 4,
+    "parentWalkers": [
+      {
+        "kind": "parent",
+        "island": "teacher",
+        "target": "teacher",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.13,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -0.38,
+          0.25,
+          1.82
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "parent",
+        "island": "teaching",
+        "target": "questions",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.38,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          1.12,
+          0.25,
+          -1.13
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "parent",
+        "island": "teaching",
+        "target": null,
+        "key": null,
+        "mode": null,
+        "walking": 0,
+        "speed": 0.17,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -2.88,
+          0.25,
+          -1.85
+        ],
+        "sliding": false,
+        "hidden": false
+      },
+      {
+        "kind": "parent",
+        "island": "stories",
+        "target": "stories",
+        "key": null,
+        "mode": null,
+        "walking": 1,
+        "speed": 0.13,
+        "resting": false,
+        "seated": false,
+        "falling": false,
+        "fallKind": null,
+        "visible": true,
+        "position": [
+          -2.19,
+          2.25,
+          -6.58
+        ],
+        "sliding": false,
+        "hidden": false
+      }
+    ],
+    "following": null,
+    "placing": false
+  },
+  "errors": []
+}

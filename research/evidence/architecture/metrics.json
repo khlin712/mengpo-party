@@ -1,0 +1,105 @@
+[
+  {
+    "camera": "{\"target\":[1.56,0.02,-0.33],\"position\":[3.7,7.21,10.07],\"distance\":12.83,\"drawCalls\":580,\"triangles\":77454,\"azimuth\":0.2,\"polar\":0.98}",
+    "overflow": false,
+    "screen": "home",
+    "size": [
+      1855,
+      888
+    ]
+  },
+  {
+    "result": "0 座主題島",
+    "screen": "relation-search-to-topic",
+    "search": "形成現在",
+    "teacherVisible": "visible",
+    "title": "認識老師",
+    "note": "修正後尚未重載的舊頁面；以after-reload紀錄作為最終驗收"
+  },
+  {
+    "result": "9 座主題島",
+    "screen": "relation-search-to-topic-after-reload",
+    "search": "",
+    "teacherVisible": "visible",
+    "title": "認識老師"
+  },
+  {
+    "screen": "reload-questions",
+    "before": 32,
+    "after": 32
+  },
+  {
+    "screen": "native-line-click",
+    "point": [
+      898,
+      388
+    ],
+    "openedRelation": "主題關聯 · 02 ↔ 07"
+  },
+  {
+    "cardOverflow": false,
+    "pageOverflow": false,
+    "screen": "mobile-relation-full",
+    "size": [
+      390,
+      844
+    ],
+    "title": "教學理念會如何落實到一堂作文課？"
+  },
+  {
+    "closed": true,
+    "focus": "belief:method",
+    "indexClass": "index",
+    "screen": "mobile-return"
+  },
+  {
+    "screen": "mobile-pointer-pan",
+    "before": {
+      "target": [
+        2.52,
+        -2.33,
+        -0.03
+      ],
+      "position": [
+        7.12,
+        11.07,
+        15.85
+      ],
+      "distance": 21.28,
+      "drawCalls": 473,
+      "triangles": 75224,
+      "azimuth": 0.28,
+      "polar": 0.89
+    },
+    "after": {
+      "target": [
+        -2.3,
+        -2.33,
+        -4.15
+      ],
+      "position": [
+        2.29,
+        11.07,
+        11.74
+      ],
+      "distance": 21.28,
+      "drawCalls": 473,
+      "triangles": 75252,
+      "azimuth": 0.28,
+      "polar": 0.89
+    }
+  },
+  {
+    "cardOverflow": false,
+    "pageOverflow": false,
+    "screen": "desktop-1024-relation",
+    "selectedLabels": [
+      "02 教學理念，認識教學",
+      "03 課堂怎麼進行，課程與成果"
+    ],
+    "size": [
+      1024,
+      844
+    ]
+  }
+]

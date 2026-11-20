@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "change_id": "bounded-webgl-recovery-20261117",
+  "gate": "predeploy",
+  "reviewer_independent": true,
+  "code_review": {
+    "status": "pass",
+    "evidence": [
+      "review.md#code-review"
+    ]
+  },
+  "report_review": {
+    "status": "pass",
+    "evidence": [
+      "review.md#report-review",
+      "README.md"
+    ]
+  },
+  "regression_tests": {
+    "status": "pass",
+    "evidence": [
+      "unit-tests.log"
+    ]
+  },
+  "failure_tests": {
+    "status": "pass",
+    "evidence": [
+      "recovery-browser.json",
+      "safari-compare.json",
+      "README.md (Safari successful restoration NOT_RUN/blocked by repeated native loss; bounded fallback PASS)"
+    ]
+  },
+  "security_review": {
+    "status": "pass",
+    "evidence": [
+      "review.md#資料及安全檢查"
+    ]
+  },
+  "data_safety": {
+    "status": "pass",
+    "evidence": [
+      "review.md#資料及安全檢查"
+    ]
+  },
+  "findings": {
+    "unresolved_p0": 0,
+    "unresolved_p1": 0,
+    "unresolved_p2": 0,
+    "p2_exception_approved": false,
+    "p2_exception_evidence": []
+  },
+  "deployment": {
+    "status": "not_run",
+    "evidence": []
+  },
+  "production_smoke": {
+    "status": "not_run",
+    "evidence": []
+  },
+  "human_acceptance": {
+    "status": "not_run",
+    "evidence": []
+  }
+}

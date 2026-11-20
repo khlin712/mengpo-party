@@ -1,0 +1,58 @@
+{
+  "browser": "Safari desktop on this Mac",
+  "faults": "WEBGL_lose_context simulation in owned localhost QA windows only",
+  "samples": {
+    "before": {
+      "origin": 1794883118745,
+      "view": {
+        "target": [
+          2.25,
+          1.22,
+          -0.38
+        ],
+        "position": [
+          4.07,
+          16.86,
+          16.65
+        ],
+        "distance": 23.19,
+        "drawCalls": 0,
+        "triangles": 0,
+        "azimuth": 0.11,
+        "pixelRatio": 1,
+        "held": false,
+        "signLock": false,
+        "flying": false,
+        "qualityChanges": 1,
+        "viewportChanges": 1,
+        "lowLoad": true,
+        "shadows": false,
+        "recovery": {
+          "phase": "manual",
+          "lowPower": true,
+          "contextLost": true,
+          "losses": 2,
+          "events": [
+            {
+              "type": "context-lost",
+              "at": 2184,
+              "phase": "waiting"
+            },
+            {
+              "type": "context-restored",
+              "at": 2277,
+              "phase": "recovering"
+            },
+            {
+              "type": "context-lost",
+              "at": 2279,
+              "phase": "manual"
+            }
+          ]
+        },
+        "polar": 0.83
+      },
+      "glLost": true
+    }
+  }
+}

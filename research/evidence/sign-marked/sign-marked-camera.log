@@ -1,0 +1,34 @@
+[
+  {
+    mobile: false,
+    view: {
+      target: [Array],
+      position: [Array],
+      distance: 11.62,
+      drawCalls: 680,
+      triangles: 166732,
+      azimuth: -0.18,
+      pixelRatio: 1,
+      held: false,
+      signLock: true,
+      polar: 1.13
+    },
+    detail: '入口指引牌：選哪一條路？'
+  },
+  {
+    mobile: true,
+    view: {
+      target: [Array],
+      position: [Array],
+      distance: 13.98,
+      drawCalls: 330,
+      triangles: 125158,
+      azimuth: -0.18,
+      pixelRatio: 1,
+      held: false,
+      signLock: true,
+      polar: 1.13
+    },
+    detail: '入口指引牌：選哪一條路？'
+  }
+]

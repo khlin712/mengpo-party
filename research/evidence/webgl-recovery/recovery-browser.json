@@ -1,0 +1,357 @@
+{
+  "navigation": [
+    "http://127.0.0.1:4205/"
+  ],
+  "glEvents": [],
+  "errors": [],
+  "before": {
+    "target": [
+      -3,
+      0.71,
+      5.79
+    ],
+    "position": [
+      -2.01,
+      4.33,
+      12.61
+    ],
+    "distance": 7.78,
+    "drawCalls": 687,
+    "triangles": 171398,
+    "azimuth": 0.14,
+    "pixelRatio": 2,
+    "held": false,
+    "signLock": false,
+    "flying": false,
+    "qualityChanges": 0,
+    "viewportChanges": 1,
+    "lowLoad": false,
+    "shadows": true,
+    "recovery": {
+      "phase": "ready",
+      "lowPower": false,
+      "contextLost": false,
+      "losses": 0,
+      "events": []
+    },
+    "polar": 1.09
+  },
+  "waiting": {
+    "target": [
+      -3,
+      0.71,
+      5.79
+    ],
+    "position": [
+      -2.01,
+      4.33,
+      12.61
+    ],
+    "distance": 7.78,
+    "drawCalls": 687,
+    "triangles": 171398,
+    "azimuth": 0.14,
+    "pixelRatio": 2,
+    "held": false,
+    "signLock": true,
+    "flying": false,
+    "qualityChanges": 0,
+    "viewportChanges": 1,
+    "lowLoad": false,
+    "shadows": true,
+    "recovery": {
+      "phase": "waiting",
+      "lowPower": true,
+      "contextLost": true,
+      "losses": 1,
+      "events": [
+        {
+          "type": "context-lost",
+          "at": 8030,
+          "phase": "waiting"
+        }
+      ]
+    },
+    "polar": 1.09
+  },
+  "safe": {
+    "target": [
+      -3,
+      0.71,
+      5.79
+    ],
+    "position": [
+      -2.01,
+      4.33,
+      12.61
+    ],
+    "distance": 7.78,
+    "drawCalls": 687,
+    "triangles": 171398,
+    "azimuth": 0.14,
+    "pixelRatio": 1,
+    "held": false,
+    "signLock": false,
+    "flying": false,
+    "qualityChanges": 1,
+    "viewportChanges": 1,
+    "lowLoad": true,
+    "shadows": false,
+    "recovery": {
+      "phase": "safe",
+      "lowPower": true,
+      "contextLost": false,
+      "losses": 1,
+      "events": [
+        {
+          "type": "context-lost",
+          "at": 8030,
+          "phase": "waiting"
+        },
+        {
+          "type": "context-restored",
+          "at": 8953,
+          "phase": "recovering"
+        },
+        {
+          "type": "first-frame",
+          "at": 9270,
+          "phase": "safe"
+        }
+      ]
+    },
+    "polar": 1.09
+  },
+  "repeat": {
+    "target": [
+      -3,
+      0.71,
+      5.79
+    ],
+    "position": [
+      -2.01,
+      4.33,
+      12.61
+    ],
+    "distance": 7.78,
+    "drawCalls": 687,
+    "triangles": 171398,
+    "azimuth": 0.14,
+    "pixelRatio": 1,
+    "held": false,
+    "signLock": false,
+    "flying": false,
+    "qualityChanges": 1,
+    "viewportChanges": 1,
+    "lowLoad": true,
+    "shadows": false,
+    "recovery": {
+      "phase": "manual",
+      "lowPower": true,
+      "contextLost": true,
+      "losses": 2,
+      "events": [
+        {
+          "type": "context-lost",
+          "at": 8030,
+          "phase": "waiting"
+        },
+        {
+          "type": "context-restored",
+          "at": 8953,
+          "phase": "recovering"
+        },
+        {
+          "type": "first-frame",
+          "at": 9270,
+          "phase": "safe"
+        },
+        {
+          "type": "context-lost",
+          "at": 10371,
+          "phase": "manual"
+        }
+      ]
+    },
+    "polar": 1.09
+  },
+  "instrumentation": {
+    "gl": [
+      {
+        "name": "webglcontextlost",
+        "at": 8029.89999999851,
+        "prevented": true
+      },
+      {
+        "name": "webglcontextrestored",
+        "at": 8833.29999999702,
+        "prevented": false
+      },
+      {
+        "name": "webglcontextlost",
+        "at": 10370.70000000298,
+        "prevented": false
+      }
+    ],
+    "sizes": [
+      {
+        "at": 1806.5,
+        "prop": "width",
+        "value": 2880,
+        "flying": false
+      },
+      {
+        "at": 1816.7000000029802,
+        "prop": "height",
+        "value": 1800,
+        "flying": false
+      },
+      {
+        "at": 8833.5,
+        "prop": "width",
+        "value": 1440,
+        "flying": false
+      },
+      {
+        "at": 8907.60000000149,
+        "prop": "height",
+        "value": 900,
+        "flying": false
+      }
+    ]
+  },
+  "noAutomaticReload": true,
+  "timeout": {
+    "target": [
+      1.09,
+      1.26,
+      -0.16
+    ],
+    "position": [
+      1.59,
+      21.34,
+      15.74
+    ],
+    "distance": 25.62,
+    "drawCalls": 757,
+    "triangles": 174128,
+    "azimuth": 0.03,
+    "pixelRatio": 1,
+    "held": false,
+    "signLock": false,
+    "flying": false,
+    "qualityChanges": 0,
+    "viewportChanges": 1,
+    "lowLoad": false,
+    "shadows": true,
+    "recovery": {
+      "phase": "manual",
+      "lowPower": true,
+      "contextLost": true,
+      "losses": 1,
+      "events": [
+        {
+          "type": "context-lost",
+          "at": 2887,
+          "phase": "waiting"
+        },
+        {
+          "type": "timeout",
+          "at": 10892,
+          "phase": "manual"
+        }
+      ]
+    },
+    "polar": 0.67
+  },
+  "lateManualRetry": {
+    "target": [
+      1.09,
+      1.26,
+      -0.16
+    ],
+    "position": [
+      1.59,
+      21.34,
+      15.74
+    ],
+    "distance": 25.62,
+    "drawCalls": 757,
+    "triangles": 174128,
+    "azimuth": 0.03,
+    "pixelRatio": 1,
+    "held": false,
+    "signLock": false,
+    "flying": false,
+    "qualityChanges": 0,
+    "viewportChanges": 1,
+    "lowLoad": true,
+    "shadows": false,
+    "recovery": {
+      "phase": "safe",
+      "lowPower": true,
+      "contextLost": false,
+      "losses": 1,
+      "events": [
+        {
+          "type": "context-lost",
+          "at": 2887,
+          "phase": "waiting"
+        },
+        {
+          "type": "timeout",
+          "at": 10892,
+          "phase": "manual"
+        },
+        {
+          "type": "late-restoration",
+          "at": 10976,
+          "phase": "manual"
+        },
+        {
+          "type": "manual-retry",
+          "at": 11013,
+          "phase": "recovering"
+        },
+        {
+          "type": "first-frame",
+          "at": 11280,
+          "phase": "safe"
+        }
+      ]
+    },
+    "polar": 0.67
+  },
+  "manualReload": {
+    "target": [
+      1.09,
+      1.26,
+      -0.16
+    ],
+    "position": [
+      1.59,
+      21.34,
+      15.74
+    ],
+    "distance": 25.62,
+    "drawCalls": 757,
+    "triangles": 174128,
+    "azimuth": 0.03,
+    "pixelRatio": 1,
+    "held": false,
+    "signLock": false,
+    "flying": false,
+    "qualityChanges": 0,
+    "viewportChanges": 1,
+    "lowLoad": true,
+    "shadows": false,
+    "recovery": {
+      "phase": "safe",
+      "lowPower": true,
+      "contextLost": false,
+      "losses": 0,
+      "events": []
+    },
+    "polar": 0.67
+  }
+}
