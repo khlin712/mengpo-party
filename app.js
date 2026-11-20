@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
-import { ISLANDS, FLOWS, GROUPS, ENTRY_ROUTES, CONCERNS, PEOPLE, PEOPLE_NOTE, TOUR, INTRO_KEY, INTRO_STEPS, PENDING, dayNote, findIslands, makeOutline, readStored, cueAt } from './content.js';
+import { ISLANDS, FLOWS, GROUPS, ENTRY_ROUTES, CONCERNS, PEOPLE, PEOPLE_NOTE, TOUR, PENDING, dayNote, findIslands, makeOutline, readStored, cueAt } from './content.js';
 import { CLASSES, CONTACTS, PRICING, publicFeedback, feedbackSignature, isLink } from './journey.js';
 import { easeInOutCubic, FLY_MS } from './motion.js';
 import { createResolution } from './resolution.js';
@@ -14,13 +14,14 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 const byId = new Map(ISLANDS.map((i) => [i.id, i]));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const narrow = () => innerWidth <= 900;
+const portrait = () => innerHeight > innerWidth * 1.1;
 const STORE = 'mengpo-island-v2';
 
 // ── 狀態 ────────────────────────────────────────────────────────────────
 const S = {
   sel: null, step: null, flow: null, person: null, people: true, query: '', groups: new Set(), tab: 'islands',
   entry: '', route: [], saved: [], note: '', visited: new Set(),
-  mins: 900, minsTarget: null, dayPlaying: false, freeze: reduced.matches, bird: false, names: true, pins: true, flowsOn: false,
+  mins: 900, minsTarget: null, dayPlaying: false, freeze: reduced.matches, bird: false, names: true, pins: true, explore: false,
   tour: { on: false, playing: false, sec: 0, cue: -1 },
 };
 function load() {
@@ -71,7 +72,7 @@ async function initWorld() {
   controls = new OrbitControls(camera, renderer.domElement);
   Object.assign(controls, { enableDamping: true, dampingFactor: 0.08, minDistance: 5, maxDistance: 120, maxPolarAngle: 1.42, minPolarAngle: 0.06, rotateSpeed: 0.7, zoomSpeed: 0.8, panSpeed: 0.8, screenSpacePanning: false });
   controls.addEventListener('start', () => { fly = null; userMoved = true; document.body.classList.add('interacted'); });
-  controls.addEventListener('change', () => { dirty = true; const t = controls.target; const l = Math.hypot(t.x, t.z); if (l > 16) { t.x *= 16 / l; t.z *= 16 / l; } });
+  controls.addEventListener('change', () => { dirty = true; const t = controls.target; const l = Math.hypot(t.x, t.z); if (l > 30) { t.x *= 30 / l; t.z *= 30 / l; } });
   W = buildWorld({ stage });
   scene = W.scene;
 
@@ -146,7 +147,14 @@ function home(instant = false) {
   userMoved = false;
   let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9;
   for (const r of W.islands.values()) { x0 = Math.min(x0, r.center.x); x1 = Math.max(x1, r.center.x); z0 = Math.min(z0, r.center.z); z1 = Math.max(z1, r.center.z); }
-  moveCamera(frame(new THREE.Vector3((x0 + x1) / 2, 0.4, (z0 + z1) / 2), { w: (x1 - x0) / 2 + 2.7, h: (z1 - z0) / 2 + 3.0 }, 14), instant);
+  const mid = new THREE.Vector3((x0 + x1) / 2, 0.4, (z0 + z1) / 2);
+  if (portrait() && !S.bird) {
+    // 直式螢幕：一條很長的路放不進窄寬度，改成站在起點往前看，路一路延伸到遠方
+    const v = new THREE.Vector3(-1, 0.8, 0.06).normalize();
+    moveCamera(frame(mid, { w: 6.5, h: (x1 - x0) / 2 + 10 }, 14, v), instant);
+    return;
+  }
+  moveCamera(frame(mid, { w: (x1 - x0) / 2 + 5, h: (z1 - z0) / 2 + 3.0 }, 14), instant);
 }
 function flyToIsland(id, instant = false) {
   if (!W) return;
@@ -163,27 +171,18 @@ function flyToIsland(id, instant = false) {
   }
   moveCamera(frame(c, rec.bridge ? { w: 3.4, h: 3.0 } : { w: 5.6, h: 4.6 }, rec.bridge ? 8 : 11), instant);
 }
-function flyToFlow(fid) {
-  if (!W) return;
-  const f = W.flows.get(fid).def, a = W.islands.get(f.a).center, b = W.islands.get(f.b).center;
-  const mid = a.clone().add(b).multiplyScalar(0.5).setY(1);
-  moveCamera(frame(mid, { w: Math.abs(a.x - b.x) / 2 + 3.4, h: Math.abs(a.z - b.z) / 2 + 3.2 }, 10));
-}
 
 // ── 選取 ────────────────────────────────────────────────────────────────
-function markVisited(id) { if (!S.visited.has(id)) { S.visited.add(id); save(); if (S.visited.size === ISLANDS.length) setTimeout(() => toast('七座島都走過了，迷霧散去 ✨'), 700); } }
+function markVisited(id) { if (!S.visited.has(id)) { S.visited.add(id); save(); } }
 function setHash(v) { try { history.replaceState(null, '', v ? '#' + v : location.pathname + location.search); } catch { /* 忽略 */ } }
 function selectIsland(id, { step = null, fly = true } = {}) {
   if (!byId.has(id)) return;
+  closeHome();
   S.sel = id; S.step = step; S.flow = null; setPerson(null);
   if (!S.tour.on) markVisited(id);
   setHash(id + (step !== null ? '/' + (step + 1) : ''));
   showCard(); refresh();
   if (fly) { syncLayout(); flyToIsland(id); }
-}
-function selectFlow(fid) {
-  S.flow = fid; S.step = null; S.sel = null; setPerson(null); setHash('');
-  showCard(); refresh(); syncLayout(); flyToFlow(fid);
 }
 function closeCard() {
   const had = S.sel || S.flow || S.person;
@@ -193,7 +192,7 @@ function closeCard() {
 }
 function showCard() {
   const card = $('#card'); card.hidden = false; document.body.classList.add('card-open');
-  $('#card-content').innerHTML = S.person ? personCard() : S.flow ? flowCard() : S.step !== null ? stepCard() : islandCard();
+  $('#card-content').innerHTML = S.person ? personCard() : S.step !== null ? stepCard() : islandCard();
   card.scrollTop = 0;
   if (narrow()) { card.classList.remove('tall'); $('#sidebar').classList.remove('tall'); }
 }
@@ -231,7 +230,6 @@ function special(t) {
 function islandCard() {
   const t = byId.get(S.sel), saved = S.saved.includes(t.id);
   const concerns = CONCERNS.filter((c) => c.topic === t.id);
-  const related = FLOWS.filter((f) => f.a === t.id || f.b === t.id);
   return `<div style="--c:${t.color}">
     ${routeBar(t.id)}
     <div class="eyebrow">${t.type ? '橋' : 'NO.'}${String(t.n).padStart(2, '0')}　<span class="tagc">${esc(t.tag)}</span></div>
@@ -245,7 +243,6 @@ function islandCard() {
     <div class="ask"><h3>這座島在問你</h3><p><b>${esc(t.task)}</b></p><p class="ex">${esc(t.example)}</p></div>
     ${concerns.length ? `<h3>你可能想問</h3>${concerns.map((c) => `<details class="q"><summary>${esc(c.q)}</summary><p>${esc(c.a)}</p></details>`).join('')}` : ''}
     ${PEOPLE.some((x) => x.island === t.id) ? `<h3>島上的人（示意）</h3>${PEOPLE.filter((x) => x.island === t.id).map((x) => `<button class="chip" style="--c:${t.color}" data-person="${x.id}"><i>人</i>${esc(x.role)}</button>`).join('')}` : ''}
-    <h3>相連的路</h3>${related.map((f) => `<div><button class="chip" style="--c:${byId.get(f.a === t.id ? f.b : f.a).color}" data-flow="${f.id}"><i>↔</i>${esc(f.label)}：${esc(byId.get(f.a === t.id ? f.b : f.a).short)}</button></div>`).join('')}
   </div>`;
 }
 function personCard() {
@@ -271,13 +268,6 @@ function stepCard() {
     <div class="btn-row">${S.step > 0 ? `<button class="btn ghost" data-step="${S.step - 1}">← 上一個</button>` : ''}${S.step < n - 1 ? `<button class="btn" data-step="${S.step + 1}">下一個 →</button>` : `<button class="btn" data-act="back">回到島的介紹</button>`}</div>
   </div>`;
 }
-function flowCard() {
-  const f = FLOWS.find((x) => x.id === S.flow);
-  return `<div class="eyebrow">兩座島的關係<span class="kind ${f.kind}">${f.kind === 'journey' ? '旅程動線' : '主題關聯'}</span></div>
-    <h2>${esc(f.label)}</h2>
-    <p>${chipHtml(f.a)} → ${chipHtml(f.b)}</p><p class="lead">${esc(f.why)}</p>
-    <p style="color:var(--muted);font-size:13px">這條線只表示網站內容的先後與關係，不代表任何成效。</p>`;
-}
 
 // 卡片事件（事件委派）
 $('#card-content').addEventListener('click', async (e) => {
@@ -286,7 +276,6 @@ $('#card-content').addEventListener('click', async (e) => {
   if (b.dataset.person) return selectPerson(b.dataset.person);
   if (b.dataset.act === 'tour') return startTour();
   if (b.dataset.island) return selectIsland(b.dataset.island);
-  if (b.dataset.flow) return selectFlow(b.dataset.flow);
   if (b.dataset.act === 'back') return selectIsland(S.sel, { fly: false });
   if (b.dataset.act === 'save') { toggleSaved(S.sel); showCard(); }
   if (b.dataset.act === 'share') toast((await copy(location.origin + location.pathname + '#' + S.sel)) ? '已複製連結' : '複製失敗，請手動複製網址');
@@ -317,7 +306,7 @@ function setEntry(key, go) {
 function renderSide() {
   const body = $('#side-body');
   $$('#sidebar .side-tabs button').forEach((b) => { const on = b.id === 'tab-' + S.tab; b.classList.toggle('active', on); b.setAttribute('aria-selected', on); });
-  $('#flow-count').textContent = FLOWS.length; $('#outline-count').textContent = S.saved.length ? `(${S.saved.length})` : '';
+  $('#outline-count').textContent = S.saved.length ? `(${S.saved.length})` : '';
   if (S.tab === 'islands') {
     const hit = new Set(findIslands(S.query, [...S.groups]).map((t) => t.id));
     body.innerHTML = ISLANDS.map((t) => {
@@ -327,24 +316,20 @@ function renderSide() {
         <ol class="steps">${t.steps.map((s, i) => `<li><button data-island="${t.id}" data-step="${i}" class="${on && S.step === i ? 'on' : ''}"><b>${i + 1}</b>${esc(s.label)}：${esc(s.q)}</button></li>`).join('')}</ol></section>`;
     }).join('') || '';
     if (!hit.size) body.innerHTML = `<p class="empty">找不到「${esc(S.query)}」。試試別的關鍵字，或直接私訊 LINE 詢問。</p>`;
-  } else if (S.tab === 'flows') {
-    body.innerHTML = `<p class="empty">島與島之間的線：實線橘色是旅程動線，青綠色是主題之間的關聯。點一條看說明。</p>` + FLOWS.map((f) => `<button class="flow-item${S.flow === f.id ? ' on' : ''}" data-flow="${f.id}"><span class="pair">${esc(byId.get(f.a).short)}<s>→</s>${esc(byId.get(f.b).short)}<span class="kind ${f.kind}">${f.kind === 'journey' ? '旅程' : '關聯'}</span></span><small>${esc(f.label)}：${esc(f.why)}</small></button>`).join('');
   } else {
     const roleLabel = S.entry ? ENTRY_ROUTES[S.entry].role : '';
     body.innerHTML = `<div class="outline"><p class="empty" style="padding:4px 0">在島的卡片按「加入我的提綱」，再寫下你的情況，複製後貼到 LINE 官方帳號。內容只存在這個瀏覽器，網站不會代你傳送。</p>
       <h3>想聊的主題</h3>${S.saved.length ? `<ul class="saved-list">${S.saved.map((id) => `<li><span>${esc(byId.get(id).title)}</span><button data-unsave="${id}" aria-label="移除">×</button></li>`).join('')}</ul>` : '<p class="empty" style="padding:4px 0">還沒有收藏。</p>'}
       <h3>我的情況與問題</h3><textarea id="note" placeholder="例如：我和孩子的關係一直卡住，想先了解適不適合參加…">${esc(S.note)}</textarea>
       <h3>提綱預覽</h3><pre id="outline-pre">${esc(makeOutline({ role: roleLabel, ids: S.saved, note: S.note }))}</pre>
-      <div class="btn-row"><button class="btn" id="copy-outline">複製提綱</button><button class="btn ghost" id="reset-progress">重置探索（迷霧重來）</button></div></div>`;
+      <div class="btn-row"><button class="btn" id="copy-outline">複製提綱</button></div></div>`;
   }
 }
 $('#side-body').addEventListener('click', async (e) => {
   const b = e.target.closest('button'); if (!b) return;
-  if (b.dataset.flow) return selectFlow(b.dataset.flow);
   if (b.dataset.island) return selectIsland(b.dataset.island, { step: b.dataset.step !== undefined ? +b.dataset.step : null });
   if (b.dataset.unsave) { toggleSaved(b.dataset.unsave); return; }
   if (b.id === 'copy-outline') toast((await copy($('#outline-pre').textContent)) ? '提綱已複製，貼到 LINE 就可以了' : '複製失敗，請手動選取文字');
-  if (b.id === 'reset-progress') { S.visited.clear(); save(); refresh(); toast('迷霧重新聚起來了'); }
 });
 $('#side-body').addEventListener('input', (e) => {
   if (e.target.id === 'note') { S.note = e.target.value; save(); $('#outline-pre').textContent = makeOutline({ role: S.entry ? ENTRY_ROUTES[S.entry].role : '', ids: S.saved, note: S.note }); }
@@ -361,7 +346,6 @@ $$('.control-tabs [data-panel]').forEach((b) => (b.onclick = () => {
 function renderPanels() {
   $('#stops').innerHTML = ISLANDS.map((t) => `<button type="button" data-island="${t.id}" class="${S.sel === t.id ? 'on' : ''}${S.visited.has(t.id) ? ' seen' : ''}">${t.n} ${esc(t.short)}</button>`).join('');
   $('#group-buttons').innerHTML = GROUPS.map((g) => `<button type="button" data-group="${esc(g)}" aria-pressed="${S.groups.has(g)}">${esc(g)}</button>`).join('');
-  $('#status').textContent = `已探索 ${S.visited.size} / ${ISLANDS.length}　迷霧散去 ${Math.round((S.visited.size / ISLANDS.length) * 100)}%`;
 }
 $('#stops').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) selectIsland(b.dataset.island); });
 $('#group-buttons').addEventListener('click', (e) => {
@@ -386,11 +370,10 @@ $$('.hud [data-toggle]').forEach((b) => (b.onclick = () => {
   if (k === 'names') { S.names = on; stage.classList.toggle('hide-plates', !on); }
   if (k === 'pins') { S.pins = on; stage.classList.toggle('hide-pins', !on); }
   if (k === 'people') { S.people = on; if (W) W.people.root.visible = on; stage.classList.toggle('hide-who', !on); }
-  if (k === 'flows') { S.flowsOn = on; refresh(); }
   if (k === 'freeze') { S.freeze = on; }
-  if (k === 'bird') { S.bird = on; if (S.sel) flyToIsland(S.sel); else if (S.flow) flyToFlow(S.flow); else home(); }
+  if (k === 'bird') { S.bird = on; if (S.sel) flyToIsland(S.sel); else home(); }
 }));
-$('#home').onclick = () => { if (S.tour.on) stopTour(); if (S.sel || S.flow) closeCard(); else home(); };
+$('#home').onclick = () => { if (S.tour.on) stopTour(); if (S.sel || S.flow || S.person) closeCard(); else home(); };
 $('#sidebar-toggle').onclick = () => { const closed = document.body.classList.toggle('sidebar-closed'); $('#sidebar-toggle').setAttribute('aria-expanded', !closed); setTimeout(() => { syncLayout(); if (S.sel) flyToIsland(S.sel); else if (!userMoved) home(); }, 320); };
 function syncLayout() {
   const h = $('#controls').offsetHeight;
@@ -421,14 +404,13 @@ function applyVisualTargets() {
     }
   }
   if (W) {
-    const show = S.flowsOn || S.sel || S.flow || S.tour.on;
-    W.flowGroup.visible = !!show;
+    W.flowGroup.visible = false; // 關聯線已從介面移除
     const tourFlows = S.tour.on ? new Set(TOUR.cues[Math.max(0, S.tour.cue)].flows) : null;
     for (const f of W.flows.values()) {
       const d = f.def; let tgt;
       if (S.tour.on) tgt = tourFlows.has(d.id) ? 0.95 : 0.1;
       else if (S.flow) tgt = d.id === S.flow ? 1 : 0.12;
-      else if (S.sel) tgt = d.a === S.sel || d.b === S.sel ? 0.9 : S.flowsOn ? 0.12 : 0;
+      else if (S.sel) tgt = 0;
       else tgt = 0.4;
       f.target = tgt;
     }
@@ -466,7 +448,6 @@ function setupPicking() {
     if (S.tour.on) return;
     if (d.kind === 'person') selectPerson(d.id);
     else if (d.kind === 'step') selectIsland(d.id, { step: d.step });
-    else if (d.kind === 'flow') selectFlow(d.id);
     else selectIsland(d.id);
   });
   let last = 0;
@@ -490,7 +471,7 @@ function decorateLabels() {
 
 // ── 自動導覽 ────────────────────────────────────────────────────────────
 function startTour() {
-  closeIntro();
+  closeHome();
   $('#card').hidden = true; document.body.classList.remove('card-open');
   S.sel = S.step = S.flow = null; setHash('');
   Object.assign(S.tour, { on: true, playing: !reduced.matches, sec: 0, cue: -1 });
@@ -519,33 +500,93 @@ $('#tour-pause').onclick = () => { S.tour.playing = !S.tour.playing; if (S.tour.
 $('#tour-replay').onclick = startTour;
 $('#tour-exit').onclick = stopTour;
 
-// ── 首次導覽 ────────────────────────────────────────────────────────────
-let introStep = 0;
-function showIntro() {
-  $('#intro').hidden = false; introStep = 0; renderIntro();
-}
-function renderIntro() {
-  const s = INTRO_STEPS[introStep], last = introStep === INTRO_STEPS.length - 1;
-  $('#intro-count').textContent = `HELLO / ${introStep + 1} · ${INTRO_STEPS.length}`;
-  $('#intro-title').textContent = s.title;
-  $('#intro-body').textContent = matchMedia('(pointer:coarse)').matches && s.touchBody ? s.touchBody : s.body;
-  const r = $('#intro-routes'); r.hidden = !last;
-  if (last) r.innerHTML = '<p style="margin:0;font-weight:700">你最在意哪一種問題？我幫你排一條參觀順序：</p>' + Object.entries(ENTRY_ROUTES).map(([k, v]) => `<button type="button" data-entry="${k}">${esc(v.label)}<small>${esc(v.intro)}</small></button>`).join('');
-  $('#intro-next').textContent = last ? '自己逛逛 →' : '下一步 →';
-}
-function closeIntro() { $('#intro').hidden = true; try { localStorage.setItem(INTRO_KEY, '1'); } catch { /* 忽略 */ } }
-$('#intro-next').onclick = () => { if (introStep < INTRO_STEPS.length - 1) { introStep++; renderIntro(); } else closeIntro(); };
-$('#intro-skip').onclick = closeIntro;
-$('#intro-routes').addEventListener('click', (e) => { const b = e.target.closest('button[data-entry]'); if (!b) return; closeIntro(); setEntry(b.dataset.entry, true); });
-$('#help').onclick = showIntro;
 addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
-  if (!$('#intro').hidden) closeIntro(); else if (S.tour.on) stopTour(); else if (!$('#card').hidden) closeCard();
+  if (!$('#signup').hidden) closeSignup(); else if (!$('#home-page').hidden) closeHome(); else if (S.tour.on) stopTour(); else if (!$('#card').hidden) closeCard();
 });
+
+// ── 首頁（白話說明＋完整文字版）與報名視窗 ─────────────────────────────────
+const homeEl = $('#home-page');
+const lineBtn = (cls = 'btn line') => {
+  const c = CONTACTS[0];
+  return c && isLink(c.href) ? `<a class="${cls}" href="${esc(c.href)}" target="_blank" rel="noopener">私訊 LINE 官方帳號</a>` : `<span class="${cls}" aria-disabled="true">LINE 連結${PENDING}</span>`;
+};
+function signupHtml() {
+  const rows = CLASSES.length
+    ? `<table class="cls"><tbody>${CLASSES.map((c) => `<tr><td>${esc(c.grade)}</td><td>${esc(c.schedule || '')}</td><td>${esc(c.note || (c.status === 'open' ? '可報名' : ''))}</td></tr>`).join('')}</tbody></table>`
+    : `<div class="todo">近期場次${PENDING}。你可以先私訊 LINE 官方帳號詢問。</div>`;
+  return `<h3>近期場次</h3>${rows}
+    <h3>費用、名額與條件</h3><ul>${PRICING.questions.map((q) => `<li>${esc(q)}</li>`).join('')}</ul>
+    <h3>怎麼報名</h3><p>不用填表單：先私訊 LINE 官方帳號，由老師回覆並提供報名連結。還沒決定也可以先問。</p>
+    <div class="btn-row">${lineBtn()}</div>`;
+}
+function textNodeHtml(t) {
+  const extra = t.id === 'stories' ? (publicFeedback().length ? publicFeedback().map((f) => `<div class="feedback">「${esc(f.text)}」<small>${esc(feedbackSignature(f))}</small></div>`).join('') : `<div class="todo">客戶回饋與前、中、後案例${PENDING}；取得本人同意後才會放上來。</div>`) : '';
+  return `<article class="tx" style="--c:${t.color}">
+    <div class="eyebrow">第 ${t.n} 站　${t.type ? '橋' : '島'}：${esc(t.short)}</div>
+    <h3>${esc(t.title)}</h3><p class="lead">${esc(t.intro)}</p><p>${esc(t.body)}</p>
+    <ul class="tx-steps">${t.steps.map((x) => `<li><b>${esc(x.label)}</b>：${esc(x.q)}${x.body ? ' ' + esc(x.body) : ''}</li>`).join('')}</ul>
+    ${extra}
+    <p class="tx-task"><b>這一站在問你：</b>${esc(t.task)}</p>
+    <button class="btn ghost" type="button" data-map="${t.id}">在地圖上看這一站 →</button></article>`;
+}
+function renderHome() {
+  const facts = PRICING.questions.map((q) => { const [k, ...v] = q.split('：'); return `<div><dt>${esc(k)}</dt><dd>${esc(v.join('：'))}</dd></div>`; }).join('');
+  homeEl.innerHTML = `
+    <div class="page-top"><span class="logo"><span class="mark">婆</span><span class="words"><b>孟婆茶會</b><small>看見卡點，走出迴圈</small></span></span><button class="btn cta" type="button" data-act="signup">報名／場次</button></div>
+    <div class="page-inner">
+      <header class="p-hero">
+        <div class="eyebrow">孟婆茶會</div>
+        <h1>用「上帝視角」，<br>看見自己卡住的地方</h1>
+        <p class="p-lead">人生常常卡在迴圈裡：同樣的事一再發生，卻不知道到底卡在哪。孟婆茶會在活動中，陪你換一個更高的角度，看清楚那個卡點。</p>
+        <div class="p-cta"><button class="btn big" type="button" data-act="signup">看場次與報名</button><button class="btn big ghost" type="button" data-act="map">用地圖探索 →</button></div>
+        <p class="p-sub"><button class="linkish" type="button" data-act="text">只想看文字？直接看完整介紹 ↓</button></p>
+      </header>
+      <div class="p-cards">
+        <section><h2>適合誰</h2><p>18 歲以上、正在迷茫或想找人生方向的人。最常見的是關係問題（愛情、夫妻、親子），也有金錢、身體健康與事業。沒有其他申請條件，只是迷茫也可以來。</p></section>
+        <section><h2>現場做什麼</h2><p>茶會以「植物能量」帶領你，從更高的角度，看見人生卡在哪個環節，以及那個卡點如何一路影響到現在。</p></section>
+        <section><h2>怎麼進行</h2><p>不是法事，不是催眠，也不是別人說故事給你聽。你全程清醒，從自己的第一視角去看。流程為示意，實際安排以老師說明為準。</p></section>
+      </div>
+      <dl class="p-facts">${facts}</dl>
+      <section class="p-route"><h2>你最在意哪一種問題？</h2><p>選一個，我幫你排好參觀順序，直接帶你到地圖。</p><div>${Object.entries(ENTRY_ROUTES).map(([k, v]) => `<button type="button" class="btn ghost" data-entry="${k}">${esc(v.label)}</button>`).join('')}</div></section>
+      <section id="p-faq"><h2>常見疑問</h2>${CONCERNS.map((c) => `<details class="q"><summary>${esc(c.q)}</summary><p>${esc(c.a)}</p></details>`).join('')}</section>
+      <section id="p-text"><h2>完整介紹（文字版）</h2><p class="p-note">依旅程順序，從人生卡住的地方，一路走到報名。互動地圖的內容和這裡相同。</p>${ISLANDS.map(textNodeHtml).join('')}</section>
+      <section id="p-signup"><h2>場次與報名</h2>${signupHtml()}</section>
+      <p class="p-foot">你寫下的提綱只存在這個瀏覽器，網站不會代你傳送任何訊息，也沒有追蹤程式。</p>
+    </div>
+    <div class="p-bar"><button class="btn" type="button" data-act="signup">報名／場次</button><button class="btn ghost" type="button" data-act="map">用地圖探索 →</button></div>`;
+}
+let homeBuilt = false;
+function openHome(anchor) {
+  if (!homeBuilt) { renderHome(); homeBuilt = true; }
+  homeEl.hidden = false; document.body.classList.add('page-open');
+  homeEl.scrollTop = 0; if (anchor) $('#' + anchor, homeEl)?.scrollIntoView();
+}
+function closeHome() { if (homeEl.hidden) return; homeEl.hidden = true; document.body.classList.remove('page-open'); }
+homeEl.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.act === 'signup') openSignup();
+  else if (b.dataset.act === 'map') { closeHome(); S.sel = null; setHash(''); home(); }
+  else if (b.dataset.act === 'text') $('#p-text', homeEl).scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth' });
+  else if (b.dataset.map) selectIsland(b.dataset.map);
+  else if (b.dataset.entry) { closeHome(); setEntry(b.dataset.entry, true); }
+});
+function openSignup() { $('#signup-body').innerHTML = signupHtml(); $('#signup').hidden = false; $('#signup-close').focus(); }
+function closeSignup() { $('#signup').hidden = true; }
+$('#signup-open').onclick = openSignup;
+$('#signup-close').onclick = closeSignup;
+$('#signup').addEventListener('click', (e) => { if (e.target.id === 'signup') closeSignup(); });
+$('#open-home').onclick = () => openHome();
+$('#explore-toggle').onclick = () => {
+  S.explore = !S.explore; document.body.classList.toggle('explore', S.explore);
+  $('#explore-toggle').setAttribute('aria-pressed', S.explore);
+  syncLayout(); if (S.sel) flyToIsland(S.sel); else if (!userMoved) home();
+};
 
 // ── 網址 #island/step ───────────────────────────────────────────────────
 function fromHash(first = false) {
   const [id, st] = decodeURIComponent(location.hash.slice(1)).split('/');
+  if (id === 'text') return openHome('p-text');
   if (byId.has(id)) selectIsland(id, { step: st && byId.get(id).steps[+st - 1] ? +st - 1 : null, fly: true });
   else if (!first && S.sel) closeCard();
 }
@@ -574,7 +615,8 @@ function animate(now) {
   controls.update();
   stepVisuals();
   W.update(dt, S.freeze, skyCache || (skyCache = W.setTime(S.mins)));
-  stage.classList.toggle('near', camera.position.distanceTo(controls.target) < 15);
+  const camD = camera.position.distanceTo(controls.target);
+  stage.classList.toggle('near', camD < 15); stage.classList.toggle('far', narrow() && camD > 26);
   renderer.render(scene, camera); labelRenderer.render(scene, camera);
   if (++frames === 3) hideLoading();
   const nr = res.sample(now, frameMs, document.hidden);
@@ -592,9 +634,10 @@ async function boot() {
   if (W) { home(true); }
   refresh();
   if (!W) hideLoading();
-  if (location.hash.length > 1) fromHash(true);
+  const h0 = decodeURIComponent(location.hash.slice(1)).split('/')[0];
+  if (byId.has(h0) || h0 === 'text') fromHash(true);
   else if (new URLSearchParams(location.search).has('tour')) startTour();
-  else { let seen = false; try { seen = localStorage.getItem(INTRO_KEY) === '1'; } catch { /* 忽略 */ } if (!seen) showIntro(); }
+  else openHome();
   requestAnimationFrame(animate); setTimeout(hideLoading, 4000);
   window.__island = { S, get W() { return W; }, camera: () => camera, controls: () => controls, selectIsland, startTour };
 }

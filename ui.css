@@ -210,3 +210,71 @@ input[type=range]{flex:1;min-width:80px;accent-color:var(--peach);height:28px}
 .note{color:var(--muted);font-size:12.5px!important;line-height:1.6}
 
 .plate.bridge{border-style:dashed;border-color:var(--ink)}
+
+/* ── 工具列：報名是主要行動；進階選項只在「探索」開啟時出現 ── */
+.toolbar button.cta,.btn.cta{background:var(--peach);color:#fff;box-shadow:0 3px 10px rgba(224,103,74,.4)}
+.toolbar button.cta:hover{background:#c9533a}
+.toolbar button[aria-pressed=true]{background:var(--ink);color:#fff}
+body:not(.explore) .hud,body:not(.explore) .controls{display:none}
+.hud .seg button#home,.hud .seg button#tour-start{background:var(--ink);color:#fff}
+.far .plate span{display:none}.far .plate{padding:3px}
+.far .plate[data-route]::after{display:none}
+.intro-box{position:relative;max-height:calc(100vh - 32px);overflow:auto}
+.intro-box .close{position:absolute;top:12px;right:12px;border:0;background:#fff;width:34px;height:34px;border-radius:50%;font-size:20px;line-height:1;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.intro-box h3{margin:18px 0 6px;font-size:13px;letter-spacing:.06em;color:var(--tea)}
+.intro-box p,.intro-box li{line-height:1.7;font-size:14.5px}
+.intro-box ul{margin:4px 0;padding-left:20px}
+span.btn[aria-disabled=true]{cursor:not-allowed}
+
+/* ── 首頁與文字版 ── */
+.page{position:fixed;inset:0;z-index:35;overflow:auto;background:linear-gradient(#cfe8f8,#fbf4ea 520px,#fbf4ea);overscroll-behavior:contain;scroll-behavior:auto}
+.page-top{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:12px max(16px,calc(50vw - 460px));background:rgba(251,244,234,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.page-top .logo{box-shadow:none;background:none;padding:0}
+.page-inner{max-width:920px;margin:0 auto;padding:28px 16px 120px}
+.p-hero{padding:24px 0 8px}
+.p-hero h1{margin:6px 0 14px;font-size:clamp(30px,6vw,52px);line-height:1.25;letter-spacing:.02em}
+.p-lead{font-size:clamp(16px,2.2vw,19px);line-height:1.85;max-width:640px;margin:0 0 22px;color:#3d322b}
+.p-cta{display:flex;flex-wrap:wrap;gap:10px}
+.btn.big{padding:14px 26px;font-size:16px}
+.p-cta .btn:not(.ghost),.p-bar .btn:not(.ghost){background:var(--peach)}
+.p-sub{margin:14px 0 0}
+.linkish{border:0;background:none;color:var(--jade);font-weight:700;font-size:14px;padding:4px 0;text-decoration:underline}
+.p-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0 18px}
+.p-cards section{background:var(--glass);border-radius:16px;padding:18px 18px 14px;box-shadow:0 4px 14px rgba(60,40,20,.08)}
+.p-cards h2,.page h2{margin:0 0 8px;font-size:18px}
+.p-cards p{margin:0;font-size:14.5px;line-height:1.8}
+.p-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 12px}
+.p-facts div{background:#fff;border:1.5px dashed var(--line);border-radius:12px;padding:10px 14px}
+.p-facts dt{font-size:12px;font-weight:800;color:var(--tea)}.p-facts dd{margin:2px 0 0;font-size:14px;line-height:1.6}
+.page section{margin-top:34px}
+.p-route{background:#fff;border-radius:16px;padding:18px}
+.p-route p{margin:0 0 10px;color:var(--muted)}.p-route div{display:flex;flex-wrap:wrap;gap:8px}
+.p-note{color:var(--muted);margin:0 0 6px}
+.tx{margin:14px 0;padding:18px 18px 16px;background:#fff;border-radius:16px;border-left:6px solid var(--c);box-shadow:0 3px 12px rgba(60,40,20,.07)}
+.tx h3{margin:6px 0 6px;font-size:19px;line-height:1.4}
+.tx .lead{font-weight:700;font-size:16px;line-height:1.7;margin:0 0 8px}
+.tx p{line-height:1.85;font-size:15px;margin:8px 0}
+.tx-steps{margin:8px 0;padding-left:20px;line-height:1.8;font-size:14.5px}
+.tx-task{background:#fff8e8;border-radius:10px;padding:10px 12px}
+.page details.q{background:#fff;border-radius:12px;padding:12px 14px;margin:8px 0}
+.page details.q summary{font-weight:700;cursor:pointer;line-height:1.5}
+.page details.q p{margin:8px 0 0;line-height:1.8;font-size:14.5px}
+#p-signup{background:#fff;border-radius:16px;padding:18px 18px 12px}
+#p-signup h3{margin:16px 0 6px;font-size:13px;letter-spacing:.06em;color:var(--tea)}
+#p-signup li,#p-signup p{line-height:1.8;font-size:14.5px}
+.p-foot{margin-top:30px;color:var(--muted);font-size:13px;line-height:1.7}
+.p-bar{position:fixed;left:0;right:0;bottom:0;z-index:3;display:none;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(251,244,234,.96);border-top:1px solid var(--line);backdrop-filter:blur(8px)}
+.p-bar .btn{flex:1;text-align:center;padding:13px 10px;font-size:15px}
+.page-open .toolbar,.page-open .brand{display:none}
+.page-open #toast{z-index:60}
+@media (max-width:760px){
+ .p-cards,.p-facts{grid-template-columns:1fr}
+ .p-bar{display:flex}
+ .page-inner{padding-top:16px}
+ .p-hero{padding-top:12px}
+ .toolbar button{padding:7px 9px;font-size:12.5px}
+ .toolbar{gap:5px}
+ .brand{left:6px}
+}
+.p-cards section,.p-route{margin-top:0}
+@media (max-width:760px){.page-top .cta{display:none}}
