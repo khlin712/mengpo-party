@@ -208,3 +208,5 @@ input[type=range]{flex:1;min-width:80px;accent-color:var(--peach);height:28px}
 .hide-who .who{display:none!important}
 .say{margin:10px 0;padding:14px 16px;border-radius:16px 16px 16px 4px;background:#fff;border:2px solid var(--c);font-size:17px;line-height:1.6;font-weight:700}
 .note{color:var(--muted);font-size:12.5px!important;line-height:1.6}
+
+.plate.bridge{border-style:dashed;border-color:var(--ink)}

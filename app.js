@@ -69,7 +69,7 @@ async function initWorld() {
   labelRenderer = new CSS2DRenderer(); labelRenderer.domElement.className = 'labels'; stage.append(labelRenderer.domElement);
   camera = new THREE.PerspectiveCamera(38, 1, 0.1, 400);
   controls = new OrbitControls(camera, renderer.domElement);
-  Object.assign(controls, { enableDamping: true, dampingFactor: 0.08, minDistance: 5, maxDistance: 46, maxPolarAngle: 1.42, minPolarAngle: 0.06, rotateSpeed: 0.7, zoomSpeed: 0.8, panSpeed: 0.8, screenSpacePanning: false });
+  Object.assign(controls, { enableDamping: true, dampingFactor: 0.08, minDistance: 5, maxDistance: 50, maxPolarAngle: 1.42, minPolarAngle: 0.06, rotateSpeed: 0.7, zoomSpeed: 0.8, panSpeed: 0.8, screenSpacePanning: false });
   controls.addEventListener('start', () => { fly = null; userMoved = true; document.body.classList.add('interacted'); });
   controls.addEventListener('change', () => { dirty = true; const t = controls.target; const l = Math.hypot(t.x, t.z); if (l > 16) { t.x *= 16 / l; t.z *= 16 / l; } });
   W = buildWorld({ stage });
@@ -125,8 +125,8 @@ function insets() {
 function frame(focus, halfSize, minDist = 8) {
   const I = insets(), W0 = stage.clientWidth, H0 = stage.clientHeight;
   const fw = Math.max(200, W0 - I.left - I.right), fh = Math.max(200, H0 - I.top - I.bottom);
-  const asp = fw / fh;
-  const dist = clamp(Math.max(halfSize.w / (TAN * asp), halfSize.h / TAN) * 1.04, minDist, 44);
+  // 世界半寬 w 要塞進 fw 像素：fw/2 · upp ≥ w，其中 upp = 2·dist·TAN / H0
+  const dist = clamp(Math.max((halfSize.w * H0) / (fw * TAN), (halfSize.h * Math.max(0.5, viewDir().y) * H0) / (fh * TAN)) * 1.06, minDist, 46);
   const dir = viewDir();
   const upp = (2 * dist * TAN) / H0; // 每像素對應的世界長度
   const right = new THREE.Vector3(1, 0, 0);
@@ -146,12 +146,12 @@ function home(instant = false) {
   userMoved = false;
   let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9;
   for (const r of W.islands.values()) { x0 = Math.min(x0, r.center.x); x1 = Math.max(x1, r.center.x); z0 = Math.min(z0, r.center.z); z1 = Math.max(z1, r.center.z); }
-  moveCamera(frame(new THREE.Vector3((x0 + x1) / 2, 0.4, (z0 + z1) / 2), { w: (x1 - x0) / 2 + 4.6, h: (z1 - z0) / 2 + 3.4 }, 14), instant);
+  moveCamera(frame(new THREE.Vector3((x0 + x1) / 2, 0.4, (z0 + z1) / 2), { w: (x1 - x0) / 2 + 2.7, h: (z1 - z0) / 2 + 3.0 }, 14), instant);
 }
 function flyToIsland(id, instant = false) {
   if (!W) return;
-  const c = W.islands.get(id).center.clone().setY(0.7);
-  moveCamera(frame(c, { w: 5.6, h: 4.6 }, 11), instant);
+  const rec = W.islands.get(id), c = rec.center.clone().setY(0.7);
+  moveCamera(frame(c, rec.bridge ? { w: 3.4, h: 3.0 } : { w: 5.6, h: 4.6 }, rec.bridge ? 8 : 11), instant);
 }
 function flyToFlow(fid) {
   if (!W) return;
@@ -224,7 +224,7 @@ function islandCard() {
   const related = FLOWS.filter((f) => f.a === t.id || f.b === t.id);
   return `<div style="--c:${t.color}">
     ${routeBar(t.id)}
-    <div class="eyebrow">NO.${String(t.n).padStart(2, '0')}　<span class="tagc">${esc(t.tag)}</span></div>
+    <div class="eyebrow">${t.type ? '橋' : 'NO.'}${String(t.n).padStart(2, '0')}　<span class="tagc">${esc(t.tag)}</span></div>
     <h2>${esc(t.title)}</h2><p class="lead">${esc(t.intro)}</p>
     <div class="btn-row"><button class="btn" data-act="save">${saved ? '★ 已在我的提綱' : '☆ 加入我的提綱'}</button><button class="btn ghost" data-act="share">複製這座島的連結</button></div>
     <p>${esc(t.body)}</p>
@@ -235,7 +235,7 @@ function islandCard() {
     <div class="ask"><h3>這座島在問你</h3><p><b>${esc(t.task)}</b></p><p class="ex">${esc(t.example)}</p></div>
     ${concerns.length ? `<h3>你可能想問</h3>${concerns.map((c) => `<details class="q"><summary>${esc(c.q)}</summary><p>${esc(c.a)}</p></details>`).join('')}` : ''}
     ${PEOPLE.some((x) => x.island === t.id) ? `<h3>島上的人（示意）</h3>${PEOPLE.filter((x) => x.island === t.id).map((x) => `<button class="chip" style="--c:${t.color}" data-person="${x.id}"><i>人</i>${esc(x.role)}</button>`).join('')}` : ''}
-    <h3>相連的島</h3>${related.map((f) => `<div><button class="chip" style="--c:${byId.get(f.a === t.id ? f.b : f.a).color}" data-flow="${f.id}"><i>↔</i>${esc(f.label)}：${esc(byId.get(f.a === t.id ? f.b : f.a).short)}</button></div>`).join('')}
+    <h3>相連的路</h3>${related.map((f) => `<div><button class="chip" style="--c:${byId.get(f.a === t.id ? f.b : f.a).color}" data-flow="${f.id}"><i>↔</i>${esc(f.label)}：${esc(byId.get(f.a === t.id ? f.b : f.a).short)}</button></div>`).join('')}
   </div>`;
 }
 function personCard() {
@@ -313,7 +313,7 @@ function renderSide() {
     body.innerHTML = ISLANDS.map((t) => {
       const on = S.sel === t.id, dim = !hit.has(t.id);
       return `<section class="isl${on ? ' on' : ''}${dim && (S.query || S.groups.size) ? ' hide' : ''}" style="--c:${t.color}">
-        <button class="isl-h" data-island="${t.id}" aria-expanded="${on}"><i>${t.n}</i><span>${esc(t.title)}<small>${esc(t.tag)}</small></span>${S.visited.has(t.id) ? '<em>已看</em>' : ''}</button>
+        <button class="isl-h" data-island="${t.id}" aria-expanded="${on}"><i>${t.n}</i><span>${esc(t.title)}<small>${t.type ? '橋　·　' : ''}${esc(t.tag)}</small></span>${S.visited.has(t.id) ? '<em>已看</em>' : ''}</button>
         <ol class="steps">${t.steps.map((s, i) => `<li><button data-island="${t.id}" data-step="${i}" class="${on && S.step === i ? 'on' : ''}"><b>${i + 1}</b>${esc(s.label)}：${esc(s.q)}</button></li>`).join('')}</ol></section>`;
     }).join('') || '';
     if (!hit.size) body.innerHTML = `<p class="empty">找不到「${esc(S.query)}」。試試別的關鍵字，或直接私訊 LINE 詢問。</p>`;
