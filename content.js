@@ -1,51 +1,201 @@
-// 孟婆島內容：依兩份對談筆記整理。尚未確認的資料（場次、價格區間、案例、回饋）一律標示「尚待提供／待確認」，不虛構。
-export const topics = [
- {id:'teacher',n:'01',title:'孟婆茶會在做什麼',tag:'認識茶會',color:'#f2b5c8',x:139,y:390,kind:'school',intro:'參加茶會，用「上帝視角」看見自己卡住的地方。',body:'人生常常卡在迴圈裡，不知道自己到底發生了什麼事。孟婆茶會想做的，是在活動中陪你換一個更高的角度，從全知的視角，看見自己卡住的問題：關係、金錢、身體健康、事業，以及人生各種問題。以下是介紹架構，正式說法與場次細節由老師補充。',steps:['上帝視角：換一個更高的角度，看見自己卡在哪裡？','打開迷霧：為什麼同樣的事一再發生？','關係與其他：關係、金錢、健康、事業，你最想先看哪一個？'],facts:[['活動性質','茶會，現場以精油作為代表，對外統一說「植物能量」'],['適用對象','18 歲以上'],['場次與人數','約二、三十場，每場約 12～15 人；累計 500 人以上為口頭估計，待確認'],['價格','約 800～1500 元，依場地與地點而定（待確認）']],task:'你現在最想看清楚的，是人生中的哪一個環節？',example:'例如：我和孩子的關係為什麼總是卡住？',links:['teaching','questions','stories'],question:'我想了解孟婆茶會實際在做什麼，以及我的問題適不適合帶來。'},
- {id:'teaching',n:'02',title:'植物能量怎麼帶你看',tag:'認識茶會',color:'#9fd8c8',x:360,y:357,kind:'tower',intro:'你是清醒的，從自己的第一視角，走進自己的世界。',body:'茶會以「植物能量」帶領你，從高我（更高的角度）看見人生卡在哪個環節，以及那個卡點如何一路影響到現在，讓你不斷碰壁或繞圈。這不是催眠，也不是別人說故事給你聽。你全程清醒，從自己的第一視角看。流程為示意，實際安排以老師說明為準。',steps:['植物能量：現場用什麼帶領你？','第一視角：清醒的你會看到什麼？','看見卡點：卡在哪個環節、如何影響到現在？','不是催眠：你最擔心哪一部分？','之後：帶著看見回到生活，下一步想怎麼走？'],facts:[['做法','以植物能量帶領，從高我看見卡點；現場以精油作為代表，對外統一說「植物能量」'],['不是什麼','不是催眠、不是聽別人說故事；你是清醒的'],['圖騰','老師設計了一張圖騰放在桌上，「我們接下來就在這個圖騰上工作」，取代過去使用的白紙'],['深入原理','不在頁面上深入說明，需要時請私訊詢問']],
-  // 示意流程：參加者在島上繞一圈，每繞一圈迷霧少一點。不代表任何成效保證。
-  flow:{title:'茶會示意流程',intro:'一位參加者來到茶會，由植物能量帶領，保持清醒、從第一視角走進自己的世界，看見卡點，再帶著看見回到生活。',
-   steps:[['來到茶會','參加者來到孟婆茶會'],['植物能量','以植物能量帶領'],['清醒入境','你保持清醒，從第一視角走進自己的世界'],['看見卡點','看見人生卡在哪個環節'],['回到生活','帶著看見回到日常']],
-   revise:['再看清楚','還覺得有迷霧時，可以再回來看一次'],
-   always:'有疑問，隨時可以私訊 LINE 詢問。',
-   note:'島上的小紙卡照這個順序繞一圈。紙上的紅點只代表還沒看清的地方，每繞一圈少一點，是示意，不代表任何成效或結果。'},task:'你想先弄懂這套做法的哪一部分？',example:'例如：我是清醒的嗎？現場到底怎麼進行？',links:['teacher','questions','stories'],question:'我想了解植物能量怎麼帶領，以及我全程是不是清醒的。'},
- {id:'questions',n:'03',title:'常見疑問與顧慮',tag:'疑問與解法',color:'#c7b6ee',x:730,y:290,kind:'pavilion',intro:'是不是法事？是不是催眠？把心裡的疑問說出來。',body:'第一次聽到的人常會有顧慮。這裡先整理最常見的幾個，回答方向來自老師的說法；正式的完整回應與場次資訊仍待老師補充。尚未確認的內容不視為承諾。',steps:['是不是法事：這是做法事嗎？','是不是催眠：我會失去意識嗎？','工具來源：這套工具從哪裡來？','適合嗎：我可以來嗎？有條件嗎？','怎麼報名：費用與場次怎麼問？'],facts:[['是不是法事','不是法事'],['工具','透過水晶、植物花與星際（待確認）的共振頻率工作，源自古老列穆里亞（待確認）的教導；工具在市場上已超過 35 年，茶會結合這個工具與植物能量一起工作'],['申請條件','無，有疑問直接 LINE 詢問']],task:'你目前最擔心、或一直想問卻還沒問出口的是什麼？',example:'例如：我只是想看看，不確定要不要報名，可以先問嗎？',links:['teacher','teaching','stories'],question:'我想先問清楚這是不是法事、是不是催眠，以及我適不適合參加。'},
- {id:'stories',n:'04',title:'參加後的繽紛世界',tag:'體驗與回饋',color:'#ffc8e2',x:283,y:14,lift:2,kind:'trophy',intro:'走過奈何橋，平凡的人生也能繽紛開心。',body:'走過奈何橋，象徵參加活動。橋的另一邊是參加完之後看到的繽紛世界：花開、漂亮的東西、一座摩天輪。這裡預留給參加者「前、中、後」的完整案例（遇到的困擾、過程中的發現、事後的改變）與客戶回饋；目前尚未收到真實案例，不展示虛構故事、回饋或數字。',steps:['繽紛世界：參加後，平凡的人生可以多開心？','前：參加前遇到什麼困擾？','中：過程中發現了什麼？','後：事後有什麼改變？','活動照片：現場長什麼樣子？'],facts:[['客戶回饋','待老師提供'],['案例（前、中、後）','待老師提供'],['活動與課程照片','待老師提供，全部可公開']],task:'你想先看別人的哪一種經驗？',example:'例如：和我一樣為親子關係煩惱的人，後來怎麼了？',links:['teacher','teaching','questions'],question:'我想看和我情況相近的參加者回饋，以及活動現場的照片。'}
-];
-export function findTopics(query,category='全部'){const q=query.trim().toLowerCase();return topics.filter(t=>(category==='全部'||t.tag===category)&&[t.title,t.tag,t.intro,t.body,t.task,t.question,t.example,...t.steps,...t.facts.flat()].join(' ').toLowerCase().includes(q));}
-export function makeOutline(role,ids,note,answers={},questions=[]){const chosen=topics.filter(t=>ids.includes(t.id));return `孟婆島｜報名前諮詢提綱\n我最在意的：${role}\n想聊的主題：${chosen.map(t=>t.title).join('、')||'孟婆茶會在做什麼'}\n\n${chosen.map(t=>'• '+t.question+(typeof answers[t.id]==='string'&&answers[t.id].trim()?'\n  我的問題：'+answers[t.id].trim():'')).join('\n')}\n\n${questions.length?'想帶進討論的問題：\n'+questions.map(q=>'• '+q).join('\n')+'\n\n':''}我的情況與問題：\n${note.trim()||'希望先了解孟婆茶會，再決定是否報名。'}\n\n（此提綱只存在你的瀏覽器，網站不會代你寄送。複製後可貼到 LINE 官方帳號詢問。）`;}
-export function readStored(raw){try{const value=JSON.parse(raw);return value&&typeof value==='object'&&!Array.isArray(value)?value:{};}catch{return {};}}
-export function explorationRoute([audience,interest,goal]){
- if(goal===2)return ['questions','teaching','teacher'];
- if(goal===1)return ['stories','teaching','teacher'];
- if(interest===0)return ['teacher','teaching','stories'];
- if(interest===1)return ['teaching','stories','questions'];
- return ['questions','teaching','stories'];
-}
+// 孟婆島內容。文字依老師的兩份對談筆記整理。
+// 尚未確認的資料（場次、價格、案例、回饋）一律標示「待老師提供／待確認」，不虛構。
+// 場次、聯絡連結、客戶回饋請改 journey.js；這個檔案放島嶼、關聯線與導覽。
+import { easeInOutCubic } from './motion.js';
+export { easeInOutCubic };
 
-// 入口：依訪客最在意的問題類型。關係（愛情、夫妻、親子）最多。
-export const entryRoutes = {
- couple:{role:'愛情與夫妻關係',label:'愛情／夫妻',intro:'先看這是在做什麼、是否清醒進行，再看別人的經驗。',topics:['teacher','teaching','stories','questions']},
- family:{role:'親子關係',label:'親子關係',intro:'近期最常見的是「為什麼我和孩子關係不好」，先從活動做什麼與回饋開始看。',topics:['teacher','stories','teaching','questions']},
- life:{role:'金錢、健康、事業或人生方向',label:'迷茫・人生方向',intro:'正在找方向的人，可以先看上帝視角怎麼幫你打開迷霧。',topics:['teacher','teaching','questions']}
+export const PENDING = '待老師提供';
+export const GROUPS = ['人生的困境', '認識茶會', '疑問與解法', '體驗與回饋', '報名與聯繫'];
+
+const s = (label, q, body = '') => ({ label, q, body });
+
+// hex：六角格軸座標（q, r）。七座島排成一朵花：中央是茶會，外圈依旅程順時針。
+export const ISLANDS = [
+  {
+    id: 'start', n: 1, title: '崎嶇島：人生卡住的地方', short: '崎嶇島', tag: '人生的困境', color: '#e8a878', hex: [-1, 0], kind: 'volcano',
+    intro: '旅程從這裡出發：人生常常卡在迴圈裡。',
+    body: '人生常常卡在迴圈裡：關係、金錢、健康、事業……不知道自己到底發生了什麼事。崎嶇的山路比喻「卡住」：翻過崖邊會掉下去，攀著陡峭山壁也許到得了頂，但很慢，爬一爬還可能掉下來。走到哪裡覺得不對，隨時都可以回頭，改走奈何橋。',
+    steps: [
+      s('困境', '來的人都帶著什麼問題？', '來茶會的人，多半正在迷茫、想找人生方向。最常見的是關係問題（愛情、夫妻、親子），其次是金錢、健康與事業。近期最常出現的是親子關係，例如「為什麼我和孩子關係不好」。'),
+      s('迴圈', '同樣的事，為什麼一再發生？', '人生卡住時，常常不是一件事，而是同一個模式反覆出現。看不見它，就容易一再碰壁。'),
+      s('迷霧', '很用力，卻不知道卡在哪？', '看不清卡點，就不知道該從哪裡開始。這就是「迷霧」。'),
+      s('攀爬', '方法不對，但真的很努力？', '攀著繩子一點一點往上爬，也許真的到得了頂；只是很慢，爬一爬還可能掉下來。'),
+    ],
+    facts: [['最常見的問題', '關係（愛情、夫妻、親子），其次是金錢、健康與事業'], ['近期最常出現', '親子關係，例如「為什麼我和孩子關係不好」']],
+    task: '你現在最想看清楚的，是人生中的哪一個環節？', example: '例如：同樣的事，為什麼一再發生？',
+    question: '我最近卡在一件事上，想知道孟婆茶會能怎麼陪我看。',
+  },
+  {
+    id: 'teacher', n: 2, title: '孟婆茶會在做什麼', short: '茶會', tag: '認識茶會', color: '#f2b5c8', hex: [0, 0], kind: 'pavilion',
+    intro: '參加茶會，用「上帝視角」看見自己卡住的地方。',
+    body: '人生常常卡在迴圈裡，不知道自己到底發生了什麼事。孟婆茶會想做的，是在活動中陪你換一個更高的角度，從全知的視角，看見自己卡住的問題：關係、金錢、身體健康、事業，以及人生各種問題。以下是介紹架構，正式說法與場次細節由老師補充。',
+    steps: [
+      s('上帝視角', '換一個更高的角度，看見自己卡在哪裡？'),
+      s('打開迷霧', '為什麼同樣的事一再發生？'),
+      s('關係與其他', '關係、金錢、健康、事業，你最想先看哪一個？'),
+    ],
+    facts: [['活動性質', '茶會，現場以精油作為代表，對外統一說「植物能量」'], ['適用對象', '18 歲以上'], ['場次與人數', '約二、三十場，每場約 12～15 人；累計 500 人以上為口頭估計，待確認'], ['價格', '約 800～1500 元，依場地與地點而定（待確認）']],
+    task: '你現在最想看清楚的，是人生中的哪一個環節？', example: '例如：我和孩子的關係為什麼總是卡住？',
+    question: '我想了解孟婆茶會實際在做什麼，以及我的問題適不適合帶來。',
+  },
+  {
+    id: 'questions', n: 3, title: '常見疑問與顧慮', short: '疑問', tag: '疑問與解法', color: '#c7b6ee', hex: [0, -1], kind: 'question',
+    intro: '是不是法事？是不是催眠？把心裡的疑問說出來。',
+    body: '第一次聽到的人常會有顧慮。這裡先整理最常見的幾個，回答方向來自老師的說法；正式的完整回應與場次資訊仍待老師補充。尚未確認的內容不視為承諾。',
+    steps: [
+      s('是不是法事', '這是做法事嗎？', '不是法事。'),
+      s('是不是催眠', '我會失去意識嗎？', '不是催眠，也不是別人說故事給你聽。你是清醒的。'),
+      s('工具來源', '這套工具從哪裡來？', '透過水晶、植物花與星際（待確認）的共振頻率工作，源自古老列穆里亞（待確認）的教導；工具在市場上已超過 35 年，茶會結合這個工具與植物能量一起工作。'),
+      s('適合嗎', '我可以來嗎？有條件嗎？', '申請條件：無，有疑問直接 LINE 詢問。'),
+      s('怎麼報名', '費用與場次怎麼問？'),
+    ],
+    facts: [['是不是法事', '不是法事'], ['工具', '透過水晶、植物花與星際（待確認）的共振頻率工作，源自古老列穆里亞（待確認）的教導；工具在市場上已超過 35 年'], ['申請條件', '無，有疑問直接 LINE 詢問']],
+    task: '你目前最擔心、或一直想問卻還沒問出口的是什麼？', example: '例如：我只是想看看，不確定要不要報名，可以先問嗎？',
+    question: '我想先問清楚這是不是法事、是不是催眠，以及我適不適合參加。',
+  },
+  {
+    id: 'teaching', n: 4, title: '植物能量怎麼帶你看', short: '植物能量', tag: '認識茶會', color: '#9fd8c8', hex: [1, -1], kind: 'dome',
+    intro: '你是清醒的，從自己的第一視角，走進自己的世界。',
+    body: '茶會以「植物能量」帶領你，從高我（更高的角度）看見人生卡在哪個環節，以及那個卡點如何一路影響到現在，讓你不斷碰壁或繞圈。這不是催眠，也不是別人說故事給你聽。你全程清醒，從自己的第一視角看。流程為示意，實際安排以老師說明為準。',
+    steps: [
+      s('植物能量', '現場用什麼帶領你？'),
+      s('第一視角', '清醒的你會看到什麼？'),
+      s('看見卡點', '卡在哪個環節、如何影響到現在？'),
+      s('不是催眠', '你最擔心哪一部分？'),
+      s('之後', '帶著看見回到生活，下一步想怎麼走？'),
+    ],
+    facts: [['做法', '以植物能量帶領，從高我看見卡點；現場以精油作為代表，對外統一說「植物能量」'], ['不是什麼', '不是催眠、不是聽別人說故事；你是清醒的'], ['圖騰', '老師設計了一張圖騰放在桌上，「我們接下來就在這個圖騰上工作」，取代過去使用的白紙'], ['深入原理', '不在頁面上深入說明，需要時請私訊詢問']],
+    task: '你想先弄懂這套做法的哪一部分？', example: '例如：我是清醒的嗎？現場到底怎麼進行？',
+    question: '我想了解植物能量怎麼帶領，以及我全程是不是清醒的。',
+  },
+  {
+    id: 'stories', n: 5, title: '參加後的繽紛世界', short: '繽紛世界', tag: '體驗與回饋', color: '#ffc8e2', hex: [1, 0], kind: 'wheel',
+    intro: '走過奈何橋，平凡的人生也能繽紛開心。',
+    body: '走過奈何橋，象徵參加活動。橋的另一邊是參加完之後看到的繽紛世界：花開、漂亮的東西、一座摩天輪。這裡預留給參加者「前、中、後」的完整案例（遇到的困擾、過程中的發現、事後的改變）與客戶回饋；目前尚未收到真實案例，不展示虛構故事、回饋或數字。',
+    steps: [
+      s('繽紛世界', '參加後，平凡的人生可以多開心？'),
+      s('前', '參加前遇到什麼困擾？'),
+      s('中', '過程中發現了什麼？'),
+      s('後', '事後有什麼改變？'),
+      s('活動照片', '現場長什麼樣子？'),
+    ],
+    facts: [['客戶回饋', PENDING], ['案例（前、中、後）', PENDING], ['活動與課程照片', PENDING + '，全部可公開']],
+    task: '你想先看別人的哪一種經驗？', example: '例如：和我一樣為親子關係煩惱的人，後來怎麼了？',
+    question: '我想看和我情況相近的參加者回饋，以及活動現場的照片。',
+  },
+  {
+    id: 'calendar', n: 6, title: '活動場次', short: '場次', tag: '報名與聯繫', color: '#f6d88f', hex: [0, 1], kind: 'tents',
+    intro: '每期日期與地點不同，先看近期場次再決定。',
+    body: '每期的日期與地點不同，名額可能「即將額滿」。先看看近期場次，再決定要不要報名。',
+    steps: [
+      s('近期場次', '日期與地點在哪裡？'),
+      s('名額', '我來得及報名嗎？', '每場約 12～15 人，快滿時會標示「即將額滿」。'),
+      s('費用', '大概多少錢？', '約 800～1500 元（待確認），依場地與地點而定。'),
+      s('資格', '誰可以來？', '18 歲以上；沒有其他申請條件，有疑問直接 LINE 詢問。'),
+    ],
+    facts: [['價格', '約 800～1500 元（待確認），依場地與地點而定'], ['名額', '每場約 12～15 人'], ['條件', '18 歲以上']],
+    task: '你方便的時間與地點是哪一種？', example: '例如：平日晚上，還是週末白天？',
+    question: '我想知道近期場次的日期、地點與費用。',
+  },
+  {
+    id: 'signup', n: 7, title: 'LINE 報名與服務台', short: '報名', tag: '報名與聯繫', color: '#a8dd9a', hex: [-1, 1], kind: 'kiosk',
+    intro: '報名不用填表單，先私訊 LINE 就好。',
+    body: '報名不用填表單：先私訊 LINE 官方帳號，由老師回覆，並索取報名連結。還沒打算報名、只是有問題嗎？來服務台詢問就好，不用先決定。',
+    steps: [
+      s('私訊報名', '怎麼報名？', '先私訊 LINE 官方帳號，由老師回覆，並索取報名連結。'),
+      s('先問問', '還沒決定可以問嗎？', '可以。只是有問題，直接詢問就好，不用先決定要不要報名。'),
+      s('隱私', '我的資料會被收集嗎？', '這個網站不會代你傳訊息，也不收集個人資料；你的筆記只存在這個瀏覽器。'),
+    ],
+    facts: [['報名方式', '私訊 LINE 官方帳號，由老師回覆'], ['連結', '見下方按鈕（未提供前顯示「連結待老師提供」）']],
+    task: '你想先問老師哪一件事？', example: '例如：我只是想看看，可以先問嗎？',
+    question: '我想報名或索取報名連結。',
+  },
+];
+
+// 關聯線（協作線）：a → b。kind 'journey' 是旅程動線，'topic' 是主題之間的關係。
+export const FLOWS = [
+  { id: 'f1', a: 'start', b: 'teacher', kind: 'journey', label: '過奈何橋', why: '走過奈何橋，象徵參加活動：從卡住的地方，走到茶會。' },
+  { id: 'f2', a: 'teacher', b: 'teaching', kind: 'topic', label: '做法', why: '知道茶會在做什麼之後，接著看植物能量怎麼帶你看。' },
+  { id: 'f3', a: 'teacher', b: 'questions', kind: 'topic', label: '顧慮', why: '有顧慮就先問清楚：是不是法事？適不適合我？' },
+  { id: 'f4', a: 'teaching', b: 'questions', kind: 'topic', label: '是不是催眠', why: '「我清醒嗎？」是最常見的疑問之一，兩座島的答案互相呼應。' },
+  { id: 'f5', a: 'teacher', b: 'stories', kind: 'topic', label: '別人的經驗', why: '想知道別人參加後的樣子，看繽紛世界的回饋與案例。' },
+  { id: 'f6', a: 'teaching', b: 'stories', kind: 'topic', label: '看見之後', why: '看見卡點之後，人生可以多繽紛？前、中、後案例留給這裡。' },
+  { id: 'f7', a: 'stories', b: 'calendar', kind: 'journey', label: '找場次', why: '看完回饋，再來看近期有哪些場次。' },
+  { id: 'f8', a: 'calendar', b: 'signup', kind: 'journey', label: '去報名', why: '選好場次，私訊 LINE 報名。' },
+  { id: 'f9', a: 'questions', b: 'signup', kind: 'topic', label: '先問問', why: '問題還沒問完也沒關係，服務台隨時可以問。' },
+  { id: 'f10', a: 'signup', b: 'start', kind: 'journey', label: '回到起點', why: '還在迷霧裡？隨時可以再繞回來看一次。' },
+];
+
+// 訪客最在意的問題 → 建議的參觀順序（最後一站固定是報名）
+export const ENTRY_ROUTES = {
+  couple: { label: '愛情／夫妻', role: '愛情與夫妻關係', intro: '先看這是在做什麼、是否清醒進行，再看別人的經驗。', topics: ['teacher', 'teaching', 'stories', 'questions', 'signup'] },
+  family: { label: '親子關係', role: '親子關係', intro: '近期最常見的是「為什麼我和孩子關係不好」，先從活動做什麼與回饋開始看。', topics: ['teacher', 'stories', 'teaching', 'questions', 'signup'] },
+  life: { label: '迷茫・人生方向', role: '金錢、健康、事業或人生方向', intro: '正在找方向的人，可以先看上帝視角怎麼幫你打開迷霧。', topics: ['start', 'teacher', 'teaching', 'questions', 'signup'] },
 };
-export const concerns = [
- {id:'ritual',audience:'couple',question:'這是不是在做法事？',topic:'questions',related:['teaching'],answer:'不是法事。老師用的是一套已在市場上超過 35 年的工具，結合植物能量一起工作；正式說明尚待老師補充。'},
- {id:'hypnosis',audience:'couple',question:'會不會被催眠？我是清醒的嗎？',topic:'teaching',related:['questions'],answer:'不是催眠，也不是別人說故事給你聽。你是清醒的，從自己的第一視角走進自己的世界去看。'},
- {id:'partner',audience:'couple',question:'愛情或夫妻關係卡住，適合來嗎？',topic:'teacher',related:['stories'],answer:'關係問題是最常見的類型；你的情況是否適合，可以先用 LINE 詢問。'},
- {id:'child',audience:'family',question:'為什麼我和孩子關係不好？',topic:'teacher',related:['stories'],answer:'這是近期最常出現的問題。活動想做的是換個角度看見卡點；相似案例與回饋尚待老師提供。'},
- {id:'proof',audience:'family',question:'有沒有別人的經驗可以看？',topic:'stories',related:['teaching'],answer:'客戶回饋與前、中、後案例會陸續放在這裡；目前尚待老師提供，不展示虛構內容。'},
- {id:'fit',audience:'life',question:'我只是迷茫，沒有特定問題，可以來嗎？',topic:'questions',related:['teacher'],answer:'申請條件：無。有疑問可以直接 LINE 詢問，不需要先決定要不要報名。'},
- {id:'price',audience:'life',question:'費用和場次怎麼看？',topic:'questions',related:['teacher'],answer:'價格約 800～1500 元（待確認），依場地與地點而定；每期日期、地點不同，請看活動場次。'},
- {id:'what',audience:'life',question:'「上帝視角」「植物能量」到底是什麼？',topic:'teacher',related:['teaching'],answer:'用植物能量帶領你，從更高的角度看見人生卡在哪裡。詳細原理不在頁面深入說明，可私訊詢問。'}
+
+// 常見顧慮，會顯示在對應島嶼的卡片上
+export const CONCERNS = [
+  { id: 'ritual', topic: 'questions', q: '這是不是在做法事？', a: '不是法事。老師用的是一套已在市場上超過 35 年的工具，結合植物能量一起工作；正式說明尚待老師補充。' },
+  { id: 'hypnosis', topic: 'teaching', q: '會不會被催眠？我是清醒的嗎？', a: '不是催眠，也不是別人說故事給你聽。你是清醒的，從自己的第一視角走進自己的世界去看。' },
+  { id: 'partner', topic: 'teacher', q: '愛情或夫妻關係卡住，適合來嗎？', a: '關係問題是最常見的類型；你的情況是否適合，可以先用 LINE 詢問。' },
+  { id: 'child', topic: 'start', q: '為什麼我和孩子關係不好？', a: '這是近期最常出現的問題。活動想做的是換個角度看見卡點；相似案例與回饋尚待老師提供。' },
+  { id: 'proof', topic: 'stories', q: '有沒有別人的經驗可以看？', a: '客戶回饋與前、中、後案例會陸續放在這裡；目前尚待老師提供，不展示虛構內容。' },
+  { id: 'fit', topic: 'questions', q: '我只是迷茫，沒有特定問題，可以來嗎？', a: '申請條件：無。有疑問可以直接 LINE 詢問，不需要先決定要不要報名。' },
+  { id: 'price', topic: 'calendar', q: '費用和場次怎麼看？', a: '價格約 800～1500 元（待確認），依場地與地點而定；每期日期、地點不同，請看活動場次。' },
+  { id: 'what', topic: 'teacher', q: '「上帝視角」「植物能量」到底是什麼？', a: '用植物能量帶領你，從更高的角度看見人生卡在哪裡。詳細原理不在頁面深入說明，可私訊詢問。' },
 ];
-export function concernsFor(entry){return entry?concerns.filter(c=>c.audience===entry):concerns.filter(c=>['ritual','hypnosis','child','fit'].includes(c.id));}
-// 首次造訪導覽（3 張短卡）。文字只說明地圖怎麼用，不承諾任何服務或結果。
-export const introSteps=[
- {title:'跟著導覽員，繞島一圈',body:'外圍一圈七站：從「崎嶇島」的困境出發，走過奈何橋，到繽紛的遊樂園，再到回饋、活動場次、LINE 報名與服務台，最後回到崎嶇島。中間三座島是孟婆茶會在做什麼、植物能量怎麼帶你看、常見疑問。點第 1 站的導覽員，或從問題清單開始。',touchBody:'外圍一圈七站：從「崎嶇島」的困境出發，走過奈何橋，到繽紛的遊樂園，再到回饋、活動場次、LINE 報名與服務台，最後回到崎嶇島。中間三座島是孟婆茶會在做什麼、植物能量怎麼帶你看、常見疑問。點第 1 站的導覽員，或從問題清單開始。'},
- {title:'用你的角度看地圖',body:'像看地圖一樣：左鍵拖曳平移，快速一甩會再滑一段；右鍵拖曳旋轉，滾輪往游標所在處縮放；選一座島時，鏡頭會飛過去。按右上「全景」看回整張地圖。',touchBody:'像看地圖一樣：單指拖曳平移，快速一甩會再滑一段；雙指捏合縮放、轉動旋轉，兩指一起上下滑動可傾斜；選一座島時，鏡頭會飛過去。按右上「全景」回到全景。'},
- {title:'把問題整理好，再來聊',body:'收藏主題、寫下自己的情況，最後可產生諮詢提綱，複製後貼到 LINE 官方帳號詢問。內容只存在這個瀏覽器，網站不會代你寄送訊息。'}
+
+// 自動導覽：from/to 為秒。mins 是島上時間（分鐘）。flows 是這一段亮起的關聯線。
+export const TOUR = {
+  total: 72,
+  cues: [
+    { from: 0, to: 8, target: 'all', mins: 900, flows: [], caption: '孟婆茶會：用「上帝視角」，看見自己卡住的地方。七座島，就是認識茶會的七個入口。' },
+    { from: 8, to: 17, target: 'start', mins: 1080, flows: ['f1'], caption: '旅程從崎嶇島出發：同樣的事一再發生，不知道卡在哪，像在山路上繞圈。' },
+    { from: 17, to: 26, target: 'teacher', mins: 900, flows: ['f1', 'f2', 'f3', 'f5'], caption: '走過奈何橋，來到茶會：在活動中換一個更高的角度，看見自己的卡點。' },
+    { from: 26, to: 35, target: 'teaching', mins: 720, flows: ['f2', 'f4', 'f6'], caption: '植物能量帶你看：你全程清醒，從自己的第一視角走進自己的世界。' },
+    { from: 35, to: 44, target: 'questions', mins: 1260, flows: ['f3', 'f4', 'f9'], caption: '是不是法事？是不是催眠？第一次聽到的人常有顧慮，先問清楚。' },
+    { from: 44, to: 53, target: 'stories', mins: 720, flows: ['f5', 'f6', 'f7'], caption: '橋的另一邊是繽紛的世界。參加者的前、中、後案例，等老師提供後放在這裡。' },
+    { from: 53, to: 62, target: 'calendar', mins: 900, flows: ['f7', 'f8'], caption: '每期日期與地點不同，先看近期場次。' },
+    { from: 62, to: 72, target: 'signup', mins: 1080, flows: ['f8', 'f9', 'f10'], caption: '報名不用填表單，先私訊 LINE 就好。還沒決定也可以問。' },
+  ],
+};
+
+export const DAY_NOTES = [
+  [0, 300, '深夜：燈籠還亮著，迷霧在島的四周。'],
+  [300, 480, '清晨：迷霧還沒散，島上很安靜。'],
+  [480, 1020, '白天：天空放晴，彩虹出現。（島上的天氣只是裝飾，不代表任何成效。）'],
+  [1020, 1200, '黃昏：崎嶇島的火山口發光，燈籠一盞盞亮起。'],
+  [1200, 1440, '夜晚：看得到星星。'],
 ];
-export const INTRO_KEY='mengpo-island-onboarded';
-// 重點寫成「標籤：問題」，供圖釘、清單列與重點卡使用。
-export function stepParts(step){const i=step.indexOf('：');return i<0?{label:step,question:''}:{label:step.slice(0,i),question:step.slice(i+1)};}
-export const CIRCLED=['①','②','③','④','⑤','⑥','⑦','⑧','⑨'];
+export const dayNote = (m) => (DAY_NOTES.find(([a, b]) => m >= a && m < b) || DAY_NOTES[0])[2];
+
+export const INTRO_KEY = 'mengpo-island-onboarded-v2';
+export const INTRO_STEPS = [
+  { title: '七座島，七個入口', body: '一座島就是一個認識孟婆茶會的入口：困境、茶會在做什麼、疑問、植物能量、繽紛世界、場次與報名。點一座島看介紹，點島上的小屋看重點；島與島之間的線，是它們的關係。' },
+  { title: '用你的角度看地圖', body: '拖曳旋轉，滾輪（或雙指捏合）縮放，右鍵或雙指拖曳平移；選一座島時鏡頭會飛過去。左下可以拉時間，看島上的一天；按「全景」回到整張地圖，按「導覽」看自動介紹。', touchBody: '單指拖曳旋轉，雙指捏合縮放、兩指一起拖曳平移；選一座島時鏡頭會飛過去。下方可以拉時間，看島上的一天；按「全景」回到整張地圖，按「導覽」看自動介紹。' },
+  { title: '把問題整理好，再來聊', body: '收藏你有興趣的島、寫下自己的情況，最後產生一份諮詢提綱，複製後貼到 LINE 官方帳號詢問。內容只存在這個瀏覽器，網站不會代你寄送訊息。' },
+];
+
+// ── 搜尋、提綱、儲存（純函式，可在 Node 測試）─────────────────────────────
+const haystack = (t) => [t.title, t.tag, t.intro, t.body, t.task, t.question, t.example, ...t.steps.flatMap((x) => [x.label, x.q, x.body]), ...t.facts.flat()].join(' ').toLowerCase();
+export function findIslands(query = '', groups = []) {
+  const q = query.trim().toLowerCase();
+  return ISLANDS.filter((t) => (!groups.length || groups.includes(t.tag)) && (!q || haystack(t).includes(q)));
+}
+export function makeOutline({ role = '', ids = [], note = '', questions = [] } = {}) {
+  const chosen = ISLANDS.filter((t) => ids.includes(t.id));
+  const list = chosen.length ? chosen : ISLANDS.filter((t) => t.id === 'teacher');
+  return `孟婆島｜報名前諮詢提綱\n我最在意的：${role || '還沒決定'}\n想聊的主題：${list.map((t) => t.title).join('、')}\n\n${list.map((t) => '• ' + t.question).join('\n')}\n\n${questions.length ? '想帶進討論的問題：\n' + questions.map((q) => '• ' + q).join('\n') + '\n\n' : ''}我的情況與問題：\n${note.trim() || '希望先了解孟婆茶會，再決定是否報名。'}\n\n（此提綱只存在你的瀏覽器，網站不會代你寄送。複製後可貼到 LINE 官方帳號詢問。）`;
+}
+export function readStored(raw) {
+  try {
+    const v = JSON.parse(raw);
+    return v && typeof v === 'object' && !Array.isArray(v) ? v : {};
+  } catch {
+    return {};
+  }
+}
+export function cueAt(cues, seconds) {
+  const i = cues.findIndex((c) => seconds >= c.from && seconds < c.to);
+  return i === -1 ? cues.length - 1 : i;
+}
