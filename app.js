@@ -151,6 +151,14 @@ function home(instant = false) {
 function flyToIsland(id, instant = false) {
   if (!W) return;
   const rec = W.islands.get(id), c = rec.center.clone().setY(0.7);
+  // 往前看：視野偏向「下一站」，讓人有一步一步往前走的感覺；最後一站才置中
+  const cur = byId.get(id), next = ISLANDS.find((t) => t.n === cur.n + 1), nrec = next && W.islands.get(next.id);
+  if (nrec) {
+    const dir = nrec.center.clone().sub(rec.center).setY(0).normalize();
+    c.addScaledVector(dir, rec.bridge ? 3.2 : 3.6);
+    moveCamera(frame(c, { w: rec.bridge ? 6.6 : 7.4, h: 3.6 }, 11), instant);
+    return;
+  }
   moveCamera(frame(c, rec.bridge ? { w: 3.4, h: 3.0 } : { w: 5.6, h: 4.6 }, rec.bridge ? 8 : 11), instant);
 }
 function flyToFlow(fid) {
