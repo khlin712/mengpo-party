@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#cfe8f8">
 <title>孟婆島｜孟婆茶會</title>
-<meta name="description" content="五座島、兩座橋，七個入口。孟婆茶會的互動介紹：用上帝視角看見自己卡住的人生問題，打開迷霧、跳出迴圈。">
+<meta name="description" content="孟婆茶會：用「上帝視角」看見自己卡住的人生問題。適合誰、現場做什麼、怎麼進行、場次與報名，這裡都有白話說明，也有互動地圖。">
 <link rel="canonical" href="https://khlin712.github.io/mengpo-party/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="孟婆島｜孟婆茶會">
@@ -16,25 +16,21 @@
 </head>
 <body>
 <main id="app">
-  <div id="stage" role="img" aria-label="五座六角形的島與兩座橋組成的互動地圖；完整文字操作請用左側的清單"></div>
+  <div id="stage" role="img" aria-label="五座六角形的島與兩座橋組成的互動地圖；完整文字內容請按「首頁」，或用清單閱讀"></div>
 
   <header class="brand">
     <a class="logo" href="./" aria-label="孟婆島首頁"><span class="mark">婆</span><span class="words"><b>孟婆茶會</b><small>看見卡點，走出迴圈</small></span></a>
   </header>
 
-  <div class="hero" id="hero">
-    <h1>從卡住的地方，<br>走過橋，走向繽紛。</h1>
-    <p>五座島、兩座橋，是認識孟婆茶會的七個入口。<br>點島或橋，開始探索。</p>
-  </div>
 
-  <nav class="toolbar" aria-label="地圖操作">
-    <button id="home" type="button" title="回到全景">⤢ 全景</button>
-    <button id="tour-start" type="button" title="自動導覽">▶ 導覽</button>
+  <nav class="toolbar" aria-label="主要操作">
+    <button id="open-home" type="button" title="首頁與文字版介紹">首頁</button>
     <button id="sidebar-toggle" type="button" aria-expanded="true" aria-controls="sidebar">☰ 清單</button>
-    <button id="help" type="button" aria-label="操作說明">?</button>
+    <button id="explore-toggle" type="button" aria-pressed="false" title="顯示地圖的進階選項">探索</button>
+    <button id="signup-open" class="cta" type="button">報名／場次</button>
   </nav>
 
-  <aside id="sidebar" class="sidebar" aria-label="島嶼清單、關聯與我的提綱">
+  <aside id="sidebar" class="sidebar" aria-label="站點清單與我的提綱">
     <button id="sheet-handle" class="sheet-handle" type="button" aria-label="展開或收合清單"><i></i></button>
     <div class="side-head">
       <div class="eyebrow">THE ISLAND INDEX</div>
@@ -43,7 +39,6 @@
       <input id="search" class="search" type="search" aria-label="搜尋島嶼或關鍵字" placeholder="搜尋：催眠、法事、價格、親子…">
       <div class="side-tabs" role="tablist">
         <button role="tab" id="tab-islands" class="active" aria-selected="true">島嶼</button>
-        <button role="tab" id="tab-flows" aria-selected="false">關聯 <span id="flow-count"></span></button>
         <button role="tab" id="tab-outline" aria-selected="false">我的提綱 <span id="outline-count"></span></button>
       </div>
     </div>
@@ -57,11 +52,12 @@
   </article>
 
   <div class="hud" id="hud">
-    <div class="seg" role="group" aria-label="顯示選項">
+    <div class="seg" role="group" aria-label="地圖選項">
+      <button id="home" type="button" title="回到全景">⤢ 全景</button>
+      <button id="tour-start" type="button" title="自動導覽">▶ 導覽</button>
       <button class="tg" data-toggle="names" aria-pressed="true" type="button">名牌</button>
       <button class="tg" data-toggle="people" aria-pressed="true" type="button">人物</button>
       <button class="tg" data-toggle="pins" aria-pressed="true" type="button">重點</button>
-      <button class="tg" data-toggle="flows" aria-pressed="false" type="button">關聯線</button>
       <button class="tg" data-toggle="bird" aria-pressed="false" type="button">鳥瞰</button>
       <button class="tg" data-toggle="freeze" aria-pressed="false" type="button">暫停</button>
     </div>
@@ -72,7 +68,6 @@
       <button role="tab" class="active" aria-selected="true" data-panel="day">01 島上的一天</button>
       <button role="tab" aria-selected="false" data-panel="journey">02 走一圈</button>
       <button role="tab" aria-selected="false" data-panel="groups">03 主題分類</button>
-      <div class="status" id="status" aria-live="polite"></div>
     </div>
     <div class="panel active" id="panel-day" role="tabpanel">
       <div class="day-row">
@@ -87,25 +82,26 @@
     </div>
     <div class="panel" id="panel-journey" role="tabpanel">
       <div class="stops" id="stops"></div>
-      <p class="control-note">依序走一圈：從崎嶇島出發，過奈何橋，最後到報名。每看過一座島，迷霧就散去一點。</p>
+      <p class="control-note">依序走一圈：從崎嶇島出發，過疑問橋、茶會、奈何橋，最後到報名。</p>
     </div>
     <div class="panel" id="panel-groups" role="tabpanel">
       <div class="group-buttons" id="group-buttons"></div>
-      <p class="control-note">可複選。符合的島保持原色，其他的淡下去。</p>
+      <p class="control-note">可複選。符合的站保持原色，其他的淡下去。</p>
     </div>
   </section>
 
   <div id="tour-caption" class="tour-caption" aria-live="polite"></div>
   <div class="tour-controls"><span id="tour-time">00 / 72</span><button id="tour-pause" type="button">暫停</button><button id="tour-replay" type="button">重播</button><button id="tour-exit" type="button">離開</button></div>
 
-  <div class="intro" id="intro" hidden>
-    <div class="intro-box" role="dialog" aria-modal="true" aria-labelledby="intro-title">
-      <div class="eyebrow" id="intro-count">HELLO / 1</div>
-      <h2 id="intro-title"></h2><p id="intro-body"></p>
-      <div id="intro-routes" class="intro-routes" hidden></div>
-      <div class="intro-actions"><button id="intro-skip" type="button">略過</button><button id="intro-next" class="next" type="button">下一步 →</button></div>
+  <div class="intro" id="signup" hidden>
+    <div class="intro-box" role="dialog" aria-modal="true" aria-labelledby="signup-title">
+      <button class="close" id="signup-close" type="button" aria-label="關閉">×</button>
+      <div class="eyebrow">SIGN UP</div><h2 id="signup-title">場次與報名</h2>
+      <div id="signup-body"></div>
     </div>
   </div>
+
+  <section id="home-page" class="page" aria-label="孟婆茶會介紹" hidden></section>
 
   <div id="gl-notice" class="gl-notice" hidden role="alert"><p id="gl-text"></p><button id="gl-reload" type="button">重新整理頁面</button></div>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
