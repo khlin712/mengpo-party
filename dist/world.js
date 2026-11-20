@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { ISLANDS, FLOWS } from './content.js';
+import { buildPeople } from './people.js';
 import { R, D, TOP, SQ3, hexCenter, isAdjacent, skyAt, lightPos, hexToRgb, arcPoints, bezier, mulberry, lerp } from './lib.js';
 
 const C = (h) => new THREE.Color(h);
@@ -235,6 +236,7 @@ export function buildWorld({ stage, labels }) {
   const lotusRoot = new THREE.Group(); scene.add(lotusRoot);
   for (let i = 0; i < ISLANDS.length; i++) {
     for (let j = i + 1; j < ISLANDS.length; j++) {
+      if (j !== i + 1) continue; // 只有「前後兩步」之間有橋，路徑才看得出脈絡
       const A = ISLANDS[i], B = ISLANDS[j];
       if (!isAdjacent(A.hex, B.hex)) continue;
       const a = hexCenter(...A.hex), b = hexCenter(...B.hex);
@@ -266,6 +268,12 @@ export function buildWorld({ stage, labels }) {
           }
         }
       }
+      // 方向箭頭：指向下一步
+      const arrowM = addGlow(glowMat(0xffd27a, 0.35), 0.35, 1.6);
+      const chev = new THREE.Mesh(new THREE.ConeGeometry(0.17, 0.34, 4), arrowM);
+      chev.rotation.x = Math.PI / 2; chev.position.set(0, arch + 0.34, 0); chev.scale.set(1.4, 1, 0.6);
+      grp.add(chev);
+      anim.push((t) => { chev.position.z = Math.sin(t * 1.6) * 0.12; });
       if (naihe) {
         for (const sz of [-1, 1]) {
           const gate = new THREE.Group();
@@ -293,6 +301,9 @@ export function buildWorld({ stage, labels }) {
       bridges.push({ a: A.id, b: B.id, group: grp, naihe });
     }
   }
+
+  // ── 人物 ──────────────────────────────────────────────────────────────
+  const people = buildPeople({ scene, islands, anim, reg, addGlow, glowMat, std });
 
   // ── 關聯弧線 ──────────────────────────────────────────────────────────
   const flowGroup = new THREE.Group(); scene.add(flowGroup);
@@ -378,7 +389,7 @@ export function buildWorld({ stage, labels }) {
     for (const fn of anim) fn(clock.t, sky);
   }
   const mistFor = (id) => islands.get(id);
-  return { scene, islands, pickables, flows, flowGroup, bridges, setTime, update, setIslandState, sun, sea, clock, mistFor, labels };
+  return { scene, islands, pickables, people, flows, flowGroup, bridges, setTime, update, setIslandState, sun, sea, clock, mistFor, labels };
 }
 
 // ── 各島中央造型 ─────────────────────────────────────────────────────────

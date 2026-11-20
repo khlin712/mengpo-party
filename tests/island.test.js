@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ISLANDS, FLOWS, GROUPS, ENTRY_ROUTES, CONCERNS, TOUR, INTRO_STEPS, findIslands, makeOutline, readStored, cueAt, dayNote } from '../dist/content.js';
-import { hexCenter, isAdjacent, hexDistance, skyAt, lightPos, fmtClock, arcPoints, bezier, D, R, SQ3 } from '../dist/lib.js';
+import { ISLANDS, FLOWS, GROUPS, ENTRY_ROUTES, CONCERNS, PEOPLE, PEOPLE_NOTE, TOUR, INTRO_STEPS, findIslands, makeOutline, readStored, cueAt, dayNote } from '../dist/content.js';
+import { hexCenter, isAdjacent, hexDistance, polyline, shortestArc, skyAt, lightPos, fmtClock, arcPoints, bezier, D, R, SQ3 } from '../dist/lib.js';
 import { easeInOutCubic, FLY_MS } from '../dist/motion.js';
 
 const ids = new Set(ISLANDS.map((t) => t.id));
@@ -20,14 +20,36 @@ test('七座島：編號、座標、分類與內容完整且不重複', () => {
   }
 });
 
-test('六角格排成一朵花：中央一座，外圈六座，且每座都和中央相鄰', () => {
-  const center = ISLANDS.find((t) => t.hex[0] === 0 && t.hex[1] === 0);
-  assert.equal(center.id, 'teacher');
-  for (const t of ISLANDS) if (t !== center) assert.ok(isAdjacent(center.hex, t.hex), t.id);
+test('島依旅程順序排成一條路：前後相連的兩步一定相鄰（有橋），整組置中', () => {
+  assert.deepEqual(ISLANDS.map((t) => t.id), ['start', 'teacher', 'teaching', 'questions', 'stories', 'calendar', 'signup']);
+  for (let i = 0; i < ISLANDS.length - 1; i++) assert.ok(isAdjacent(ISLANDS[i].hex, ISLANDS[i + 1].hex), `${ISLANDS[i].id} → ${ISLANDS[i + 1].id}`);
+  const cs = ISLANDS.map((t) => hexCenter(...t.hex));
+  assert.ok(Math.abs(cs.reduce((s, c) => s + c.x, 0) / 7) < 1e-9 && Math.abs(cs.reduce((s, c) => s + c.z, 0) / 7) < 1e-9);
   assert.equal(hexDistance([0, 0], [1, -1]), 1);
   const a = hexCenter(0, 0), b = hexCenter(1, 0);
   assert.ok(Math.abs(Math.hypot(b.x - a.x, b.z - a.z) - D) < 1e-9);
   assert.ok(D > SQ3 * R, '相鄰島之間要留水道給橋');
+});
+
+test('人物：每位都有角色與台詞，指向有效的島，標明是示意', () => {
+  assert.equal(new Set(PEOPLE.map((p) => p.id)).size, PEOPLE.length);
+  for (const p of PEOPLE) { assert.ok(p.role && p.name && p.line, p.id); assert.ok(p.island === null || ids.has(p.island), p.id); }
+  assert.equal(PEOPLE.find((p) => p.id === 'guide').action, 'tour');
+  for (const t of ISLANDS) assert.ok(PEOPLE.some((p) => p.island === t.id), `${t.id} 島上沒有人`);
+  assert.match(PEOPLE_NOTE, /示意/);
+  assert.doesNotMatch(PEOPLE.map((p) => p.line).join(''), /保證|治癒|變好了|我好多了/);
+});
+
+test('人物走路：沿折線前進、角度取較短的一邊', () => {
+  const pl = polyline([[0, 0, 0], [0, 0, 3], [4, 1, 3]]);
+  assert.equal(pl.len, 7);
+  assert.deepEqual([pl.at(0).x, pl.at(0).z], [0, 0]);
+  assert.ok(Math.abs(pl.at(1.5).z - 1.5) < 1e-9 && Math.abs(pl.at(1.5).heading) < 1e-9);
+  assert.ok(Math.abs(pl.at(5).x - 2) < 1e-9 && Math.abs(pl.at(5).y - 0.5) < 1e-9);
+  assert.equal(pl.at(99).x, 4);
+  const arc = shortestArc(0.1, 2 * Math.PI - 0.1);
+  assert.ok(Math.abs(arc.at(-1) - (0.1 - 0.2)) < 1e-9 || Math.abs(arc.at(-1) + 0.1) < 1e-9, '走短的那一邊');
+  assert.ok(arc.length >= 2);
 });
 
 test('關聯線都連到有效的島，沒有重複或自連，整張圖相連', () => {

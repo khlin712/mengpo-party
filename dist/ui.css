@@ -17,7 +17,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
 .plate:hover,.plate.on{transform:scale(1.12);z-index:5}
 .plate.on{border-color:var(--ink)}
 .plate.dim,.pin.dim{opacity:.35}
-.plate[data-route]::after{content:attr(data-route);position:absolute;top:-9px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--peach);color:#fff;font-size:11px;display:grid;place-items:center;border:2px solid #fff}
+.plate[data-route]::after{content:attr(data-route);position:absolute;top:-9px;right:-8px;min-width:22px;height:20px;padding:0 4px;border-radius:99px;background:var(--peach);color:#fff;font-size:11px;display:grid;place-items:center;border:2px solid #fff}
 .hide-plates .plate{display:none}
 .pin{display:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--c);background:#fff;font-size:11px;font-weight:800;line-height:1;padding:0;box-shadow:0 2px 6px rgba(0,0,0,.25)}
 .pin:hover,.pin.on{background:var(--c);transform:scale(1.2)}
@@ -36,6 +36,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
 .hero p{margin:0;font-size:14px;line-height:1.6;color:#4a3d34}
 .sidebar-closed .hero{left:30px}
 body.interacted .hero{opacity:0}
+.hero{animation:heroFade 1s 8s forwards}
+@keyframes heroFade{to{opacity:0;visibility:hidden}}
 .card-open .hero,.tour .hero{display:none}
 
 .toolbar{position:fixed;top:14px;right:14px;z-index:14;display:flex;gap:8px}
@@ -195,3 +197,14 @@ input[type=range]{flex:1;min-width:80px;accent-color:var(--peach);height:28px}
 }
 @media (max-width:420px){.logo .words{display:none}.mark{width:34px;height:34px}.control-tabs button{padding:6px 9px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* 人物 */
+.who{display:none;max-width:190px;padding:4px 10px;border:2px solid #fff;border-radius:12px;background:var(--glass);box-shadow:0 3px 10px rgba(60,40,20,.25);font-size:12px;line-height:1.4;text-align:left}
+.who b{display:block;font-size:11px;color:var(--peach)}
+.who span{display:none;font-weight:500}
+.near:not(.hide-who) .who{display:block}
+.who.on{display:block!important;z-index:6}.who.on span{display:block}
+.who:hover span{display:block}.who:hover{z-index:6}
+.hide-who .who{display:none!important}
+.say{margin:10px 0;padding:14px 16px;border-radius:16px 16px 16px 4px;background:#fff;border:2px solid var(--c);font-size:17px;line-height:1.6;font-weight:700}
+.note{color:var(--muted);font-size:12.5px!important;line-height:1.6}
