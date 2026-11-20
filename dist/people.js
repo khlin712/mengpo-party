@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { ISLANDS, PEOPLE } from './content.js';
-import { TOP, hexCenter, shortestArc, polyline, lerp, clamp } from './lib.js';
+import { TOP, BRIDGE_ARCH, hexCenter, shortestArc, polyline, lerp, clamp } from './lib.js';
 
 const SCALE = 1.5; // 人物放大，遠一點也看得到
 const RING = 1.18; // 走路的圈（比小屋更靠內，繞開島中央的造型）
@@ -57,18 +57,20 @@ export function buildPeople({ scene, islands, anim, reg, addGlow, glowMat }) {
   const root = new THREE.Group(); scene.add(root);
   const defs = new Map(PEOPLE.map((p) => [p.id, p]));
   const persons = new Map(); // id → {def, rig, label, group}
-  const centers = ISLANDS.map((t) => hexCenter(...t.hex));
+  const IS = ISLANDS.filter((t) => !t.type); // 島（橋不在這裡）
+  const centers = IS.map((t) => hexCenter(...t.hex));
+  const bridgeBetween = (a, b) => ISLANDS.find((t) => t.type === 'bridge' && t.between[0] === a && t.between[1] === b);
 
   // ── 整條旅程的折線（繞著島上的圈走，過橋時跟著橋的弧度）──────────────
   const pts = []; let firstBridgeEnd = 0;
-  ISLANDS.forEach((t, i) => {
+  IS.forEach((t, i) => {
     const c = centers[i], prev = centers[i - 1], next = centers[i + 1];
     const aOut = next ? Math.atan2(next.x - c.x, next.z - c.z) : null;
     const aIn = prev ? Math.atan2(prev.x - c.x, prev.z - c.z) : null;
     const a0 = aIn ?? aOut + 2.2, a1 = aOut ?? aIn + 2.2;
     for (const a of shortestArc(a0, a1)) pts.push([c.x + Math.sin(a) * RING, TOP + 0.02, c.z + Math.cos(a) * RING]);
     if (next) {
-      const arch = t.id === 'start' ? 0.5 : 0.1;
+      const nb = bridgeBetween(t.id, IS[i + 1].id), arch = BRIDGE_ARCH[nb ? nb.kind : 'plain'];
       const from = pts[pts.length - 1];
       const aInN = Math.atan2(c.x - next.x, c.z - next.z);
       const to = [next.x + Math.sin(aInN) * RING, TOP + 0.02, next.z + Math.cos(aInN) * RING];
@@ -114,9 +116,9 @@ export function buildPeople({ scene, islands, anim, reg, addGlow, glowMat }) {
     teacher: { island: 'teacher', at: [0, -0.55], faceTo: [0, 0], look: { shirt: 0x2f8f7b }, kind: 'teacher' },
     guest1: { island: 'teacher', at: [0.55, 0.3], faceTo: [0, 0], look: { shirt: 0xf2b5c8 } },
     guest2: { island: 'teacher', at: [-0.55, 0.3], faceTo: [0, 0], look: { shirt: 0xffd9a0 } },
-    plant: { island: 'teaching', at: [1.0, 0.4], faceTo: [0, 0], look: { shirt: 0x9fd8c8 } },
-    asker: { island: 'questions', at: [0.5, 0.45], faceTo: [0, 0], look: { shirt: 0xc7b6ee }, sway: true },
-    asker2: { island: 'questions', at: [-0.55, 0.3], faceTo: [0, 0], look: { shirt: 0xe6d9f7 }, sway: true },
+    plant: { island: 'teaching', bridge: { t: 0.5, side: 0.3, face: 1 }, look: { shirt: 0x9fd8c8 } },
+    asker: { island: 'questions', bridge: { t: 0.3, side: 0.18, face: 1 }, look: { shirt: 0xc7b6ee }, sway: true },
+    asker2: { island: 'questions', bridge: { t: 0.62, side: -0.18, face: -1 }, look: { shirt: 0xe6d9f7 }, sway: true },
     joy1: { island: 'stories', at: [0.65, 0.5], faceTo: [0.2, 1.4], look: { shirt: 0xff8fb0 }, cheer: true },
     joy2: { island: 'stories', at: [-0.7, 0.55], faceTo: [0, 1.4], look: { shirt: 0xffd45e }, cheer: true },
     plan: { island: 'calendar', at: [-0.2, 0.42], faceTo: [0, 0], look: { shirt: 0xf6d88f } },
@@ -125,9 +127,17 @@ export function buildPeople({ scene, islands, anim, reg, addGlow, glowMat }) {
   };
   const statics = [];
   Object.entries(SPOTS).forEach(([id, sp], i) => {
-    const idx = ISLANDS.findIndex((t) => t.id === sp.island), c = centers[idx];
+    const idx = IS.findIndex((t) => t.id === sp.island), c = centers[idx];
     const p = mk(id, { shirt: 0xcccccc, ...(sp.look || {}), skin: SKINS[i % 4], hair: HAIRS[i % 5] }, sp.kind || 'guest');
     if (sp.orbit) { p.look.shirt = 0x9aa0a6; p.rig.shirtM.color.setHex(0x9aa0a6); }
+    if (sp.bridge) { // 站在橋上（疑問橋上猶豫、奈何橋上看說明）
+      const node = ISLANDS.find((t) => t.id === sp.island), A = centers[IS.findIndex((t) => t.id === node.between[0])], B = centers[IS.findIndex((t) => t.id === node.between[1])];
+      const dx = B.x - A.x, dz = B.z - A.z, L = Math.hypot(dx, dz), ux = dx / L, uz = dz / L, span = L - 2 * RING, t = sp.bridge.t;
+      const along = (t - 0.5) * span;
+      p.group.position.set((A.x + B.x) / 2 + ux * along - uz * sp.bridge.side, TOP + 0.05 + Math.sin(t * Math.PI) * BRIDGE_ARCH[node.kind], (A.z + B.z) / 2 + uz * along + ux * sp.bridge.side);
+      p.group.rotation.y = Math.atan2(ux, uz) + (sp.bridge.face < 0 ? Math.PI : 0);
+      sp.baseY = p.group.position.y;
+    }
     if (sp.at) {
       p.group.position.set(c.x + sp.at[0], TOP, c.z + sp.at[1]);
       p.group.rotation.y = Math.atan2(sp.faceTo[0] - sp.at[0], sp.faceTo[1] - sp.at[1]);
@@ -161,7 +171,7 @@ export function buildPeople({ scene, islands, anim, reg, addGlow, glowMat }) {
       } else {
         rig.armR.rotation.x = Math.sin(t * 1.3 + s.ph) * 0.08;
         rig.head.rotation.y = Math.sin(t * 0.7 + s.ph) * (s.sp.sway ? 0.5 : 0.25);
-        group.position.y = TOP + Math.sin(t * 1.6 + s.ph) * 0.004;
+        group.position.y = (s.sp.baseY ?? TOP) + Math.sin(t * 1.6 + s.ph) * 0.004;
       }
     }
   });
@@ -171,7 +181,7 @@ export function buildPeople({ scene, islands, anim, reg, addGlow, glowMat }) {
     const p = persons.get(id); if (!p) return null;
     if (p.def.island) return p.def.island;
     let best = null, bd = 1e9;
-    ISLANDS.forEach((t, i) => { const d = Math.hypot(centers[i].x - p.group.position.x, centers[i].z - p.group.position.z); if (d < bd) { bd = d; best = t.id; } });
+    IS.forEach((t, i) => { const d = Math.hypot(centers[i].x - p.group.position.x, centers[i].z - p.group.position.z); if (d < bd) { bd = d; best = t.id; } });
     return best;
   }
   return { root, persons, setSelected, islandOf, path };

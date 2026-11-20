@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { ISLANDS, FLOWS } from './content.js';
 import { buildPeople } from './people.js';
-import { R, D, TOP, SQ3, hexCenter, isAdjacent, skyAt, lightPos, hexToRgb, arcPoints, bezier, mulberry, lerp } from './lib.js';
+import { R, D, TOP, SQ3, BRIDGE_ARCH, hexCenter, isAdjacent, skyAt, lightPos, hexToRgb, arcPoints, bezier, mulberry, lerp } from './lib.js';
 
 const C = (h) => new THREE.Color(h);
 const std = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.85, metalness: 0, flatShading: true, ...o });
@@ -132,7 +132,7 @@ export function buildWorld({ stage, labels }) {
   const hexGeo = (r, h) => new THREE.CylinderGeometry(r, r, h, 6);
   const mistMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, fog: false });
 
-  for (const def of ISLANDS) {
+  for (const def of ISLANDS.filter((t) => !t.type)) {
     const { x, z } = hexCenter(...def.hex);
     const g = new THREE.Group();
     g.position.set(x, 0, z);
@@ -229,76 +229,157 @@ export function buildWorld({ stage, labels }) {
     islands.set(def.id, { def, group: g, center: new THREE.Vector3(x, TOP, z), ground, mats, buildings, plate, pins: buildings.map((b) => b.pin), mist, mistLevel: 1, deco, dim: 0, hl: 0 });
   }
 
-  // ── 橋 ────────────────────────────────────────────────────────────────
+  // ── 橋（疑問橋、奈何橋同時是內容節點，可點、有重點路牌）──────────────
   const bridges = [];
   const woodM = std(0xb48560), railM = std(0x9a7454), redM = std(0xc8574f), cream = std(0xfff4e0);
   const lampM = addGlow(glowMat(0xffc86b, 0.25), 0.25, 2.2);
   const lotusRoot = new THREE.Group(); scene.add(lotusRoot);
-  for (let i = 0; i < ISLANDS.length; i++) {
-    for (let j = i + 1; j < ISLANDS.length; j++) {
-      if (j !== i + 1) continue; // 只有「前後兩步」之間有橋，路徑才看得出脈絡
-      const A = ISLANDS[i], B = ISLANDS[j];
-      if (!isAdjacent(A.hex, B.hex)) continue;
-      const a = hexCenter(...A.hex), b = hexCenter(...B.hex);
-      const dir = new THREE.Vector3(b.x - a.x, 0, b.z - a.z);
-      const len = dir.length(); dir.normalize();
-      const naihe = (A.id === 'start' && B.id === 'teacher') || (A.id === 'teacher' && B.id === 'start');
-      const span = len - (R * SQ3) + 1.1;
-      const grp = new THREE.Group();
-      grp.position.set((a.x + b.x) / 2, TOP, (a.z + b.z) / 2);
-      grp.rotation.y = Math.atan2(dir.x, dir.z);
-      const segs = naihe ? 8 : 4;
-      const arch = naihe ? 0.5 : 0.1;
-      for (let s = 0; s < segs; s++) {
-        const t0 = s / segs, t1 = (s + 1) / segs, tm = (t0 + t1) / 2;
-        const seg = new THREE.Mesh(new THREE.BoxGeometry(naihe ? 0.9 : 0.62, 0.12, span / segs + 0.02), naihe ? redM : woodM);
-        seg.position.set(0, Math.sin(tm * Math.PI) * arch, (tm - 0.5) * span);
-        seg.rotation.x = -Math.cos(tm * Math.PI) * arch * Math.PI / span * 1.0;
-        seg.castShadow = seg.receiveShadow = true;
-        grp.add(seg);
-        for (const sx of [-1, 1]) {
-          const rail = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, span / segs + 0.02), naihe ? cream : railM);
-          rail.position.set(sx * (naihe ? 0.43 : 0.3), Math.sin(tm * Math.PI) * arch + 0.2, (tm - 0.5) * span);
-          rail.rotation.x = seg.rotation.x;
-          grp.add(rail);
-          if (s % 2 === 0 || s === segs - 1) {
-            const post = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.22, 5), naihe ? cream : railM);
-            post.position.set(sx * (naihe ? 0.43 : 0.3), Math.sin(t0 * Math.PI) * arch + 0.1, (t0 - 0.5) * span);
-            grp.add(post);
+  const islandList = ISLANDS.filter((t) => !t.type), bridgeNodes = ISLANDS.filter((t) => t.type === 'bridge');
+  const qMark = (m) => { // 立體的「？」
+    const q = new THREE.Group();
+    const arc = new THREE.Mesh(new THREE.TorusGeometry(0.28, 0.075, 8, 20, Math.PI * 1.45), m); arc.rotation.z = -Math.PI * 0.2; arc.position.y = 0.3;
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.2, 8), m); stem.position.set(0.02, -0.12, 0);
+    const dot = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), m); dot.position.set(0.02, -0.4, 0);
+    q.add(arc, stem, dot); return q;
+  };
+  for (let i = 0; i < islandList.length - 1; i++) {
+    const A = islandList[i], B = islandList[i + 1];
+    if (!isAdjacent(A.hex, B.hex)) continue;
+    const node = bridgeNodes.find((n) => n.between[0] === A.id && n.between[1] === B.id);
+    const style = node ? node.kind : 'plain'; // plain | scary | naihe
+    const scary = style === 'scary', naihe = style === 'naihe';
+    const a = hexCenter(...A.hex), b = hexCenter(...B.hex);
+    const dir = new THREE.Vector3(b.x - a.x, 0, b.z - a.z);
+    const len = dir.length(); dir.normalize();
+    const span = len - R * SQ3 + 1.1;
+    const grp = new THREE.Group();
+    grp.position.set((a.x + b.x) / 2, TOP, (a.z + b.z) / 2);
+    grp.rotation.y = Math.atan2(dir.x, dir.z);
+    const rb = mulberry(11 + i);
+    const mats = [];
+    const own = (m) => { m.userData.base = m.color.clone(); mats.push(m); return m; };
+    const width = scary ? 0.8 : naihe ? 0.9 : 0.62;
+    const segs = scary ? 10 : naihe ? 10 : 4;
+    const arch = BRIDGE_ARCH[style];
+    const deckM = own(scary ? std(0x4a3d3a) : naihe ? std(0xc8574f) : std(0xb48560));
+    const railC = scary ? std(0x2f2626) : naihe ? cream : railM;
+    const deckY = (t) => Math.sin(t * Math.PI) * arch;
+    const pick = (m, data) => { if (node) reg(m, data); };
+    const glowPurple = addGlow(glowMat(0xb06aff, 0.5), 0.5, 2.4);
+    const hangs = [];
+    for (let s = 0; s < segs; s++) {
+      const t0 = s / segs, t1 = (s + 1) / segs, tm = (t0 + t1) / 2, seglen = span / segs;
+      const seg = new THREE.Mesh(new THREE.BoxGeometry(width, scary ? 0.09 : 0.12, seglen * (scary ? 0.82 : 1.02)), deckM);
+      seg.position.set(0, deckY(tm) + (scary ? (rb() - 0.5) * 0.05 : 0), (tm - 0.5) * span);
+      seg.rotation.x = -Math.cos(tm * Math.PI) * arch * Math.PI / span;
+      if (scary) seg.rotation.z = (rb() - 0.5) * 0.14;
+      seg.castShadow = seg.receiveShadow = true;
+      pick(seg, { kind: 'island', id: node?.id });
+      grp.add(seg);
+      for (const sx of [-1, 1]) {
+        const rail = new THREE.Mesh(new THREE.BoxGeometry(scary ? 0.03 : 0.05, scary ? 0.03 : 0.05, seglen * 1.02), railC);
+        rail.position.set(sx * (width / 2 - 0.03), deckY(tm) + (scary ? 0.2 + Math.sin(tm * Math.PI) * -0.04 : 0.2), (tm - 0.5) * span);
+        rail.rotation.x = seg.rotation.x; if (scary) rail.rotation.z = sx * 0.12;
+        grp.add(rail);
+        if (s % 2 === 0 || s === segs - 1) {
+          const post = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.04, scary ? 0.34 : 0.22, 5), railC);
+          post.position.set(sx * (width / 2 - 0.03), deckY(t0) + (scary ? 0.17 : 0.1), (t0 - 0.5) * span);
+          if (scary) post.rotation.z = sx * 0.15 + (rb() - 0.5) * 0.1;
+          pick(post, { kind: 'island', id: node?.id });
+          grp.add(post);
+          if (scary && s % 4 === 0) { // 紫色的燈籠掛在歪斜的柱子上
+            const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 6), glowPurple);
+            lamp.position.set(sx * (width / 2 + 0.02), deckY(t0) + 0.28, (t0 - 0.5) * span); grp.add(lamp); hangs.push([lamp, rb() * 6]);
+          }
+          if (naihe && s % 2 === 0) { // 柱頭的盆栽：植物能量
+            const leaf = new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), std(0x6fb56a));
+            leaf.position.set(sx * (width / 2 - 0.03), deckY(t0) + 0.3, (t0 - 0.5) * span); grp.add(leaf);
           }
         }
       }
-      // 方向箭頭：指向下一步
-      const arrowM = addGlow(glowMat(0xffd27a, 0.35), 0.35, 1.6);
-      const chev = new THREE.Mesh(new THREE.ConeGeometry(0.17, 0.34, 4), arrowM);
-      chev.rotation.x = Math.PI / 2; chev.position.set(0, arch + 0.34, 0); chev.scale.set(1.4, 1, 0.6);
-      grp.add(chev);
-      anim.push((t) => { chev.position.z = Math.sin(t * 1.6) * 0.12; });
-      if (naihe) {
-        for (const sz of [-1, 1]) {
-          const gate = new THREE.Group();
-          for (const sx of [-1, 1]) { const p = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.9, 6), redM); p.position.set(sx * 0.5, 0.45, 0); gate.add(p); }
-          const beam = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.08, 0.1), redM); beam.position.y = 0.92;
-          const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 6), lampM); lamp.position.y = 0.72;
-          gate.add(beam, lamp); gate.position.z = sz * span * 0.48; grp.add(gate);
-        }
-        // 橋下漂著蓮花（點蓮花 → 繽紛世界的回饋）
-        const lm = new THREE.MeshStandardMaterial({ color: 0xffb3c8, emissive: 0xff8fb0, emissiveIntensity: 0.15, roughness: 0.6, flatShading: true });
-        addGlow(lm, 0.15, 0.8);
-        for (let k = 0; k < 6; k++) {
-          const lotus = new THREE.Group();
-          for (let q = 0; q < 6; q++) { const p = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.22, 4), lm); p.position.set(Math.cos(q / 6 * 6.28) * 0.1, 0.1, Math.sin(q / 6 * 6.28) * 0.1); p.rotation.set(Math.sin(q / 6 * 6.28) * 0.7, 0, -Math.cos(q / 6 * 6.28) * 0.7); lotus.add(p); }
-          const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.02, 10), std(0x5aa86a)); pad.position.y = -0.02; lotus.add(pad);
-          const off = (k - 2.5) * 0.55, side = k % 2 ? 1 : -1;
-          lotus.position.set((a.x + b.x) / 2 + dir.z * side * (0.9 + (k % 3) * 0.25) + dir.x * off, -0.5, (a.z + b.z) / 2 - dir.x * side * (0.9 + (k % 3) * 0.25) + dir.z * off);
-          lotus.traverse((o) => { if (o.isMesh) reg(o, { kind: 'lotus', id: 'stories' }); });
-          lotus.userData.ph = k;
-          lotusRoot.add(lotus);
-          anim.push((t) => { lotus.position.y = -0.5 + Math.sin(t * 0.9 + k) * 0.03; lotus.rotation.y = t * 0.1 + k; });
-        }
+    }
+    // 方向箭頭
+    const arrowM = addGlow(glowMat(scary ? 0xb06aff : 0xffd27a, 0.35), 0.35, 1.6);
+    const chev = new THREE.Mesh(new THREE.ConeGeometry(0.17, 0.34, 4), arrowM);
+    chev.rotation.x = Math.PI / 2; chev.position.set(0, arch + 0.34, 0); chev.scale.set(1.4, 1, 0.6);
+    grp.add(chev);
+    anim.push((t) => { chev.position.z = Math.sin(t * 1.6) * 0.12; });
+
+    if (scary) {
+      // 飄浮的問號、橋下的紫霧、搖晃的橋身
+      const qm = addGlow(glowMat(0xb06aff, 0.35), 0.35, 1.6);
+      [[-0.5, 1.5, -0.55], [0.55, 1.25, 0.05], [-0.2, 1.7, 0.7]].forEach(([x, y, zf], k) => {
+        const q = qMark(qm); q.position.set(x, y, zf * span / 2); q.scale.setScalar(0.7 - k * 0.08); grp.add(q);
+        anim.push((t) => { q.rotation.y = t * 0.8 + k * 2; q.position.y = y + Math.sin(t * 1.3 + k) * 0.08; });
+      });
+      const fog = new THREE.MeshBasicMaterial({ color: 0xb9a3e8, transparent: true, opacity: 0.28, depthWrite: false, fog: false });
+      for (let k = 0; k < 5; k++) { const f = new THREE.Mesh(new THREE.SphereGeometry(0.55 + rb() * 0.3, 8, 6), fog); f.position.set((rb() - 0.5) * 1.4, -0.15 + rb() * 0.2, (k / 4 - 0.5) * span); f.scale.y = 0.4; f.raycast = () => {}; grp.add(f); anim.push((t) => { f.position.x += Math.sin(t * 0.5 + k) * 0.001; }); }
+      anim.push((t) => { hangs.forEach(([l, ph]) => { l.scale.setScalar(1 + Math.sin(t * 6 + ph) * 0.12); }); });
+    }
+    if (naihe) {
+      for (const sz of [-1, 1]) {
+        const gate = new THREE.Group();
+        for (const sx of [-1, 1]) { const p = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.9, 6), redM); p.position.set(sx * 0.58, 0.45, 0); gate.add(p); }
+        const beam = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.08, 0.1), redM); beam.position.y = 0.92;
+        const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 6), lampM); lamp.position.y = 0.72;
+        gate.add(beam, lamp); gate.position.z = sz * span * 0.47; grp.add(gate);
       }
-      scene.add(grp);
-      bridges.push({ a: A.id, b: B.id, group: grp, naihe });
+      // 植物能量：橋中央有綠色的光點繞著轉
+      const orbM = addGlow(glowMat(0x9fffd8, 0.6), 0.6, 1.2);
+      const motes = Array.from({ length: 8 }, () => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.045, 6, 5), orbM); grp.add(m); return m; });
+      anim.push((t) => motes.forEach((m, k) => { const an = t * (0.5 + k * 0.04) + k; m.position.set(Math.cos(an) * (0.55 + (k % 3) * 0.12), arch + 0.55 + (k % 4) * 0.16 + Math.sin(t + k) * 0.05, Math.sin(an) * (0.9 + (k % 3) * 0.2)); }));
+      // 橋下漂著蓮花
+      const lm = new THREE.MeshStandardMaterial({ color: 0xffb3c8, emissive: 0xff8fb0, emissiveIntensity: 0.15, roughness: 0.6, flatShading: true });
+      addGlow(lm, 0.15, 0.8);
+      for (let k = 0; k < 6; k++) {
+        const lotus = new THREE.Group();
+        for (let q = 0; q < 6; q++) { const p = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.22, 4), lm); p.position.set(Math.cos(q / 6 * 6.28) * 0.1, 0.1, Math.sin(q / 6 * 6.28) * 0.1); p.rotation.set(Math.sin(q / 6 * 6.28) * 0.7, 0, -Math.cos(q / 6 * 6.28) * 0.7); lotus.add(p); }
+        const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.02, 10), std(0x5aa86a)); pad.position.y = -0.02; lotus.add(pad);
+        const off = (k - 2.5) * 0.6, side = k % 2 ? 1 : -1;
+        lotus.position.set((a.x + b.x) / 2 + dir.z * side * (0.95 + (k % 3) * 0.25) + dir.x * off, -0.5, (a.z + b.z) / 2 - dir.x * side * (0.95 + (k % 3) * 0.25) + dir.z * off);
+        lotus.traverse((o) => { if (o.isMesh) reg(o, { kind: 'island', id: 'stories' }); });
+        lotusRoot.add(lotus);
+        anim.push((t) => { lotus.position.y = -0.5 + Math.sin(t * 0.9 + k) * 0.03; lotus.rotation.y = t * 0.1 + k; });
+      }
+    }
+    scene.add(grp);
+    bridges.push({ a: A.id, b: B.id, group: grp, style });
+
+    if (node) { // 這座橋也是一個內容節點：路牌（重點）、名牌、迷霧
+      const buildings = [];
+      const n = node.steps.length;
+      node.steps.forEach((st, k) => {
+        const t = (k + 1) / (n + 1), side = k % 2 ? 1 : -1;
+        const sign = new THREE.Group();
+        sign.position.set(side * (width / 2 + 0.34), deckY(t), (t - 0.5) * span);
+        const post = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.035, 0.55, 5), own(std(scary ? 0x3a2f30 : 0x9a7454)));
+        post.position.y = 0.27;
+        const board = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.2, 0.05), own(std(mix(node.color, '#ffffff', 0.35).getHex())));
+        board.position.y = 0.55; board.rotation.y = side * -0.5;
+        post.castShadow = board.castShadow = true;
+        reg(post, { kind: 'step', id: node.id, step: k }); reg(board, { kind: 'step', id: node.id, step: k });
+        sign.add(post, board); grp.add(sign);
+        const pin = document.createElement('button');
+        pin.className = 'pin'; pin.type = 'button'; pin.textContent = k + 1; pin.dataset.island = node.id; pin.dataset.step = k;
+        pin.setAttribute('aria-label', `${node.short}　重點 ${k + 1}：${st.label}`);
+        pin.style.setProperty('--c', node.color);
+        const po = new CSS2DObject(pin); po.position.set(0, 0.95, 0); sign.add(po);
+        buildings.push({ group: sign, pin });
+      });
+      const plate = document.createElement('button');
+      plate.className = 'plate bridge'; plate.type = 'button'; plate.dataset.island = node.id;
+      plate.style.setProperty('--c', node.color);
+      plate.innerHTML = `<b>${node.n}</b><span>${node.short}</span>`;
+      plate.setAttribute('aria-label', node.title);
+      const plateObj = new CSS2DObject(plate); plateObj.position.set(0, arch + 1.9, 0); grp.add(plateObj);
+      const mist = new THREE.Group();
+      for (let k = 0; k < 3; k++) {
+        const sp = new THREE.Mesh(new THREE.SphereGeometry(0.6 + rb() * 0.3, 8, 6), mistMat.clone());
+        sp.position.set((rb() - 0.5) * 1.2, 0.5 + rb() * 0.5, (k / 2 - 0.5) * span * 0.8); sp.scale.y = 0.5; sp.userData.ph = rb() * 6.28; sp.raycast = () => {};
+        mist.add(sp);
+      }
+      grp.add(mist);
+      islands.set(node.id, { def: node, group: grp, center: new THREE.Vector3(grp.position.x, TOP + arch * 0.6, grp.position.z), ground: null, mats, buildings, plate, pins: buildings.map((x) => x.pin), mist, mistLevel: 1, deco: null, dim: 0, hl: 0, bridge: { dir: dir.clone(), span, arch, style } });
     }
   }
 

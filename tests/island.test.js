@@ -6,11 +6,15 @@ import { easeInOutCubic, FLY_MS } from '../dist/motion.js';
 
 const ids = new Set(ISLANDS.map((t) => t.id));
 
-test('七座島：編號、座標、分類與內容完整且不重複', () => {
+test('七個節點（五座島、兩座橋）：編號、座標、分類與內容完整且不重複', () => {
   assert.equal(ISLANDS.length, 7);
+  assert.equal(ISLANDS.filter((t) => t.type === 'bridge').length, 2);
   assert.equal(ids.size, 7);
   assert.deepEqual(ISLANDS.map((t) => t.n), [1, 2, 3, 4, 5, 6, 7]);
-  assert.equal(new Set(ISLANDS.map((t) => t.hex.join(','))).size, 7, '六角格座標不可重複');
+  const real = ISLANDS.filter((t) => !t.type);
+  assert.equal(real.length, 5);
+  assert.equal(new Set(real.map((t) => t.hex.join(','))).size, 5, '六角格座標不可重複');
+  assert.ok(ISLANDS.filter((t) => t.type).every((t) => !t.hex), '橋沒有六角格座標');
   for (const t of ISLANDS) {
     assert.ok(GROUPS.includes(t.tag), t.id);
     assert.ok(t.title && t.intro && t.body && t.task && t.example && t.question && t.facts.length, t.id);
@@ -20,11 +24,16 @@ test('七座島：編號、座標、分類與內容完整且不重複', () => {
   }
 });
 
-test('島依旅程順序排成一條路：前後相連的兩步一定相鄰（有橋），整組置中', () => {
-  assert.deepEqual(ISLANDS.map((t) => t.id), ['start', 'teacher', 'teaching', 'questions', 'stories', 'calendar', 'signup']);
-  for (let i = 0; i < ISLANDS.length - 1; i++) assert.ok(isAdjacent(ISLANDS[i].hex, ISLANDS[i + 1].hex), `${ISLANDS[i].id} → ${ISLANDS[i + 1].id}`);
-  const cs = ISLANDS.map((t) => hexCenter(...t.hex));
-  assert.ok(Math.abs(cs.reduce((s, c) => s + c.x, 0) / 7) < 1e-9 && Math.abs(cs.reduce((s, c) => s + c.z, 0) / 7) < 1e-9);
+test('旅程順序：崎嶇島 → 疑問橋 → 茶會 → 奈何橋 → 繽紛世界 → 場次 → 報名；橋接在對的兩島之間', () => {
+  assert.deepEqual(ISLANDS.map((t) => t.id), ['start', 'questions', 'teacher', 'teaching', 'stories', 'calendar', 'signup']);
+  const real = ISLANDS.filter((t) => !t.type);
+  for (let i = 0; i < real.length - 1; i++) assert.ok(isAdjacent(real[i].hex, real[i + 1].hex), `${real[i].id} → ${real[i + 1].id}`);
+  const q = ISLANDS.find((t) => t.id === 'questions'), w = ISLANDS.find((t) => t.id === 'teaching');
+  assert.deepEqual(q.between, ['start', 'teacher']); assert.equal(q.kind, 'scary');
+  assert.deepEqual(w.between, ['teacher', 'stories']); assert.equal(w.kind, 'naihe');
+  assert.match(q.intro, /疑問/); assert.match(w.intro, /工作怎麼進行/);
+  const cs = real.map((t) => hexCenter(...t.hex));
+  assert.ok(Math.abs(cs.reduce((s, c) => s + c.x, 0) / 5) < 1e-9 && Math.abs(cs.reduce((s, c) => s + c.z, 0) / 5) < 1e-9, '重心在原點');
   assert.equal(hexDistance([0, 0], [1, -1]), 1);
   const a = hexCenter(0, 0), b = hexCenter(1, 0);
   assert.ok(Math.abs(Math.hypot(b.x - a.x, b.z - a.z) - D) < 1e-9);
@@ -91,7 +100,7 @@ test('搜尋可依關鍵字與分類篩選', () => {
 
 test('諮詢提綱：只含收藏的島，忽略未知 id，不寫入虛構內容', () => {
   const out = makeOutline({ role: '親子關係', ids: ['questions', 'unknown'], note: ' 想問是否適合我 ' });
-  assert.match(out, /常見疑問與顧慮/); assert.match(out, /想問是否適合我/); assert.match(out, /親子關係/);
+  assert.match(out, /心中的疑問/); assert.match(out, /想問是否適合我/); assert.match(out, /親子關係/);
   assert.doesNotMatch(out, /undefined|unknown/);
   assert.match(makeOutline({}), /孟婆茶會在做什麼/);
   assert.match(out, /不會代你寄送/);
