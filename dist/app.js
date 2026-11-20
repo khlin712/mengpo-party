@@ -122,15 +122,15 @@ function insets() {
   return I;
 }
 // 計算鏡頭位置：讓 focus 點出現在「沒被面板擋住」的區域中央
-function frame(focus, halfSize, minDist = 8) {
+function frame(focus, halfSize, minDist = 8, dirOver = null) {
   const I = insets(), W0 = stage.clientWidth, H0 = stage.clientHeight;
   const fw = Math.max(200, W0 - I.left - I.right), fh = Math.max(200, H0 - I.top - I.bottom);
   // 世界半寬 w 要塞進 fw 像素：fw/2 · upp ≥ w，其中 upp = 2·dist·TAN / H0
-  const dist = clamp(Math.max((halfSize.w * H0) / (fw * TAN), (halfSize.h * Math.max(0.5, viewDir().y) * H0) / (fh * TAN)) * 1.06, minDist, 110);
-  const dir = viewDir();
+  const dist = clamp(Math.max((halfSize.w * H0) / (fw * TAN), (halfSize.h * Math.max(0.5, (dirOver || viewDir()).y) * H0) / (fh * TAN)) * 1.06, minDist, 110);
+  const dir = dirOver || viewDir();
   const upp = (2 * dist * TAN) / H0; // 每像素對應的世界長度
-  const right = new THREE.Vector3(1, 0, 0);
   const fwd = new THREE.Vector3(-dir.x, 0, -dir.z); if (fwd.lengthSq() < 1e-4) fwd.set(0, 0, -1); fwd.normalize();
+  const right = new THREE.Vector3(-fwd.z, 0, fwd.x);
   const sx = (I.left - I.right) / 2, sy = (I.top - I.bottom) / 2;
   // 左側被擋 → 島要往右，target 往左移；底部被擋(sy<0) → 島要往上，target 往鏡頭方向移
   const target = focus.clone().addScaledVector(right, -sx * upp).addScaledVector(fwd, sy * upp / Math.max(dir.y, 0.35));
@@ -153,11 +153,12 @@ function flyToIsland(id, instant = false) {
   const rec = W.islands.get(id), c = rec.center.clone().setY(0.7);
   // 往前看：視野偏向「下一站」，讓人有一步一步往前走的感覺；最後一站才置中
   const cur = byId.get(id), next = ISLANDS.find((t) => t.n === cur.n + 1), nrec = next && W.islands.get(next.id);
-  if (nrec) {
+  if (nrec && !S.bird) {
+    // 站在這一站的「後面」往前看：這一站在近處，後面的橋與島一路遠去
     const dir = nrec.center.clone().sub(rec.center).setY(0).normalize();
-    const gap = nrec.center.distanceTo(rec.center), shift = gap * (rec.bridge ? 1.14 : 1.29);
-    c.addScaledVector(dir, shift);
-    moveCamera(frame(c, { w: shift + (rec.bridge ? 3.4 : 3.8), h: 3.6 }, 11), instant);
+    c.addScaledVector(dir, rec.bridge ? 2.2 : 2.6);
+    const v = dir.clone().multiplyScalar(-0.85).add(new THREE.Vector3(0, 0.55, 0.5)).normalize();
+    moveCamera(frame(c, { w: 4.4, h: 3.2 }, 10, v), instant);
     return;
   }
   moveCamera(frame(c, rec.bridge ? { w: 3.4, h: 3.0 } : { w: 5.6, h: 4.6 }, rec.bridge ? 8 : 11), instant);
