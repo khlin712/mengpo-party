@@ -67,9 +67,9 @@ async function initWorld() {
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.25;
   stage.append(renderer.domElement);
   labelRenderer = new CSS2DRenderer(); labelRenderer.domElement.className = 'labels'; stage.append(labelRenderer.domElement);
-  camera = new THREE.PerspectiveCamera(38, 1, 0.1, 400);
+  camera = new THREE.PerspectiveCamera(38, 1, 0.1, 900);
   controls = new OrbitControls(camera, renderer.domElement);
-  Object.assign(controls, { enableDamping: true, dampingFactor: 0.08, minDistance: 5, maxDistance: 50, maxPolarAngle: 1.42, minPolarAngle: 0.06, rotateSpeed: 0.7, zoomSpeed: 0.8, panSpeed: 0.8, screenSpacePanning: false });
+  Object.assign(controls, { enableDamping: true, dampingFactor: 0.08, minDistance: 5, maxDistance: 120, maxPolarAngle: 1.42, minPolarAngle: 0.06, rotateSpeed: 0.7, zoomSpeed: 0.8, panSpeed: 0.8, screenSpacePanning: false });
   controls.addEventListener('start', () => { fly = null; userMoved = true; document.body.classList.add('interacted'); });
   controls.addEventListener('change', () => { dirty = true; const t = controls.target; const l = Math.hypot(t.x, t.z); if (l > 16) { t.x *= 16 / l; t.z *= 16 / l; } });
   W = buildWorld({ stage });
@@ -126,7 +126,7 @@ function frame(focus, halfSize, minDist = 8) {
   const I = insets(), W0 = stage.clientWidth, H0 = stage.clientHeight;
   const fw = Math.max(200, W0 - I.left - I.right), fh = Math.max(200, H0 - I.top - I.bottom);
   // 世界半寬 w 要塞進 fw 像素：fw/2 · upp ≥ w，其中 upp = 2·dist·TAN / H0
-  const dist = clamp(Math.max((halfSize.w * H0) / (fw * TAN), (halfSize.h * Math.max(0.5, viewDir().y) * H0) / (fh * TAN)) * 1.06, minDist, 46);
+  const dist = clamp(Math.max((halfSize.w * H0) / (fw * TAN), (halfSize.h * Math.max(0.5, viewDir().y) * H0) / (fh * TAN)) * 1.06, minDist, 110);
   const dir = viewDir();
   const upp = (2 * dist * TAN) / H0; // 每像素對應的世界長度
   const right = new THREE.Vector3(1, 0, 0);
@@ -155,8 +155,9 @@ function flyToIsland(id, instant = false) {
   const cur = byId.get(id), next = ISLANDS.find((t) => t.n === cur.n + 1), nrec = next && W.islands.get(next.id);
   if (nrec) {
     const dir = nrec.center.clone().sub(rec.center).setY(0).normalize();
-    c.addScaledVector(dir, rec.bridge ? 3.2 : 3.6);
-    moveCamera(frame(c, { w: rec.bridge ? 6.6 : 7.4, h: 3.6 }, 11), instant);
+    const gap = nrec.center.distanceTo(rec.center), shift = gap * (rec.bridge ? 1.14 : 1.29);
+    c.addScaledVector(dir, shift);
+    moveCamera(frame(c, { w: shift + (rec.bridge ? 3.4 : 3.8), h: 3.6 }, 11), instant);
     return;
   }
   moveCamera(frame(c, rec.bridge ? { w: 3.4, h: 3.0 } : { w: 5.6, h: 4.6 }, rec.bridge ? 8 : 11), instant);

@@ -50,20 +50,20 @@ export function buildWorld({ stage, labels }) {
   const addGlow = (mat, base, boost) => { glows.push({ mat, base, boost }); return mat; };
 
   // ── 光與霧 ────────────────────────────────────────────────────────────
-  scene.fog = new THREE.Fog(0xcfe8f8, 38, 95);
+  scene.fog = new THREE.Fog(0xcfe8f8, 80, 240);
   const hemi = new THREE.HemisphereLight(0xdff0ff, 0xa0866a, 0.8);
   scene.add(hemi);
   const sun = new THREE.DirectionalLight(0xffffff, 1.4);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1536, 1536);
-  Object.assign(sun.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 70 });
+  Object.assign(sun.shadow.camera, { left: -27, right: 27, top: 27, bottom: -27, near: 1, far: 140 });
   sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.04;
   scene.add(sun, sun.target);
 
   // 天空漸層球
   const skyU = { top: { value: new THREE.Color() }, bottom: { value: new THREE.Color() } };
   const skyMesh = new THREE.Mesh(
-    new THREE.SphereGeometry(120, 24, 16),
+    new THREE.SphereGeometry(320, 24, 16),
     new THREE.ShaderMaterial({
       uniforms: skyU, side: THREE.BackSide, depthWrite: false, fog: false,
       vertexShader: 'varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);} ',
@@ -91,7 +91,7 @@ export function buildWorld({ stage, labels }) {
   scene.add(rainbow);
 
   // 海
-  const seaGeo = new THREE.PlaneGeometry(160, 160, 56, 56);
+  const seaGeo = new THREE.PlaneGeometry(360, 360, 72, 72);
   seaGeo.rotateX(-Math.PI / 2);
   const seaMat = new THREE.MeshStandardMaterial({ color: 0x4fb0c9, emissive: 0x1d6f86, emissiveIntensity: 0.35, roughness: 0.5, metalness: 0.05, flatShading: true });
   const sea = new THREE.Mesh(seaGeo, seaMat);
