@@ -173,3 +173,11 @@
 .main-cta button{min-height:44px;border-radius:12px;border:1px solid #496550;background:#fff;color:#283c34;font:700 15px/1.2 inherit;font-family:inherit;cursor:pointer;padding:10px 14px}
 .main-cta button.primary{background:#496550;color:#fff}
 .main-cta button:focus-visible{outline:3px solid #d9a521;outline-offset:2px}
+
+/* 孟婆島：地圖上的大標語（只借「地圖上浮一句主標」的層級，文字與造型為原創）。小螢幕、開卡片時隱藏。 */
+.hero-note{position:absolute;left:24px;bottom:84px;z-index:3;max-width:300px;pointer-events:none;color:#283c34;text-shadow:0 1px 10px rgba(255,255,255,.85)}
+.hero-note .hero-num{font:800 56px/1 inherit;font-family:inherit;color:#d96b8e;opacity:.9}
+.hero-note h2{margin:2px 0 6px;font:800 28px/1.2 inherit;font-family:inherit;letter-spacing:.02em}
+.hero-note p{margin:0;font:600 14px/1.5 inherit;font-family:inherit;color:#4a5d52}
+@media (max-width:1099px),(max-height:699px){.hero-note{display:none}}
+body:has(#detail:not([hidden])) .hero-note{display:none}
