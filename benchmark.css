@@ -1,0 +1,175 @@
+/* Benchmark pass: density, type scale and placement measured from the reference map site
+   (see research/PUMA-VISUAL.md). Colours and content stay the course island's own.
+   Loaded last, so these rules settle size and placement. */
+:root{--index-w:320px;--card-w:360px;--card-top:158px;--ink-line:#283c3426;--paper-glass:#fbfaf3e8;--muted-2:#8d968a}
+
+/* ---- Type: one sans family, heavy headings, small mono eyebrows. ---- */
+.shell .kicker,.detail-head .eyebrow{font:700 10px/1.4 ui-monospace,'SFMono-Regular',Menlo,monospace;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+.shell .index-head h1{font:900 24px/1.35 'Noto Sans TC',sans-serif;letter-spacing:.5px;margin:6px 0 8px}
+.shell .detail h2{font:800 21px/1.35 'Noto Sans TC',sans-serif;margin:3px 0 0}
+.brand-words b{font:800 19px/1.25 'Noto Sans TC',sans-serif;letter-spacing:1px}
+.brand-words small{font-size:12px;letter-spacing:1px}
+
+/* ---- Map fills the whole window; the index floats over its right edge as glass. ---- */
+@media(min-width:721px){
+ .shell main{display:block}
+ .shell .world{position:fixed;inset:0}
+ .shell .index{position:fixed;z-index:6;top:0;right:0;bottom:0;width:var(--index-w);padding:28px 22px 0;background:var(--paper-glass);border-left:1px solid #ffffffb3;box-shadow:-12px 0 40px #23392e14;backdrop-filter:blur(16px) saturate(1.1);-webkit-backdrop-filter:blur(16px) saturate(1.1);transition:transform .3s ease,visibility .3s}
+ .index-collapsed .shell .index,.shell.index-collapsed .index{transform:translateX(100%);visibility:hidden}
+ .shell .top-actions{right:calc(var(--index-w) + 20px);transition:right .3s ease}
+ .shell.index-collapsed .top-actions{right:20px}
+}
+@media(min-width:721px) and (max-width:1100px){:root{--index-w:296px;--card-w:min(340px,calc(100vw - var(--index-w) - 60px))}}
+
+/* ---- Top-right actions: 44px glass buttons with a hairline border. ---- */
+@media(min-width:721px){
+ .shell .top-actions{gap:6px}
+ .shell .top-actions>button{min-height:44px;min-width:44px;padding:0 13px;border-radius:10px;border:1px solid var(--ink-line);font-size:12.5px;font-weight:500;box-shadow:0 2px 8px #23392e0f}
+ .shell .top-actions i{font-size:13px}
+ .shell #help{width:44px;padding:0}
+ .discuss-button b{min-width:20px;height:20px;font-size:11px}
+}
+
+/* ---- Map tools: two capsules; on wide screens they sit on the top row next to the brand. ---- */
+.shell .map-tools{background:none;border:0;box-shadow:none;padding:0;gap:6px;backdrop-filter:none;-webkit-backdrop-filter:none}
+.shell .tool-group{gap:0;padding:3px;border-radius:999px;background:var(--glass);border:1px solid #fff;box-shadow:0 2px 8px #23392e14;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.shell .tool-group+.tool-group{border-left:1px solid #fff;padding-left:3px}
+.shell .map-tools button{min-width:46px;min-height:46px;padding:3px 6px;border-radius:999px;gap:1px;color:#6f7a70}
+.shell .map-tools button i{width:22px;height:22px;font-size:14px}
+.shell .map-tools button span{font-size:10.5px;line-height:1.2}
+.shell .map-tools button:hover{background:#ffffffb3;color:var(--ink)}
+.shell .map-tools button[aria-pressed=true]{color:var(--ink)}
+/* Where they fit (wide screens) the capsules share the top row with the brand; at mid widths they dock
+   under the brand and step away while a card is open, so the card always starts just under the brand. */
+:root{--card-top:101px}
+@media(min-width:721px){.shell .map-tools{top:86px}.detail-open .map-tools{display:none}}
+/* The tools sit beside the brand only when the top row has room for them and the actions (角色、清單…) too. */
+@media(min-width:1700px){
+ .shell .map-tools{top:20px;left:276px}
+ .detail-open .map-tools{display:flex;left:276px}
+}
+
+/* ---- Island names: small pills with an orange number. ---- */
+.island-3d-label{font-size:11.5px;font-weight:600;min-height:28px;padding:3px 10px;border:1px solid #fff;background:#fffdf8f2;box-shadow:0 3px 10px #23392e24;color:var(--ink)}
+.island-3d-label>span:first-child{font:700 10.5px ui-monospace,'SFMono-Regular',Menlo,monospace;color:var(--accent);margin-right:5px}
+.island-3d-label.compact{min-width:28px;height:28px;padding:2px}
+.island-3d-label.compact>span:first-child{font-size:10.5px;margin:0}
+.island-3d-label.selected{background:var(--ink);color:#fffaf2;border-color:var(--ink)}
+.island-3d-label.selected>span:first-child{color:#f3c9a6}
+
+/* ---- Index: compact rhythm. ---- */
+.shell .index-stats{font-size:11.5px;color:var(--muted-2)}
+.shell .index-stats b{font:600 14px Georgia,serif}
+.shell .index-lead{font-size:12.5px;line-height:1.7;margin:4px 0 14px}
+.shell .quiz-card{padding:10px 12px;border-radius:12px;margin:0 0 10px;border-color:#efd3bd;background:#fff6ec}
+.shell .quiz-card b{font-size:14px;font-weight:800;color:var(--ink)}
+.shell .quiz-card small{font-size:11.5px;line-height:1.5;margin-top:2px;color:var(--muted-2)}
+.shell .quiz-arrow{font-size:20px}
+.shell .entry-actions{gap:6px;margin:0 0 10px}
+.shell .entry-actions button{padding:7px 8px;border-radius:9px;border-color:var(--ink-line);font-size:12.5px;font-weight:700;line-height:1.3}
+.shell .entry-actions button span{font-size:10.5px;margin-top:1px}
+.shell .search{min-height:44px;padding:4px 12px;border-radius:8px;border:1px solid var(--ink-line);margin:0 0 10px}
+.shell .search span{font-size:16px}
+.shell .search input{font-size:13px}
+.shell .index-tabs{gap:5px}
+.shell .index-tabs button{min-height:44px;border-radius:9px;border-color:var(--ink-line);font-size:12.5px;font-weight:500}
+.shell .index-tabs button span{font:400 10.5px ui-monospace,monospace}
+.shell #entry-note{font-size:12px;line-height:1.6;margin:8px 0 4px}
+.shell .concern-list button{min-height:50px;padding:9px 8px;font-size:13.5px;line-height:1.5;gap:10px}
+.shell .q-mark{font-size:17px;width:18px}
+.shell .text-button{font-size:12.5px}
+.shell .tabs{gap:5px;margin:8px 0 4px}
+.shell .tabs button{min-height:32px;padding:3px 11px;font-size:12px;border-color:var(--ink-line)}
+.shell .result-count{font-size:11px!important}
+.shell .topic-row{padding:8px;gap:12px;min-height:56px}
+.shell .topic-row .num{font:400 22px/1 Georgia,serif;min-width:26px}
+.shell .topic-name strong{font-size:13.5px;font-weight:700}
+.shell .topic-name small{font-size:10.5px;color:var(--muted-2)}
+.shell .topic-row .count{font:400 10px ui-monospace,monospace;color:var(--muted-2)}
+.shell .topic-item.active{border-radius:12px}
+.shell .topic-steps{padding:0 8px 10px 46px}
+.shell .topic-steps li{padding:0;font-size:12.5px}
+.shell .step-link{min-height:40px;padding:6px 9px;margin:0;border-radius:9px;gap:9px;font-size:12.5px}
+.shell .step-link .pin-no{width:18px;height:18px;border:0;background:#fff;font-size:11px;font-weight:800}
+.shell .index-footer{font-size:11px}
+
+/* ---- Detail card: 360px glass card, small section labels, white bordered rows. ---- */
+@media(min-width:721px){.shell .detail{padding:0 18px 0 20px}}
+.shell .detail-top{min-height:44px;padding:8px 0;margin-bottom:6px}
+.shell #detail-crumb{font:600 10.5px ui-monospace,monospace;letter-spacing:1px;color:var(--muted-2)}
+.shell .detail-top .close{font-size:22px;border-radius:12px}
+.shell .detail-head{gap:12px;align-items:center}
+.shell .detail-badge{width:48px;height:48px;border-radius:15px;font-size:18px}
+.shell .detail-head .eyebrow{font-size:9.5px;letter-spacing:1.5px}
+.shell .chips{gap:5px;margin:12px 0 2px}
+.shell .chip{min-height:25px;padding:3px 10px;font-size:11px;font-weight:600;border-color:#e6dccd;background:#fff}
+.shell .chip.strong{background:var(--ink);border-color:var(--ink)}
+.shell .answer-first{margin:12px 0 4px;padding:2px 0 2px 12px;border-radius:0;background:none;border-left:3px solid var(--accent)}
+.shell .answer-first .lead{font-size:13.5px;line-height:1.7;color:var(--ink)}
+.shell .card-section{padding:14px 0 0}
+.shell .card-section h3,.shell .detail summary{font-size:10.5px;font-weight:700;letter-spacing:1px;color:var(--muted-2)}
+.shell .card-section h3{margin:0 0 8px}
+.shell .detail summary{min-height:36px}
+.shell .detail summary span{font-size:10.5px}
+.shell .step-rows{gap:6px}
+.shell .step-row{padding:9px 11px;border-radius:12px;border-color:#ece4d8;background:#fff;gap:10px}
+.shell .step-row b{width:20px;height:20px;font-size:11.5px}
+.shell .step-row strong{font-size:13px}
+.shell .step-row small{font-size:11.5px;line-height:1.5}
+.shell .evidence-section p,.shell .topic-facts,.shell .exercise label{font-size:13px;line-height:1.7}
+.shell .topic-facts div{padding:8px 0}
+.shell .exercise textarea{font-size:13px;min-height:96px}
+.shell .related{gap:6px}
+.shell .related button{min-height:38px;font-size:12.5px;border-color:#e6dccd;background:#fff}
+.shell .related button b{width:26px;height:26px;font-size:11px}
+.shell .detail-actions{padding:12px 20px 16px}
+.shell .detail-actions button{min-height:44px;font-size:13px;border-radius:12px}
+.shell .detail-actions small{font-size:11px}
+.shell .pending-note{font-size:12.5px}
+.shell .step-nav button{font-size:12.5px}
+
+/* ---- Caption and legend: small chips. ---- */
+.shell .map-caption{font-size:12px;padding:6px 12px}
+.shell .legend{font-size:11px;border-radius:8px;padding:5px 10px}
+
+/* ---- Phones: map first, the tools tucked behind a 「工具」 button like the reference's single time button. ---- */
+#tools-toggle{display:none}
+@media(max-width:720px){
+ #tools-toggle{display:inline-flex}
+ .shell .map-tools{display:none}
+ .tools-open .shell .map-tools,.shell.tools-open .map-tools{display:flex;flex-wrap:wrap;top:calc(max(12px,env(safe-area-inset-top)) + 64px);left:12px;right:72px}
+ .shell .map-tools button{min-width:40px;min-height:44px}
+ .shell .map-tools button span{display:block;font-size:10px}
+ .shell .map-tools button i{width:20px;height:20px;font-size:13px}
+ .island-3d-label{min-height:30px;font-size:11px}
+ .island-3d-label.compact{min-width:30px;height:30px}
+ .shell .index-head h1{font-size:22px}
+}
+.shell .entry-actions button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---- Card details from the reference's second visual pass ---- */
+.shell .detail-badge{background:linear-gradient(150deg,#fffaf2,var(--badge,#dcb26e));box-shadow:0 1px 0 #fff inset,0 3px 8px #23392e24;color:var(--ink)}
+.shell .card-section h3{text-transform:uppercase;letter-spacing:1.6px;margin:4px 0 8px}
+.shell .step-row:hover,.shell .step-row.hot{background:#fff6ec;border-color:#efd3bd}
+.shell .topic-facts{display:grid;gap:6px;margin:10px 0 0}
+.shell .topic-facts div{padding:8px 10px 8px 24px;border:0;border-radius:10px;background:#f8f4ec;position:relative}
+.shell .topic-facts div::before{content:"";position:absolute;left:10px;top:15px;width:6px;height:6px;border-radius:2px;background:var(--accent)}
+.shell .topic-facts dt{font-size:11px;color:var(--muted-2)}
+.shell .topic-facts dd{margin:2px 0 0;font-size:12.5px;line-height:1.6}
+.shell .related button:hover{background:#fff6ec;border-color:var(--accent)}
+@media(min-width:721px){.shell .detail{scrollbar-width:thin;scrollbar-color:#e3cdb8 transparent}}
+
+/* ---- Phones (reference mobile layout) ---- */
+@media(max-width:720px){
+ /* half-height list sheet: drop the intro so the questions get the room; the full sheet shows everything */
+ .shell .index:not(.sheet-full) .index-head{display:none}
+ /* detail card: thin side margins like a sheet */
+ .shell .detail{left:8px;right:8px;width:auto;border-radius:20px 20px 0 0}
+}
+@media(max-width:720px){.shell .index:not(.sheet-full) .quiz-card{display:none}}
+
+/* 孟婆島：兩個全站主按鈕 */
+.main-cta{display:grid;grid-template-columns:1fr;gap:8px;margin:12px 0 10px}
+.main-cta button{min-height:44px;border-radius:12px;border:1px solid #496550;background:#fff;color:#283c34;font:700 15px/1.2 inherit;font-family:inherit;cursor:pointer;padding:10px 14px}
+.main-cta button.primary{background:#496550;color:#fff}
+.main-cta button:focus-visible{outline:3px solid #d9a521;outline-offset:2px}
