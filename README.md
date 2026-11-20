@@ -4,7 +4,7 @@
 
 目標網址：https://khlin712.github.io/mengpo-party/
 
-本專案由[作文學習島](https://khlin712.github.io/gsat-writing-class-island/)的引擎改編而來（原站不受影響）；內容、造型與動線依兩份對談筆記重新設計。
+本專案沿用[作文學習島](https://khlin712.github.io/gsat-writing-class-island/)的 3D 引擎（原站不受影響）；內容、版面與島嶼造型依兩份對談筆記重新設計：圓形島嶼、中央一條河、奈何橋橫越河面、崎嶇島有火山、遊樂園有摩天輪與旋轉木馬。
 
 ## 本機預覽與測試
 

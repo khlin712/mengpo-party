@@ -70,11 +70,11 @@ export function createWorld(host,topics,onSelect,{onRelation=()=>{},onStation=()
  // (The paper plane that used to float here became one of the clickable letter planes below.)
  floaters.push({mesh:pages,y:pages.position.y,phase:1});
  // The selected island gets a dark outline around its rim.
- function hexRing(inner,outer){const corner=(r,i)=>new THREE.Vector3(r*Math.sin(i*Math.PI/3),0,r*Math.cos(i*Math.PI/3)).applyAxisAngle(new THREE.Vector3(0,1,0),Math.PI/6);const shape=new THREE.Shape(),hole=new THREE.Path();for(let i=0;i<=6;i++){const o=corner(outer,i),n=corner(inner,i);i?shape.lineTo(o.x,o.z):shape.moveTo(o.x,o.z);i?hole.lineTo(n.x,n.z):hole.moveTo(n.x,n.z);}shape.holes.push(hole);const geometry=new THREE.ShapeGeometry(shape);geometry.rotateX(Math.PI/2);return geometry;}
+ function hexRing(inner,outer){const shape=new THREE.Shape(),hole=new THREE.Path();shape.absarc(0,0,outer,0,Math.PI*2,false);hole.absarc(0,0,inner,0,Math.PI*2,true);shape.holes.push(hole);const geometry=new THREE.ShapeGeometry(shape,48);geometry.rotateX(Math.PI/2);return geometry;}
  const ringGeometry=hexRing(1.37,1.5),ringMaterial=new THREE.MeshBasicMaterial({color:'#2f3b33',side:THREE.DoubleSide});const rings=new Map();
  const groups=new Map(),tops=new Map(),labelButtons=new Map(),labelObjects=new Map(),positions=new Map(),radii=new Map();
- const topGeometry=new THREE.CylinderGeometry(1.34,1.34,.08,6);topGeometry.rotateY(Math.PI/6);
- const baseGeometry=new THREE.CylinderGeometry(1.34,1.23,.27,6);baseGeometry.rotateY(Math.PI/6);
+ const topGeometry=new THREE.CylinderGeometry(1.34,1.34,.08,40);
+ const baseGeometry=new THREE.CylinderGeometry(1.34,1.23,.27,40);
  for(const t of topics){const g=new THREE.Group();if(t.id===SUMMIT)g.position.set(SUMMIT_AT.x,SUMMIT_AT.y,SUMMIT_AT.z);else g.position.set((t.x-470)*.0127,t.lift||0,(t.y-340)*.018);g.userData.id=t.id;scene.add(g);groups.set(t.id,g);positions.set(t.id,g.position.clone());mesh(g,baseGeometry,'#a3aa84',0,.025,0);const top=mesh(g,topGeometry,t.color,0,.2,0);tops.set(t.id,top);const ring=new THREE.Mesh(ringGeometry,ringMaterial);ring.position.y=.22;ring.visible=false;g.add(ring);rings.set(t.id,ring);box(g,0,.245,.59,1.52,.012,.15,'#e5dabb');architecture.build(g,t);if(t.kind!=='trees'){tree(g,-.86,-.14,.56);tree(g,.83,.04,.64);tree(g,.55,-.64,.45);}
  const label=document.createElement('button');label.className='island-3d-label';label.innerHTML=`<span>${t.n}</span><span class="island-title">${t.title}</span>`;label.title=t.title;label.setAttribute('aria-label',`${t.n} ${t.title}，${t.tag}`);label.onclick=()=>onSelect(t.id);const object=new CSS2DObject(label);object.position.set(0,.25,.98);g.add(object);labelButtons.set(t.id,label);labelObjects.set(t.id,object);radii.set(t.id,new THREE.Box3().setFromObject(g).getBoundingSphere(new THREE.Sphere()).radius);
  underside(g,t,topics.indexOf(t));
@@ -107,9 +107,9 @@ export function createWorld(host,topics,onSelect,{onRelation=()=>{},onStation=()
  // ---- The journey stops (see summit.js / journey.js): start, trailhead, the two cliff tops on the rough road, the foot of the
  // steep wall, calendar, trial-class & sign-up (an open-air cinema) and the service desk. ----
  const stopGroups=new Map(),stationLabels=new Map(),stationOf={start:'start',fork:'fork',wallfoot:'fork',pass1:'fork',pass2:'fork',calendar:'calendar',signup:'signup',contact:'contact',[UNIVERSITY]:'university'};
- const stopColor={start:'#9fc47e',fork:'#d9c99a',calendar:'#c9d3dc',signup:'#b9c98f',contact:'#a8c3ae'};
+ const stopColor={start:'#9a8878',fork:'#d9c99a',calendar:'#c9d3dc',signup:'#b9c98f',contact:'#a8c3ae'};
  Object.entries(STOPS).forEach(([id,s],k)=>{const g=new THREE.Group();g.position.set(s.x,s.y,s.z);g.name='stop-'+id;g.userData.stop=id;scene.add(g);stopGroups.set(id,g);
-  if(s.ledge){mesh(g,new THREE.CylinderGeometry(.7,.62,.22,7),'#b9ad95',0,.13,0);mesh(g,new THREE.CylinderGeometry(.66,.66,.04,7),'#d8ccb2',0,.25,0);
+  if(s.ledge){mesh(g,new THREE.CylinderGeometry(.7,.62,.22,24),'#b9ad95',0,.13,0);mesh(g,new THREE.CylinderGeometry(.66,.66,.04,24),'#d8ccb2',0,.25,0);
    if(s.kind==='crag'){
     // A cliff top: jagged rocks round a bare ledge over a sheer drop — where people on the rough road can fall.
     const col=merged(cragUnderside(.6,3.3+s.y,40+k));col.position.y=.02;g.add(col);
@@ -149,12 +149,10 @@ export function createWorld(host,topics,onSelect,{onRelation=()=>{},onStation=()
  // student's letter folded up; tapping one opens it (see app.js openLetter). On screen a plane never shrinks below a size you
  // can tap, a clear button sits on it for mouse, touch and keyboard, and now and then its paper catches the light. While the
  // pointer is on a plane it stops where it is on its circle (it must not jump away from under the pointer).
- const LETTER_SPOTS=[
-  {at:()=>new THREE.Vector3(UNIVERSITY_AT.x,UNIVERSITY_AT.y,UNIVERSITY_AT.z),off:[-1.7,1.85,.15],phase:0},
-  {at:()=>{const s=STOPS.signup;return new THREE.Vector3(s.x,s.y||0,s.z);},off:[1.45,.85,-.95],phase:2.1},
-  {at:()=>positions.get(SUMMIT).clone(),off:[1.95,2.35,-.55],phase:4.2},
-  {at:()=>positions.get('teaching').clone(),off:[-1.1,1.9,-.6],phase:1.0},
-  {at:()=>{const s=STOPS.calendar;return new THREE.Vector3(s.x,s.y||0,s.z);},off:[-1.2,1.1,.8],phase:3.1}];
+ const RIVER_PTS=[[-8.2,1.9],[-6.0,1.4],[-4.2,.9],[-1.8,.4],[.3,-.1],[3.3,-.9],[6.2,-1.9],[8.6,-3.2]].map(([x,z])=>new THREE.Vector3(x,-.36,z));
+ const riverCurve=new THREE.CatmullRomCurve3(RIVER_PTS,false,'catmullrom',.4);
+ const riverAt=u=>{const p=riverCurve.getPoint(u);return new THREE.Vector3(p.x,p.y+.12,p.z);};
+ const LETTER_SPOTS=[0.08,0.27,0.46,0.66,0.86].map((u,k)=>({at:()=>riverAt(u),off:[0,0,0],phase:k*1.3}));
  const creaseGeometry=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,.001,-.3),new THREE.Vector3(0,.071,.08)]),creaseMaterial=new THREE.LineBasicMaterial({color:'#d9c9a3'});
  const creaseLine=()=>{const l=new THREE.Object3D();l.raycast=()=>{};return l;};
  const letterPlanes=LETTER_SPOTS.map((spot,k)=>{const mat=new THREE.MeshStandardMaterial({color:'#f7b3cb',side:THREE.DoubleSide,roughness:.7,emissive:'#ffc6dc',emissiveIntensity:.18});
@@ -176,13 +174,15 @@ export function createWorld(host,topics,onSelect,{onRelation=()=>{},onStation=()
    // A short glint every few seconds (none with reduced motion).
    const g=still?0:Math.max(0,1-Math.abs(((t+p.phase*2.3)%7)-.4)/.4);p.mat.emissiveIntensity=.12+g*.55+p.lift*.25;}}
  const bridge=bridgePath(centers.get('fork'),positions.get(SUMMIT)),graph=buildGraph(centers);
- // 奈何橋下的河：一條淺藍色的河跟著橋走，河面上漂著蓮花（孟婆一定有河、有橋）。
- {const N=bridge.length,half=.62,pos=[],idx=[],uv=[];
-  for(let k=0;k<N;k++){const p=bridge[k],q=bridge[Math.min(N-1,k+1)],o=bridge[Math.max(0,k-1)];let dx=q.x-o.x,dz=q.z-o.z;const L=Math.hypot(dx,dz)||1;dx/=L;dz/=L;const nx=-dz,nz=dx,y=p.y-.5;
-   pos.push(p.x+nx*half,y,p.z+nz*half,p.x-nx*half,y,p.z-nz*half);uv.push(0,k/N,1,k/N);if(k<N-1){const a=k*2;idx.push(a,a+1,a+2,a+1,a+3,a+2);}}
+ // 中央的河：從島群左側穿過中央三座島，在奈何橋下流過，右端順著天空流走。孟婆一定有河、有橋；河面漂著蓮花。
+ {const N=90,half=1.25,pos=[],idx=[],uv=[];
+  for(let k=0;k<=N;k++){const u=k/N,p=riverCurve.getPoint(u),t=riverCurve.getTangent(u),nx=-t.z,nz=t.x,w=half*(.55+.45*Math.sin(Math.PI*Math.min(1,u*1.15+.02)));
+   pos.push(p.x+nx*w,p.y,p.z+nz*w,p.x-nx*w,p.y,p.z-nz*w);uv.push(0,u,1,u);if(k<N){const a=k*2;idx.push(a,a+1,a+2,a+1,a+3,a+2);}}
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();
-  const river=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:'#8fd6f5',emissive:'#5bb8e8',emissiveIntensity:.35,roughness:.25,metalness:.1,transparent:true,opacity:.82,side:THREE.DoubleSide}));
-  river.name='river';river.castShadow=false;river.raycast=()=>{};scene.add(river);}
+  const river=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:'#7fd0f4',emissive:'#4fb4ea',emissiveIntensity:.45,roughness:.2,metalness:.1,transparent:true,opacity:.88,side:THREE.DoubleSide}));
+  river.name='river';river.castShadow=false;river.raycast=()=>{};scene.add(river);
+  // 河岸的淡色邊線，讓河在天空中讀得出形狀
+  const edge=new THREE.Mesh(g.clone(),new THREE.MeshBasicMaterial({color:'#ffffff',transparent:true,opacity:.18,side:THREE.DoubleSide}));edge.position.y=-.02;edge.scale.set(1,1,1);edge.raycast=()=>{};scene.add(edge);}
  // ② The steep wall: a sheer rock face on the trophy island's outer side, rising from the ledge at its foot.
  // (The climb itself is a set of ropes hanging from the trophy island's rim — see route3d.js.)
  // Only low solid parts block feet; roofs and ground slabs leave walking space open.

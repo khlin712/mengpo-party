@@ -22,7 +22,7 @@ const jitter=(geometry,amount,flat=0)=>{const p=geometry.attributes.position;for
 function paint(geometry,yTop,yBottom,stops){const p=geometry.attributes.position,colors=new Float32Array(p.count*3),cs=stops.map(c=>new THREE.Color(c)),c=new THREE.Color();
  for(let i=0;i<p.count;i++){const t=Math.min(1,Math.max(0,(yTop-p.getY(i))/(yTop-yBottom||1))),f=t*(cs.length-1),k=Math.min(cs.length-2,Math.floor(f));c.copy(cs[k]).lerp(cs[k+1],f-k);colors.set([c.r,c.g,c.b],i*3);}
  geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));return geometry;}
-const hexLayer=(rTop,rBottom,top,bottom,colors,amount)=>{const g=new THREE.CylinderGeometry(rTop,rBottom,top-bottom,6,1);g.rotateY(Math.PI/6);g.translate(0,(top+bottom)/2,0);jitter(g,amount);return paint(g,top,bottom,colors);};
+const hexLayer=(rTop,rBottom,top,bottom,colors,amount)=>{const g=new THREE.CylinderGeometry(rTop,rBottom,top-bottom,26,1);g.translate(0,(top+bottom)/2,0);jitter(g,amount);return paint(g,top,bottom,colors);};
 const spike=(radius,height,top,x,z,sides,colors,amount)=>{const g=new THREE.ConeGeometry(radius,height,sides,3);g.rotateY(Math.PI/6);g.rotateX(Math.PI);g.translate(x,top-height/2,z);jitter(g,amount);return paint(g,top,top-height,colors);};
 
 const solid=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,flatShading:true}),smooth=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,flatShading:false});

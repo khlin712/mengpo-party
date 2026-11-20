@@ -48,7 +48,10 @@ const arcAngle=p=>Math.atan2(p.z-C.z,p.x-C.x),arcRadius=p=>Math.hypot(p.x-C.x,p.
 function alongArc(from,to,y,spacing,rimA=1.15,rimB=1.15,out=0,side=0){const ra=arcRadius(from)+side,rb=arcRadius(to);let a0=arcAngle(from),a1=arcAngle(to);while(a1-a0>Math.PI)a1-=2*Math.PI;while(a0-a1>Math.PI)a1+=2*Math.PI;const s=Math.sign(a1-a0);a0+=s*rimA/ra;a1-=s*rimB/rb;
  return even(u=>{const a=a0+(a1-a0)*u,r=ra+(rb-ra)*smooth(u)+out*Math.sin(Math.PI*u)**2;return {x:C.x+Math.cos(a)*r,z:C.z+Math.sin(a)*r};},spacing,y);}
 // ③ The golden bridge: from the trailhead round behind the islands and up to the trophy's rim, rising evenly — the smooth way.
-export function bridgePath(fork=STOPS.fork,summit=SUMMIT_AT,spacing=.17){const y0=(fork.y||0)+TOP,y1=summit.y+TOP;return alongArc(fork,summit,f=>y0+(y1-y0)*f,spacing,.9,1.15,-.2,-.45).map(p=>({...p,path:'bridge'}));}
+export function bridgePath(fork=STOPS.fork,summit=SUMMIT_AT,spacing=.17){const y0=(fork.y||0)+TOP,y1=summit.y+TOP;
+ // 奈何橋：從橋頭直接越過中央的河，緩緩升到遊樂園島；路線只帶一點 S 形，不繞島外圈。
+ const dx=summit.x-fork.x,dz=summit.z-fork.z,L=Math.hypot(dx,dz)||1,ux=dx/L,uz=dz/L,nx=-uz,nz=ux,S={x:fork.x+ux*.95,z:fork.z+uz*.95},E={x:summit.x-ux*1.2,z:summit.z-uz*1.2};
+ return even(u=>({x:S.x+(E.x-S.x)*u+nx*Math.sin(u*Math.PI*2)*.5,z:S.z+(E.z-S.z)*u+nz*Math.sin(u*Math.PI*2)*.5}),spacing,f=>y0+(y1-y0)*f).map(p=>({...p,path:'bridge'}));}
 // The long rough trail from the trailhead, further out round the back, to the foot of the steep wall.
 // A stretch of the rough way between two stops: up and down over humps, never level for long — the hard road.
 export function trailPath(from=STOPS.fork,to=STOPS.pass1,spacing=.2,out){const y0=(from.y||0)+TOP,y1=(to.y||0)+TOP,rimA=from.ring?.45:.9,rimB=to.ring?.45:.9,side=from.ring?0:.45;
