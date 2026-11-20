@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
-import { ISLANDS, FLOWS, GROUPS, ENTRY_ROUTES, CONCERNS, TOUR, INTRO_KEY, INTRO_STEPS, PENDING, dayNote, findIslands, makeOutline, readStored, cueAt } from './content.js';
+import { ISLANDS, FLOWS, GROUPS, ENTRY_ROUTES, CONCERNS, PEOPLE, PEOPLE_NOTE, TOUR, INTRO_KEY, INTRO_STEPS, PENDING, dayNote, findIslands, makeOutline, readStored, cueAt } from './content.js';
 import { CLASSES, CONTACTS, PRICING, publicFeedback, feedbackSignature, isLink } from './journey.js';
 import { easeInOutCubic, FLY_MS } from './motion.js';
 import { createResolution } from './resolution.js';
@@ -18,7 +18,7 @@ const STORE = 'mengpo-island-v2';
 
 // ── 狀態 ────────────────────────────────────────────────────────────────
 const S = {
-  sel: null, step: null, flow: null, query: '', groups: new Set(), tab: 'islands',
+  sel: null, step: null, flow: null, person: null, people: true, query: '', groups: new Set(), tab: 'islands',
   entry: '', route: [], saved: [], note: '', visited: new Set(),
   mins: 900, minsTarget: null, dayPlaying: false, freeze: reduced.matches, bird: false, names: true, pins: true, flowsOn: false,
   tour: { on: false, playing: false, sec: 0, cue: -1 },
@@ -71,7 +71,7 @@ async function initWorld() {
   controls = new OrbitControls(camera, renderer.domElement);
   Object.assign(controls, { enableDamping: true, dampingFactor: 0.08, minDistance: 5, maxDistance: 46, maxPolarAngle: 1.42, minPolarAngle: 0.06, rotateSpeed: 0.7, zoomSpeed: 0.8, panSpeed: 0.8, screenSpacePanning: false });
   controls.addEventListener('start', () => { fly = null; userMoved = true; document.body.classList.add('interacted'); });
-  controls.addEventListener('change', () => { dirty = true; const t = controls.target; const l = Math.hypot(t.x, t.z); if (l > 11) { t.x *= 11 / l; t.z *= 11 / l; } });
+  controls.addEventListener('change', () => { dirty = true; const t = controls.target; const l = Math.hypot(t.x, t.z); if (l > 16) { t.x *= 16 / l; t.z *= 16 / l; } });
   W = buildWorld({ stage });
   scene = W.scene;
 
@@ -144,7 +144,9 @@ function moveCamera({ target, pos }, instant = false) {
 function home(instant = false) {
   if (!camera) return;
   userMoved = false;
-  moveCamera(frame(new THREE.Vector3(0, 0.4, 0), { w: 8.6, h: 6.9 }, 14), instant);
+  let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9;
+  for (const r of W.islands.values()) { x0 = Math.min(x0, r.center.x); x1 = Math.max(x1, r.center.x); z0 = Math.min(z0, r.center.z); z1 = Math.max(z1, r.center.z); }
+  moveCamera(frame(new THREE.Vector3((x0 + x1) / 2, 0.4, (z0 + z1) / 2), { w: (x1 - x0) / 2 + 4.6, h: (z1 - z0) / 2 + 3.4 }, 14), instant);
 }
 function flyToIsland(id, instant = false) {
   if (!W) return;
@@ -163,29 +165,37 @@ function markVisited(id) { if (!S.visited.has(id)) { S.visited.add(id); save(); 
 function setHash(v) { try { history.replaceState(null, '', v ? '#' + v : location.pathname + location.search); } catch { /* 忽略 */ } }
 function selectIsland(id, { step = null, fly = true } = {}) {
   if (!byId.has(id)) return;
-  S.sel = id; S.step = step; S.flow = null;
+  S.sel = id; S.step = step; S.flow = null; setPerson(null);
   if (!S.tour.on) markVisited(id);
   setHash(id + (step !== null ? '/' + (step + 1) : ''));
   showCard(); refresh();
   if (fly) { syncLayout(); flyToIsland(id); }
 }
 function selectFlow(fid) {
-  S.flow = fid; S.step = null; S.sel = null; setHash('');
+  S.flow = fid; S.step = null; S.sel = null; setPerson(null); setHash('');
   showCard(); refresh(); syncLayout(); flyToFlow(fid);
 }
 function closeCard() {
-  const had = S.sel || S.flow;
-  S.sel = S.step = S.flow = null; setHash('');
+  const had = S.sel || S.flow || S.person;
+  S.sel = S.step = S.flow = null; setPerson(null); setHash('');
   $('#card').hidden = true; document.body.classList.remove('card-open');
   refresh(); if (had) { syncLayout(); home(); }
 }
 function showCard() {
   const card = $('#card'); card.hidden = false; document.body.classList.add('card-open');
-  $('#card-content').innerHTML = S.flow ? flowCard() : S.step !== null ? stepCard() : islandCard();
+  $('#card-content').innerHTML = S.person ? personCard() : S.flow ? flowCard() : S.step !== null ? stepCard() : islandCard();
   card.scrollTop = 0;
   if (narrow()) { card.classList.remove('tall'); $('#sidebar').classList.remove('tall'); }
 }
 
+function setPerson(id) { S.person = id; if (W) W.people.setSelected(id); }
+function selectPerson(id) {
+  const p = W?.people.persons.get(id); if (!p) return;
+  const isl = W.people.islandOf(id);
+  S.person = id; S.sel = isl; S.step = null; S.flow = null; W.people.setSelected(id);
+  if (isl && !S.tour.on) markVisited(isl);
+  setHash(''); showCard(); refresh(); syncLayout(); if (isl) flyToIsland(isl);
+}
 // ── 卡片內容 ────────────────────────────────────────────────────────────
 const chipHtml = (id) => { const t = byId.get(id); return `<button class="chip" style="--c:${t.color}" data-island="${t.id}"><i>${t.n}</i>${esc(t.short)}</button>`; };
 function routeBar(id) {
@@ -224,7 +234,19 @@ function islandCard() {
     <h3>基本資料</h3><dl class="facts">${t.facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
     <div class="ask"><h3>這座島在問你</h3><p><b>${esc(t.task)}</b></p><p class="ex">${esc(t.example)}</p></div>
     ${concerns.length ? `<h3>你可能想問</h3>${concerns.map((c) => `<details class="q"><summary>${esc(c.q)}</summary><p>${esc(c.a)}</p></details>`).join('')}` : ''}
+    ${PEOPLE.some((x) => x.island === t.id) ? `<h3>島上的人（示意）</h3>${PEOPLE.filter((x) => x.island === t.id).map((x) => `<button class="chip" style="--c:${t.color}" data-person="${x.id}"><i>人</i>${esc(x.role)}</button>`).join('')}` : ''}
     <h3>相連的島</h3>${related.map((f) => `<div><button class="chip" style="--c:${byId.get(f.a === t.id ? f.b : f.a).color}" data-flow="${f.id}"><i>↔</i>${esc(f.label)}：${esc(byId.get(f.a === t.id ? f.b : f.a).short)}</button></div>`).join('')}
+  </div>`;
+}
+function personCard() {
+  const p = W.people.persons.get(S.person), d = p.def, t = d.island ? byId.get(d.island) : byId.get(W.people.islandOf(S.person));
+  return `<div style="--c:${t.color}">
+    <div class="eyebrow">島上的人　<span class="tagc">${esc(d.role)}</span></div>
+    <h2>${esc(d.name)}</h2>
+    <blockquote class="say">「${esc(d.line)}」</blockquote>
+    <p class="note">${esc(PEOPLE_NOTE)}</p>
+    <div class="btn-row">${d.action === 'tour' ? '<button class="btn" data-act="tour">▶ 跟著導覽員走一圈</button>' : ''}<button class="btn ghost" data-island="${t.id}">看「${esc(t.short)}」的介紹</button></div>
+    <h3>這座島的其他人</h3>${PEOPLE.filter((x) => x.island === t.id && x.id !== d.id).map((x) => `<button class="chip" style="--c:${t.color}" data-person="${x.id}"><i>人</i>${esc(x.role)}</button>`).join('') || '<p class="note">這裡沒有其他人。</p>'}
   </div>`;
 }
 function stepCard() {
@@ -251,6 +273,8 @@ function flowCard() {
 $('#card-content').addEventListener('click', async (e) => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.step !== undefined) return selectIsland(S.sel, { step: +b.dataset.step, fly: false });
+  if (b.dataset.person) return selectPerson(b.dataset.person);
+  if (b.dataset.act === 'tour') return startTour();
   if (b.dataset.island) return selectIsland(b.dataset.island);
   if (b.dataset.flow) return selectFlow(b.dataset.flow);
   if (b.dataset.act === 'back') return selectIsland(S.sel, { fly: false });
@@ -351,6 +375,7 @@ $$('.hud [data-toggle]').forEach((b) => (b.onclick = () => {
   const k = b.dataset.toggle; const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on);
   if (k === 'names') { S.names = on; stage.classList.toggle('hide-plates', !on); }
   if (k === 'pins') { S.pins = on; stage.classList.toggle('hide-pins', !on); }
+  if (k === 'people') { S.people = on; if (W) W.people.root.visible = on; stage.classList.toggle('hide-who', !on); }
   if (k === 'flows') { S.flowsOn = on; refresh(); }
   if (k === 'freeze') { S.freeze = on; }
   if (k === 'bird') { S.bird = on; if (S.sel) flyToIsland(S.sel); else if (S.flow) flyToFlow(S.flow); else home(); }
@@ -381,7 +406,7 @@ function applyVisualTargets() {
       const rec = W.islands.get(t.id);
       rec.plate.classList.toggle('dim', v.dimT > 0); rec.plate.classList.toggle('on', S.sel === t.id);
       const rank = S.route.indexOf(t.id);
-      if (rank >= 0) rec.plate.dataset.route = rank + 1; else delete rec.plate.dataset.route;
+      if (rank >= 0) rec.plate.dataset.route = '★' + (rank + 1); else delete rec.plate.dataset.route;
       rec.pins.forEach((p, i) => { p.classList.toggle('show', S.sel === t.id); p.classList.toggle('on', S.sel === t.id && S.step === i); p.classList.toggle('dim', v.dimT > 0); });
     }
   }
@@ -429,24 +454,26 @@ function setupPicking() {
     if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6 || performance.now() - down.t > 600) return;
     const d = pick(e); if (!d) return;
     if (S.tour.on) return;
-    if (d.kind === 'step') selectIsland(d.id, { step: d.step });
+    if (d.kind === 'person') selectPerson(d.id);
+    else if (d.kind === 'step') selectIsland(d.id, { step: d.step });
     else if (d.kind === 'flow') selectFlow(d.id);
     else selectIsland(d.id);
   });
   let last = 0;
   renderer.domElement.addEventListener('pointermove', (e) => {
     if (e.pointerType !== 'mouse' || e.buttons || performance.now() - last < 50) return; last = performance.now();
-    const d = pick(e); const id = d && d.kind !== 'flow' ? d.id : null;
+    const d = pick(e); const id = d && d.kind !== 'flow' && d.kind !== 'person' ? d.id : null;
     renderer.domElement.style.cursor = d ? 'pointer' : 'grab';
     if (id !== hoverId) { if (hoverId) vis.get(hoverId).hover = 0; hoverId = id; if (id) vis.get(id).hover = 0.6; }
-    tip.hidden = !d; if (d) { const t = d.kind === 'flow' ? FLOWS.find((f) => f.id === d.id).label : d.kind === 'step' ? byId.get(d.id).steps[d.step].label : byId.get(d.id).title; tip.textContent = t; tip.style.left = e.clientX + 'px'; tip.style.top = e.clientY + 'px'; }
+    tip.hidden = !d; if (d) { const t = d.kind === 'person' ? W.people.persons.get(d.id).def.role : d.kind === 'flow' ? FLOWS.find((f) => f.id === d.id).label : d.kind === 'step' ? byId.get(d.id).steps[d.step].label : byId.get(d.id).title; tip.textContent = t; tip.style.left = e.clientX + 'px'; tip.style.top = e.clientY + 'px'; }
   });
   renderer.domElement.addEventListener('pointerleave', () => { tip.hidden = true; if (hoverId) vis.get(hoverId).hover = 0; hoverId = null; });
 }
 // 名牌與圖釘是 HTML 按鈕
 function decorateLabels() {
   stage.addEventListener('click', (e) => {
-    const b = e.target.closest('.plate,.pin'); if (!b || S.tour.on) return;
+    const b = e.target.closest('.plate,.pin,.who'); if (!b || S.tour.on) return;
+    if (b.dataset.person) return selectPerson(b.dataset.person);
     selectIsland(b.dataset.island, { step: b.dataset.step !== undefined ? +b.dataset.step : null });
   });
 }

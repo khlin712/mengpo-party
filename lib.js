@@ -5,7 +5,9 @@ export const D = 4.55; // 相鄰島中心距離（> √3·R，留出水道給橋
 export const TOP = 0.5; // 島面高度
 export const NEIGHBORS = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, -1], [-1, 1]];
 
-export const hexCenter = (q, r) => ({ x: D * (q + r / 2), z: ((D * SQ3) / 2) * r });
+// 整組島的重心放在原點（七座島的軸座標平均為 q+r/2 = 12/7、r = -2/7）
+const OX = (12 / 7) * D, OZ = ((-2 / 7) * D * SQ3) / 2;
+export const hexCenter = (q, r) => ({ x: D * (q + r / 2) - OX, z: ((D * SQ3) / 2) * r - OZ });
 export const isAdjacent = (a, b) => NEIGHBORS.some(([q, r]) => q === b[0] - a[0] && r === b[1] - a[1]);
 export const hexDistance = (a, b) => {
   const dq = b[0] - a[0], dr = b[1] - a[1];
@@ -74,5 +76,31 @@ export function mulberry(seed) {
     t = Math.imul(t ^ (t >>> 15), t | 1);
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// ── 人物走路用 ───────────────────────────────────────────────────────────
+// 從角度 a0 走到 a1（走較短的那一邊），回傳取樣的角度
+export function shortestArc(a0, a1, step = 0.18) {
+  let d = a1 - a0;
+  while (d > Math.PI) d -= 2 * Math.PI;
+  while (d < -Math.PI) d += 2 * Math.PI;
+  const n = Math.max(1, Math.ceil(Math.abs(d) / step));
+  return Array.from({ length: n + 1 }, (_, i) => a0 + (d * i) / n);
+}
+// 折線：依走過的距離取得位置與朝向
+export function polyline(pts) {
+  const acc = [0];
+  for (let i = 1; i < pts.length; i++) acc.push(acc[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][2] - pts[i - 1][2]));
+  const len = acc[acc.length - 1];
+  return {
+    len, acc,
+    at(d) {
+      d = clamp(d, 0, len);
+      let i = 1;
+      while (i < acc.length - 1 && acc[i] < d) i++;
+      const a = pts[i - 1], b = pts[i], seg = acc[i] - acc[i - 1] || 1, u = (d - acc[i - 1]) / seg;
+      return { x: lerp(a[0], b[0], u), y: lerp(a[1], b[1], u), z: lerp(a[2], b[2], u), heading: Math.atan2(b[0] - a[0], b[2] - a[2]) };
+    },
   };
 }
