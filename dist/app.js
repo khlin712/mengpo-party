@@ -532,26 +532,31 @@ function textNodeHtml(t) {
 }
 function renderHome() {
   const facts = PRICING.questions.map((q) => { const [k, ...v] = q.split('：'); return `<div><dt>${esc(k)}</dt><dd>${esc(v.join('：'))}</dd></div>`; }).join('');
+  const path = ISLANDS.map((t) => `<li><button type="button" data-map="${t.id}" style="--c:${t.color}"><i>${t.n}</i><span><b>${esc(t.short)}</b><small>${esc(t.tag)}</small></span></button></li>`).join('');
+  const three = [['01', '適合誰', '18 歲以上、正在迷茫或想找人生方向的人。最常見的是關係問題（愛情、夫妻、親子），也有金錢、身體健康與事業。沒有其他申請條件，只是迷茫也可以來。'], ['02', '現場做什麼', '茶會以「植物能量」帶領你，從更高的角度，看見人生卡在哪個環節，以及那個卡點如何一路影響到現在。'], ['03', '怎麼進行', '不是法事，不是催眠，也不是別人說故事給你聽。你全程清醒，從自己的第一視角去看。流程為示意，實際安排以老師說明為準。']]
+    .map(([n, h, t]) => `<article><span class="n">${n}</span><h2>${h}</h2><p>${esc(t)}</p></article>`).join('');
+  const split = (id, title, desc, body) => `<section class="p-split" id="${id}"><div class="p-side"><h2>${title}</h2>${desc ? `<p>${desc}</p>` : ''}</div><div class="p-main">${body}</div></section>`;
   homeEl.innerHTML = `
-    <div class="page-top"><span class="logo"><span class="mark">婆</span><span class="words"><b>孟婆茶會</b><small>看見卡點，走出迴圈</small></span></span><button class="btn cta" type="button" data-act="signup">報名／場次</button></div>
+    <div class="page-top"><span class="logo"><span class="mark">婆</span><span class="words"><b>孟婆茶會</b><small>看見卡點，走出迴圈</small></span></span>
+      <nav class="p-nav" aria-label="本頁段落"><a href="#p-three" data-jump="p-three">適合誰</a><a href="#p-faq" data-jump="p-faq">常見疑問</a><a href="#p-text" data-jump="p-text">完整介紹</a><a href="#p-signup" data-jump="p-signup">場次</a></nav>
+      <button class="btn cta" type="button" data-act="signup">報名／場次</button></div>
     <div class="page-inner">
       <header class="p-hero">
-        <div class="eyebrow">孟婆茶會</div>
-        <h1>用「上帝視角」，<br>看見自己卡住的地方</h1>
-        <p class="p-lead">人生常常卡在迴圈裡：同樣的事一再發生，卻不知道到底卡在哪。孟婆茶會在活動中，陪你換一個更高的角度，看清楚那個卡點。</p>
-        <div class="p-cta"><button class="btn big" type="button" data-act="signup">看場次與報名</button><button class="btn big ghost" type="button" data-act="map">用地圖探索 →</button></div>
-        <p class="p-sub"><button class="linkish" type="button" data-act="text">只想看文字？直接看完整介紹 ↓</button></p>
+        <div class="p-hero-text">
+          <div class="eyebrow">孟婆茶會</div>
+          <h1>用「上帝視角」，<br>看見自己卡住的地方</h1>
+          <p class="p-lead">人生常常卡在迴圈裡：同樣的事一再發生，卻不知道到底卡在哪。孟婆茶會在活動中，陪你換一個更高的角度，看清楚那個卡點。</p>
+          <div class="p-cta"><button class="btn big" type="button" data-act="signup">看場次與報名</button><button class="btn big ghost" type="button" data-act="map">用地圖探索 →</button></div>
+          <p class="p-sub"><button class="linkish" type="button" data-act="text">只想看文字？直接看完整介紹 ↓</button></p>
+        </div>
+        <aside class="p-path" aria-label="七站路線"><div class="eyebrow">這趟旅程的七站</div><ol>${path}</ol><p>點任一站，到地圖上看。</p></aside>
       </header>
-      <div class="p-cards">
-        <section><h2>適合誰</h2><p>18 歲以上、正在迷茫或想找人生方向的人。最常見的是關係問題（愛情、夫妻、親子），也有金錢、身體健康與事業。沒有其他申請條件，只是迷茫也可以來。</p></section>
-        <section><h2>現場做什麼</h2><p>茶會以「植物能量」帶領你，從更高的角度，看見人生卡在哪個環節，以及那個卡點如何一路影響到現在。</p></section>
-        <section><h2>怎麼進行</h2><p>不是法事，不是催眠，也不是別人說故事給你聽。你全程清醒，從自己的第一視角去看。流程為示意，實際安排以老師說明為準。</p></section>
-      </div>
+      <div class="p-three" id="p-three">${three}</div>
       <dl class="p-facts">${facts}</dl>
-      <section class="p-route"><h2>你最在意哪一種問題？</h2><p>選一個，我幫你排好參觀順序，直接帶你到地圖。</p><div>${Object.entries(ENTRY_ROUTES).map(([k, v]) => `<button type="button" class="btn ghost" data-entry="${k}">${esc(v.label)}</button>`).join('')}</div></section>
-      <section id="p-faq"><h2>常見疑問</h2>${CONCERNS.map((c) => `<details class="q"><summary>${esc(c.q)}</summary><p>${esc(c.a)}</p></details>`).join('')}</section>
-      <section id="p-text"><h2>完整介紹（文字版）</h2><p class="p-note">依旅程順序，從人生卡住的地方，一路走到報名。互動地圖的內容和這裡相同。</p>${ISLANDS.map(textNodeHtml).join('')}</section>
-      <section id="p-signup"><h2>場次與報名</h2>${signupHtml()}</section>
+      <section class="p-route"><div><h2>你最在意哪一種問題？</h2><p>選一個，我幫你排好參觀順序，直接帶你到地圖。</p></div><div class="p-route-btns">${Object.entries(ENTRY_ROUTES).map(([k, v]) => `<button type="button" class="btn ghost" data-entry="${k}">${esc(v.label)}</button>`).join('')}</div></section>
+      ${split('p-faq', '常見疑問', '第一次聽到，常會有這些顧慮。', CONCERNS.map((c) => `<details class="q"><summary>${esc(c.q)}</summary><p>${esc(c.a)}</p></details>`).join(''))}
+      ${split('p-text', '完整介紹', '依旅程順序，從人生卡住的地方，一路走到報名。互動地圖的內容和這裡相同。', ISLANDS.map(textNodeHtml).join(''))}
+      ${split('p-signup', '場次與報名', '不用填表單，先私訊 LINE 就可以。', `<div class="p-signup">${signupHtml()}</div>`)}
       <p class="p-foot">你寫下的提綱只存在這個瀏覽器，網站不會代你傳送任何訊息，也沒有追蹤程式。</p>
     </div>
     <div class="p-bar"><button class="btn" type="button" data-act="signup">報名／場次</button><button class="btn ghost" type="button" data-act="map">用地圖探索 →</button></div>`;
@@ -564,6 +569,8 @@ function openHome(anchor) {
 }
 function closeHome() { if (homeEl.hidden) return; homeEl.hidden = true; document.body.classList.remove('page-open'); }
 homeEl.addEventListener('click', (e) => {
+  const j = e.target.closest('a[data-jump]');
+  if (j) { e.preventDefault(); $('#' + j.dataset.jump, homeEl)?.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'start' }); return; }
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.act === 'signup') openSignup();
   else if (b.dataset.act === 'map') { closeHome(); S.sel = null; setHash(''); home(); }
