@@ -53,7 +53,7 @@ export function buildWorld({ stage, labels }) {
   scene.fog = new THREE.Fog(0xcfe8f8, 70, 220);
   const hemi = new THREE.HemisphereLight(0xdff0ff, 0xa0866a, 0.8);
   scene.add(hemi);
-  const dawn = new THREE.PointLight(0xffd9a0, 75, 70, 1.5); // 路的盡頭是亮的
+  const dawn = new THREE.PointLight(0xffd9a0, 110, 80, 1.5); // 路的盡頭是亮的
   scene.add(dawn);
   const sun = new THREE.DirectionalLight(0xffffff, 1.4);
   sun.castShadow = true;
@@ -127,7 +127,7 @@ export function buildWorld({ stage, labels }) {
     for (let i = 0; i < p.length; i += 3) {
       const u = (p[i] - (xMin - 4)) / (xMax - xMin + 8);
       const c = riverTint(u);
-      const k = bright * lerp(0.32, 1.75, Math.pow(Math.min(1, Math.max(0, u)), 0.9));
+      const k = bright * lerp(0.18, 2.1, Math.pow(Math.min(1, Math.max(0, u)), 0.9));
       col[i] = c[0] * k; col[i + 1] = c[1] * k; col[i + 2] = c[2] * k;
     }
     seaGeo.attributes.color.needsUpdate = true;
@@ -201,7 +201,7 @@ export function buildWorld({ stage, labels }) {
     scene.add(g);
     const base = C(def.color);
     const mats = []; // 之後淡化用
-    const tone = lerp(0.62, 1, (x - xMin) / (xMax - xMin || 1));
+    const tone = lerp(0.42, 1.12, (x - xMin) / (xMax - xMin || 1));
     const own = (m) => { m.color.multiplyScalar(tone); m.userData.base = m.color.clone(); mats.push(m); return m; };
 
     const grass = own(std(mix(def.color, '#bfd59a', 0.55).getHex()));
@@ -333,7 +333,7 @@ export function buildWorld({ stage, labels }) {
     grp.rotation.y = Math.atan2(dir.x, dir.z);
     const rb = mulberry(11 + i);
     const mats = [];
-    const tone = lerp(0.62, 1, ((a.x + b.x) / 2 - xMin) / (xMax - xMin || 1));
+    const tone = lerp(0.42, 1.12, ((a.x + b.x) / 2 - xMin) / (xMax - xMin || 1));
     const own = (m) => { m.color.multiplyScalar(tone); m.userData.base = m.color.clone(); mats.push(m); return m; };
     const width = scary ? 0.8 : naihe ? 0.9 : 0.62;
     const segs = scary ? 10 : naihe ? 10 : 4;
@@ -524,13 +524,13 @@ export function buildWorld({ stage, labels }) {
 
   // ── 時間 ──────────────────────────────────────────────────────────────
   const tmpC = new THREE.Color();
-  const DARK_TOP = new THREE.Color(0x12163a), DARK_BOT = new THREE.Color(0x2b2650), BRIGHT_TOP = new THREE.Color(0x8ccaf5), BRIGHT_BOT = new THREE.Color(0xffdca6);
+  const DARK_TOP = new THREE.Color(0x080a22), DARK_BOT = new THREE.Color(0x1a1536), BRIGHT_TOP = new THREE.Color(0x8ccaf5), BRIGHT_BOT = new THREE.Color(0xffdca6);
   function setTime(minutes) {
     const sky = skyAt(minutes);
     const lp = lightPos(minutes);
     // 起點（-x）那側偏暗沉、橋之後（+x）偏明亮：往前走就是往光走
-    skyU.top.value.setRGB(...sky.top).lerp(DARK_TOP, 0.7); skyU.bottom.value.setRGB(...sky.bottom).lerp(DARK_BOT, 0.65);
-    skyU.topB.value.setRGB(...sky.top).lerp(BRIGHT_TOP, 0.5); skyU.bottomB.value.setRGB(...sky.bottom).lerp(BRIGHT_BOT, 0.7);
+    skyU.top.value.setRGB(...sky.top).lerp(DARK_TOP, 0.85); skyU.bottom.value.setRGB(...sky.bottom).lerp(DARK_BOT, 0.8);
+    skyU.topB.value.setRGB(...sky.top).lerp(BRIGHT_TOP, 0.7); skyU.bottomB.value.setRGB(...sky.bottom).lerp(BRIGHT_BOT, 0.88);
     scene.fog.color.copy(skyU.bottom.value).lerp(skyU.bottomB.value, 0.5);
     hemi.intensity = sky.hemiI; hemi.color.setRGB(...sky.top).lerp(tmpC.set(0xffffff), 0.5); hemi.groundColor.setRGB(...sky.bottom).multiplyScalar(0.55);
     sun.color.setRGB(...sky.light); sun.intensity = sky.lightI;
