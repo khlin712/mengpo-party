@@ -1,4 +1,3 @@
-import { ISLANDS } from './content.js';
 // 與 three.js 無關的純計算：六角格座標、天空色彩、曲線。Node 可直接測試。
 export const SQ3 = Math.sqrt(3);
 export const R = 2.0; // 六角格外接圓半徑（尖頂朝 ±z）
@@ -7,11 +6,8 @@ export const TOP = 0.5; // 島面高度
 export const BRIDGE_ARCH = { plain: 0.1, scary: 0.12, naihe: 0.5 }; // 橋面的弧度（人物走路也用）
 export const NEIGHBORS = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, -1], [-1, 1]];
 
-// 整組島的重心放在原點（只算島，橋不算）
-const ISL = ISLANDS.filter((t) => !t.type);
-const OX = D * (ISL.reduce((a, t) => a + t.hex[0] + t.hex[1] / 2, 0) / ISL.length);
-const OZ = ((D * SQ3) / 2) * (ISL.reduce((a, t) => a + t.hex[1], 0) / ISL.length);
-export const hexCenter = (q, r) => ({ x: D * (q + r / 2) - OX, z: ((D * SQ3) / 2) * r - OZ });
+// 五座島排成六角環（缺口在報名與起點之間），環心放在原點
+export const hexCenter = (q, r) => ({ x: D * (q + r / 2), z: ((D * SQ3) / 2) * r });
 export const isAdjacent = (a, b) => NEIGHBORS.some(([q, r]) => q === b[0] - a[0] && r === b[1] - a[1]);
 export const hexDistance = (a, b) => {
   const dq = b[0] - a[0], dr = b[1] - a[1];

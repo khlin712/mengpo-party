@@ -150,8 +150,7 @@ function home(instant = false) {
   const mid = new THREE.Vector3((x0 + x1) / 2, 0.4, (z0 + z1) / 2);
   if (portrait() && !S.bird) {
     // 直式螢幕：一條很長的路放不進窄寬度，改成站在起點往前看，路一路延伸到遠方
-    const v = new THREE.Vector3(-1, 0.8, 0.06).normalize();
-    moveCamera(frame(mid, { w: 6.5, h: (x1 - x0) / 2 + 10 }, 14, v), instant);
+    moveCamera(frame(mid, { w: (x1 - x0) / 2 + 4, h: (z1 - z0) / 2 + 3 }, 14), instant);
     return;
   }
   moveCamera(frame(mid, { w: (x1 - x0) / 2 + 5, h: (z1 - z0) / 2 + 3.0 }, 14), instant);

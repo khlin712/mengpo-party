@@ -33,7 +33,8 @@ test('旅程順序：崎嶇島 → 疑問橋 → 茶會 → 奈何橋 → 繽紛
   assert.deepEqual(w.between, ['teacher', 'stories']); assert.equal(w.kind, 'naihe');
   assert.match(q.intro, /疑問/); assert.match(w.intro, /工作怎麼進行/);
   const cs = real.map((t) => hexCenter(...t.hex));
-  assert.ok(Math.abs(cs.reduce((s, c) => s + c.x, 0) / 5) < 1e-9 && Math.abs(cs.reduce((s, c) => s + c.z, 0) / 5) < 1e-9, '重心在原點');
+  for (const c of cs) assert.ok(Math.abs(Math.hypot(c.x, c.z) - D) < 1e-9, '五座島都在環上（離環心一個島距）');
+  assert.equal(hexDistance(real[4].hex, real[0].hex), 2, '報名與起點之間留缺口，不相鄰');
   assert.equal(hexDistance([0, 0], [1, -1]), 1);
   const a = hexCenter(0, 0), b = hexCenter(1, 0);
   assert.ok(Math.abs(Math.hypot(b.x - a.x, b.z - a.z) - D) < 1e-9);
