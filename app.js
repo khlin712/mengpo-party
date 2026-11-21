@@ -150,10 +150,10 @@ function home(instant = false) {
   const mid = new THREE.Vector3((x0 + x1) / 2, 0.4, (z0 + z1) / 2);
   if (portrait() && !S.bird) {
     // 直式螢幕：一條很長的路放不進窄寬度，改成站在起點往前看，路一路延伸到遠方
-    moveCamera(frame(mid, { w: (x1 - x0) / 2 + 4, h: (z1 - z0) / 2 + 3 }, 14), instant);
+    moveCamera(frame(mid, { w: (x1 - x0) / 2 + 2.5, h: (z1 - z0) / 2 + 0.5 }, 14), instant);
     return;
   }
-  moveCamera(frame(mid, { w: (x1 - x0) / 2 + 5, h: (z1 - z0) / 2 + 3.0 }, 14), instant);
+  moveCamera(frame(mid, { w: (x1 - x0) / 2 + 3, h: (z1 - z0) / 2 + 0.5 }, 14, S.bird ? null : new THREE.Vector3(0.05, 0.5, 0.85).normalize()), instant); // 放低一點，讓四周的山入鏡
 }
 function flyToIsland(id, instant = false) {
   if (!W) return;
