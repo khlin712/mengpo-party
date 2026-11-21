@@ -177,6 +177,9 @@ export function buildWorld({ stage, labels }) {
   const hexGeo = (r, h) => new THREE.CylinderGeometry(r, r, h, 6);
   const mistMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, fog: false });
 
+  const petalStem = new THREE.CylinderGeometry(0.012, 0.016, 1, 4), petalGeo = new THREE.ConeGeometry(0.014, 0.17, 4);
+  const stemM = new THREE.MeshStandardMaterial({ color: 0x5f7a4a, roughness: 0.8 });
+  const bloomM = addGlow(new THREE.MeshStandardMaterial({ color: 0xe0364a, emissive: 0xc01e3a, emissiveIntensity: 0.3, roughness: 0.6 }), 0.3, 0.9);
   for (const def of ISLANDS.filter((t) => !t.type)) {
     const { x, z } = hexCenter(...def.hex);
     const g = new THREE.Group();
@@ -216,10 +219,22 @@ export function buildWorld({ stage, labels }) {
       } else {
         const tree = new THREE.Group();
         const h = 0.35 + rr() * 0.2;
-        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, h, 5), std(0x7b5a44)); trunk.position.y = h / 2;
-        const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.5, 6), std(mix('#79b66a', def.color, 0.25).getHex())); leaf.position.y = h + 0.2;
+        const bare = (x - xMin) / (xMax - xMin || 1) < 0.1; // 起點：枯木；越往繽紛世界越有生氣
+        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, h, 5), std(bare ? 0x4a3c44 : 0x7b5a44)); trunk.position.y = h / 2;
+        const leaf = new THREE.Mesh(new THREE.ConeGeometry(bare ? 0.12 : 0.24, bare ? 0.28 : 0.5, 6), std(bare ? 0x5c4a62 : mix('#79b66a', def.color, 0.25).getHex())); leaf.position.y = h + (bare ? 0.1 : 0.2);
         leaf.castShadow = true;
-        tree.add(trunk, leaf); tree.position.set(px, TOP, pz); g.add(tree);
+        tree.add(trunk, leaf); tree.position.set(px, TOP, pz); if (bare) tree.rotation.z = (rr() - 0.5) * 0.35; g.add(tree);
+      }
+    }
+    // 彼岸花：只開在茶會與奈何橋後的岸邊
+    if (def.id === 'teacher' || def.id === 'stories') {
+      for (let k = 0; k < 9; k++) {
+        const a = (k / 9) * Math.PI * 2 + rr() * 0.4, rad = R * (0.66 + rr() * 0.14);
+        const fl = new THREE.Group();
+        const hh = 0.22 + rr() * 0.1;
+        const st = new THREE.Mesh(petalStem, stemM); st.scale.y = hh; st.position.y = hh / 2; fl.add(st);
+        for (let q = 0; q < 5; q++) { const pt = new THREE.Mesh(petalGeo, bloomM); const an = (q / 5) * Math.PI * 2; pt.position.set(Math.cos(an) * 0.03, hh + 0.03, Math.sin(an) * 0.03); pt.rotation.set(Math.sin(an) * 1.0, 0, -Math.cos(an) * 1.0); fl.add(pt); }
+        fl.position.set(Math.sin(a) * rad, TOP, Math.cos(a) * rad); g.add(fl);
       }
     }
 
@@ -278,6 +293,7 @@ export function buildWorld({ stage, labels }) {
   const bridges = [];
   const woodM = std(0xb48560), railM = std(0x9a7454), redM = std(0xc8574f), cream = std(0xfff4e0);
   const lampM = addGlow(glowMat(0xffc86b, 0.25), 0.25, 2.2);
+  const glowReflM = new THREE.MeshBasicMaterial({ color: 0xffc86b, transparent: true, opacity: 0.45, depthWrite: false, fog: false, blending: THREE.AdditiveBlending });
   const lotusRoot = new THREE.Group(); scene.add(lotusRoot);
   const islandList = ISLANDS.filter((t) => !t.type), bridgeNodes = ISLANDS.filter((t) => t.type === 'bridge');
   const qMark = (m) => { // 立體的「？」
@@ -311,6 +327,7 @@ export function buildWorld({ stage, labels }) {
     const deckY = (t) => Math.sin(t * Math.PI) * arch;
     const pick = (m, data) => { if (node) reg(m, data); };
     const glowPurple = addGlow(glowMat(0xb06aff, 0.5), 0.5, 2.4);
+    const WATER_Y = -1.05;
     const hangs = [];
     for (let s = 0; s < segs; s++) {
       const t0 = s / segs, t1 = (s + 1) / segs, tm = (t0 + t1) / 2, seglen = span / segs;
@@ -336,11 +353,33 @@ export function buildWorld({ stage, labels }) {
             const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 6), glowPurple);
             lamp.position.set(sx * (width / 2 + 0.02), deckY(t0) + 0.28, (t0 - 0.5) * span); grp.add(lamp); hangs.push([lamp, rb() * 6]);
           }
+          if (naihe && s % 2 === 0) { // 外側掛燈籠，水面有倒影
+            const hl = new THREE.Mesh(new THREE.SphereGeometry(0.075, 8, 6), lampM);
+            hl.position.set(sx * (width / 2 + 0.07), deckY(t0) + 0.13, (t0 - 0.5) * span); grp.add(hl);
+            const refl = new THREE.Mesh(new THREE.CircleGeometry(0.17, 12), glowReflM);
+            refl.rotation.x = -Math.PI / 2; refl.position.set(hl.position.x, WATER_Y + 0.03, hl.position.z); refl.raycast = () => {}; grp.add(refl);
+          }
           if (naihe && s % 2 === 0) { // 柱頭的盆栽：植物能量
             const leaf = new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), std(0x6fb56a));
             leaf.position.set(sx * (width / 2 - 0.03), deckY(t0) + 0.3, (t0 - 0.5) * span); grp.add(leaf);
           }
         }
+      }
+    }
+    // 橋墩入水（水面在群組座標 -1.05）：橋是跨在河上的
+    const pierM = scary ? std(0x2f2626) : naihe ? redM : railM;
+    const ringM = new THREE.MeshBasicMaterial({ color: 0xdfe8f4, transparent: true, opacity: 0.4, depthWrite: false, fog: false });
+    for (const tt of [0.28, 0.5, 0.72]) {
+      for (const sx of [-1, 1]) {
+        const top = deckY(tt) - 0.07, bot = WATER_Y - 0.12;
+        const pier = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.075, top - bot, 6), pierM);
+        pier.position.set(sx * (width / 2 - 0.08), (top + bot) / 2, (tt - 0.5) * span);
+        if (scary) pier.rotation.z = sx * 0.06 + (rb() - 0.5) * 0.08;
+        pier.castShadow = true; grp.add(pier);
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.014, 4, 18), ringM);
+        ring.rotation.x = Math.PI / 2; ring.position.set(pier.position.x, WATER_Y + 0.02, pier.position.z); ring.raycast = () => {}; grp.add(ring);
+        const ph = rb() * 6.28;
+        anim.push((t) => { const k = 1 + ((t * 0.6 + ph) % 1) * 0.9; ring.scale.set(k, k, 1); });
       }
     }
     // 方向箭頭
