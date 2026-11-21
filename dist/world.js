@@ -95,7 +95,15 @@ export function buildWorld({ stage, labels }) {
   seaGeo.rotateX(-Math.PI / 2);
   const seaCols = new Float32Array(seaGeo.attributes.position.count * 3);
   seaGeo.setAttribute('color', new THREE.BufferAttribute(seaCols, 3));
-  const seaMat = new THREE.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, emissive: 0x1a3550, emissiveIntensity: 0.15, roughness: 0.45, metalness: 0.08, flatShading: true });
+  // 水紋：沿水流方向（z）拉長的細紋，取代一格一格的三角面
+  const flowTex = (() => {
+    const c = document.createElement('canvas'); c.width = 256; c.height = 256; const x = c.getContext('2d');
+    x.fillStyle = '#dcdcdc'; x.fillRect(0, 0, 256, 256);
+    const rr = mulberry(5);
+    for (let i = 0; i < 90; i++) { const px = rr() * 256, len = 40 + rr() * 150, py = rr() * 256, w = 1 + rr() * 2.5; x.fillStyle = rr() > 0.5 ? 'rgba(255,255,255,0.16)' : 'rgba(40,50,70,0.14)'; x.fillRect(px, py, w, len); x.fillRect(px, py - 256, w, len); }
+    const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(90, 18); t.colorSpace = THREE.SRGBColorSpace; return t;
+  })();
+  const seaMat = new THREE.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, map: flowTex, emissive: 0x1a3550, emissiveIntensity: 0.15, roughness: 0.9, metalness: 0, flatShading: false });
   const sea = new THREE.Mesh(seaGeo, seaMat);
   sea.position.y = -0.55; sea.receiveShadow = true;
   scene.add(sea);
@@ -130,6 +138,8 @@ export function buildWorld({ stage, labels }) {
       p[i + 1] = (Math.sin(x * 0.7 + Math.sin(z * 0.2 - t * 0.8)) + Math.cos(z * 0.35 - t * 1.1)) * 0.05 * near;
     }
     seaGeo.attributes.position.needsUpdate = true;
+    seaGeo.computeVertexNormals();
+    flowTex.offset.y = (t * 0.03) % 1;
   });
   // 貼水的薄霧
   const riverMist = new THREE.Mesh(new THREE.PlaneGeometry(360, 360), new THREE.MeshBasicMaterial({ color: 0xcdd6e6, transparent: true, opacity: 0.07, depthWrite: false, fog: false }));
