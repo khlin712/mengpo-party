@@ -50,7 +50,7 @@ export function buildWorld({ stage, labels }) {
   const addGlow = (mat, base, boost) => { glows.push({ mat, base, boost }); return mat; };
 
   // ── 光與霧 ────────────────────────────────────────────────────────────
-  scene.fog = new THREE.Fog(0xcfe8f8, 80, 240);
+  scene.fog = new THREE.Fog(0xcfe8f8, 70, 220);
   const hemi = new THREE.HemisphereLight(0xdff0ff, 0xa0866a, 0.8);
   scene.add(hemi);
   const sun = new THREE.DirectionalLight(0xffffff, 1.4);
@@ -90,24 +90,69 @@ export function buildWorld({ stage, labels }) {
   rainbow.position.set(2, -6, -34);
   scene.add(rainbow);
 
-  // 海
+  // 忘川河：水流垂直於路線（沿 z 流動），從每座橋底下穿過；水色隨旅程變化（暗沉 → 茶色 → 清澈）
   const seaGeo = new THREE.PlaneGeometry(360, 360, 72, 72);
   seaGeo.rotateX(-Math.PI / 2);
-  const seaMat = new THREE.MeshStandardMaterial({ color: 0x4fb0c9, emissive: 0x1d6f86, emissiveIntensity: 0.35, roughness: 0.5, metalness: 0.05, flatShading: true });
+  const seaCols = new Float32Array(seaGeo.attributes.position.count * 3);
+  seaGeo.setAttribute('color', new THREE.BufferAttribute(seaCols, 3));
+  const seaMat = new THREE.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, emissive: 0x1a3550, emissiveIntensity: 0.15, roughness: 0.45, metalness: 0.08, flatShading: true });
   const sea = new THREE.Mesh(seaGeo, seaMat);
   sea.position.y = -0.55; sea.receiveShadow = true;
   scene.add(sea);
   const seaBase = seaGeo.attributes.position.array.slice();
+  const islandXs = ISLANDS.filter((t) => !t.type).map((t) => hexCenter(...t.hex).x);
+  const xMin = Math.min(...islandXs), xMax = Math.max(...islandXs);
+  // 旅程進度 0→1 對應的水色：疑問（暗沉）→ 茶（琥珀）→ 清澈
+  const RIVER = [[0, 0x3a2f5a], [0.2, 0x453a66], [0.4, 0xd08a30], [0.62, 0xb8873a], [0.82, 0x4fc3d6], [1, 0x7fe0e8]].map(([k, c]) => [k, hexToRgb(c)]);
+  const riverTint = (u) => {
+    u = Math.min(1, Math.max(0, u));
+    let i = 1; while (i < RIVER.length - 1 && RIVER[i][0] < u) i++;
+    const [k0, c0] = RIVER[i - 1], [k1, c1] = RIVER[i];
+    const t = (u - k0) / (k1 - k0 || 1);
+    return c0.map((v, j) => lerp(v, c1[j], t));
+  };
+  function paintRiver(sky) {
+    const p = seaBase, col = seaCols, bright = lerp(1.0, 1.3, sky.day);
+    for (let i = 0; i < p.length; i += 3) {
+      const u = (p[i] - (xMin - 4)) / (xMax - xMin + 8);
+      const c = riverTint(u);
+      col[i] = c[0] * bright; col[i + 1] = c[1] * bright; col[i + 2] = c[2] * bright;
+    }
+    seaGeo.attributes.color.needsUpdate = true;
+  }
   let seaTick = 0;
   anim.push((t) => {
     if (++seaTick % 2) return;
     const p = seaGeo.attributes.position.array;
     for (let i = 0; i < p.length; i += 3) {
       const x = seaBase[i], z = seaBase[i + 2];
-      const near = Math.hypot(x, z) < 22 ? 1 : 0.4;
-      p[i + 1] = (Math.sin(x * 0.55 + t * 0.9) + Math.cos(z * 0.6 + t * 0.7)) * 0.05 * near;
+      const near = Math.hypot(x, z) < 26 ? 1 : 0.4;
+      p[i + 1] = (Math.sin(x * 0.7 + Math.sin(z * 0.2 - t * 0.8)) + Math.cos(z * 0.35 - t * 1.1)) * 0.05 * near;
     }
     seaGeo.attributes.position.needsUpdate = true;
+  });
+  // 貼水的薄霧
+  const riverMist = new THREE.Mesh(new THREE.PlaneGeometry(360, 360), new THREE.MeshBasicMaterial({ color: 0xcdd6e6, transparent: true, opacity: 0.07, depthWrite: false, fog: false }));
+  riverMist.rotation.x = -Math.PI / 2; riverMist.position.y = -0.2; riverMist.raycast = () => {}; riverMist.renderOrder = 1;
+  scene.add(riverMist);
+  // 河燈：沿河水緩緩往下游飄
+  const LAMPS = 90, lampPos = new Float32Array(LAMPS * 3), lampSeed = [];
+  const lr = mulberry(21);
+  for (let i = 0; i < LAMPS; i++) { lampSeed.push([(lr() - 0.5) * 70, lr() * 90 - 45, 0.5 + lr() * 0.6]); }
+  const lampGeo = new THREE.BufferGeometry();
+  lampGeo.setAttribute('position', new THREE.BufferAttribute(lampPos, 3));
+  const dotTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 32; const x = c.getContext('2d'); const g = x.createRadialGradient(16, 16, 0, 16, 16, 16); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.35, 'rgba(255,255,255,0.55)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 32, 32); return new THREE.CanvasTexture(c); })();
+  const lampMat = new THREE.PointsMaterial({ map: dotTex, color: 0xffc27a, size: 0.7, sizeAttenuation: true, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
+  const lamps = new THREE.Points(lampGeo, lampMat);
+  lamps.frustumCulled = false; lamps.raycast = () => {};
+  scene.add(lamps);
+  anim.push((t, sky) => {
+    for (let i = 0; i < LAMPS; i++) {
+      const [x, z0, v] = lampSeed[i];
+      lampPos[i * 3] = x; lampPos[i * 3 + 1] = -0.38 + Math.sin(t * 1.3 + i) * 0.03; lampPos[i * 3 + 2] = ((z0 + t * v * 1.1 + 45) % 90 + 90) % 90 - 45;
+    }
+    lampGeo.attributes.position.needsUpdate = true;
+    if (sky) lampMat.opacity = lerp(0.35, 0.9, sky.night);
   });
 
   // 雲
@@ -428,11 +473,11 @@ export function buildWorld({ stage, labels }) {
     const sky = skyAt(minutes);
     const lp = lightPos(minutes);
     skyU.top.value.setRGB(...sky.top); skyU.bottom.value.setRGB(...sky.bottom);
-    scene.fog.color.setRGB(...sky.bottom);
+    scene.fog.color.setRGB(...sky.bottom).lerp(tmpC.set(0x31405e), 0.3);
     hemi.intensity = sky.hemiI; hemi.color.setRGB(...sky.top).lerp(tmpC.set(0xffffff), 0.5); hemi.groundColor.setRGB(...sky.bottom).multiplyScalar(0.55);
     sun.color.setRGB(...sky.light); sun.intensity = sky.lightI;
     sun.position.set(lp.x, lp.y, lp.z);
-    seaMat.color.setRGB(...sky.water);
+    paintRiver(sky);
     stars.material.opacity = Math.max(0, (sky.night - 0.5) * 2);
     rainbow.children.forEach((m) => { m.material.opacity = 0.5 * sky.day * sky.day; });
     for (const gl of glows) gl.mat.emissiveIntensity = gl.base + gl.boost * sky.night;

@@ -21,7 +21,7 @@ const STORE = 'mengpo-island-v2';
 const S = {
   sel: null, step: null, flow: null, person: null, people: true, query: '', groups: new Set(), tab: 'islands',
   entry: '', route: [], saved: [], note: '', visited: new Set(),
-  mins: 900, minsTarget: null, dayPlaying: false, freeze: reduced.matches, bird: false, names: true, pins: true, explore: false,
+  mins: 1110, minsTarget: null, dayPlaying: false, freeze: reduced.matches, bird: false, names: true, pins: true, explore: false,
   tour: { on: false, playing: false, sec: 0, cue: -1 },
 };
 function load() {
@@ -480,7 +480,7 @@ function startTour() {
 }
 function stopTour() {
   S.tour.on = false; S.tour.playing = false; document.body.classList.remove('tour');
-  S.sel = null; S.minsTarget = 900; refresh(); syncLayout(); home();
+  S.sel = null; S.minsTarget = 1110; refresh(); syncLayout(); home();
 }
 function syncTourButtons() { $('#tour-pause').textContent = S.tour.playing ? '暫停' : '播放'; }
 function updateTour(force = false) {
