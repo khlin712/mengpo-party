@@ -117,20 +117,20 @@ export function buildWorld({ stage, labels }) {
   {
     const mr = mulberry(77), mtns = new THREE.Group();
     const mk = (hex, x) => { const c = new THREE.Color(hex); return c.multiplyScalar(lerp(0.4, 1.15, Math.min(1, Math.max(0, (x + 70) / 140)))); };
-    const N = 56;
+    const N = 64;
     for (let i = 0; i < N; i++) {
       const th = (i / N) * Math.PI * 2 + (mr() - 0.5) * 0.08;
       const layer = i % 2 ? 1 : 0;
-      const rad = (layer ? 46 : 29) + mr() * 7;
-      const x = Math.cos(th) * rad * 1.25, z = Math.sin(th) * rad; // 稍微拉寬成橢圓
+      const rad = (layer ? 38 : 23) + mr() * 5;
+      const x = Math.cos(th) * rad * 1.15, z = Math.sin(th) * rad; // 稍微拉寬成橢圓
       const back = 0.5 - 0.5 * Math.sin(th); // z 為負（遠處）→ 1；靠鏡頭（z 為正）→ 0
-      const hgt = (5 + mr() * 7) * (0.3 + 0.7 * back) * (layer ? 1.6 : 1);
+      const hgt = (9 + mr() * 8) * (0.28 + 0.72 * back) * (layer ? 1.7 : 1);
       const wid = hgt * (0.55 + mr() * 0.4);
       const col = mk(layer ? 0x6b6f9a : 0x5e7a6a, x);
       const m = new THREE.Mesh(new THREE.ConeGeometry(wid, hgt, 6 + Math.floor(mr() * 3), 1), new THREE.MeshStandardMaterial({ color: col, roughness: 1, flatShading: true }));
       m.position.set(x, -0.6 + hgt / 2 - 0.8, z); m.rotation.y = mr() * 6; m.raycast = () => {};
       mtns.add(m);
-      if (hgt > 9) { // 山頂的雲霧白
+      if (hgt > 12) { // 山頂的雲霧白
         const cap = new THREE.Mesh(new THREE.ConeGeometry(wid * 0.34, hgt * 0.3, 6, 1), new THREE.MeshStandardMaterial({ color: mk(0xf4f1ff, x), roughness: 1, flatShading: true }));
         cap.position.set(x, m.position.y + hgt * 0.35, z); cap.rotation.y = m.rotation.y; cap.raycast = () => {};
         mtns.add(cap);
