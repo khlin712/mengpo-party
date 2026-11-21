@@ -53,6 +53,8 @@ export function buildWorld({ stage, labels }) {
   scene.fog = new THREE.Fog(0xcfe8f8, 70, 220);
   const hemi = new THREE.HemisphereLight(0xdff0ff, 0xa0866a, 0.8);
   scene.add(hemi);
+  const dawn = new THREE.PointLight(0xffd9a0, 75, 70, 1.5); // 路的盡頭是亮的
+  scene.add(dawn);
   const sun = new THREE.DirectionalLight(0xffffff, 1.4);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1536, 1536);
@@ -61,13 +63,13 @@ export function buildWorld({ stage, labels }) {
   scene.add(sun, sun.target);
 
   // 天空漸層球
-  const skyU = { top: { value: new THREE.Color() }, bottom: { value: new THREE.Color() } };
+  const skyU = { top: { value: new THREE.Color() }, bottom: { value: new THREE.Color() }, topB: { value: new THREE.Color() }, bottomB: { value: new THREE.Color() } };
   const skyMesh = new THREE.Mesh(
     new THREE.SphereGeometry(320, 24, 16),
     new THREE.ShaderMaterial({
       uniforms: skyU, side: THREE.BackSide, depthWrite: false, fog: false,
       vertexShader: 'varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);} ',
-      fragmentShader: 'uniform vec3 top; uniform vec3 bottom; varying vec3 vP; void main(){ float h = smoothstep(-0.05, 0.75, vP.y); gl_FragColor = vec4(mix(bottom, top, h), 1.0); }',
+      fragmentShader: 'uniform vec3 top; uniform vec3 bottom; uniform vec3 topB; uniform vec3 bottomB; varying vec3 vP; void main(){ float h = smoothstep(-0.05, 0.75, vP.y); float w = smoothstep(-0.6, 0.6, vP.x); vec3 t = mix(top, topB, w); vec3 b = mix(bottom, bottomB, w); gl_FragColor = vec4(mix(b, t, h), 1.0); }',
     }),
   );
   skyMesh.renderOrder = -10;
@@ -110,6 +112,7 @@ export function buildWorld({ stage, labels }) {
   const seaBase = seaGeo.attributes.position.array.slice();
   const islandXs = ISLANDS.filter((t) => !t.type).map((t) => hexCenter(...t.hex).x);
   const xMin = Math.min(...islandXs), xMax = Math.max(...islandXs);
+  dawn.position.set(xMax + 5, 6, 3);
   // 旅程進度 0→1 對應的水色：疑問（暗沉）→ 茶（琥珀）→ 清澈
   const RIVER = [[0, 0x3a2f5a], [0.2, 0x453a66], [0.4, 0xd08a30], [0.62, 0xb8873a], [0.82, 0x4fc3d6], [1, 0x7fe0e8]].map(([k, c]) => [k, hexToRgb(c)]);
   const riverTint = (u) => {
@@ -124,7 +127,8 @@ export function buildWorld({ stage, labels }) {
     for (let i = 0; i < p.length; i += 3) {
       const u = (p[i] - (xMin - 4)) / (xMax - xMin + 8);
       const c = riverTint(u);
-      col[i] = c[0] * bright; col[i + 1] = c[1] * bright; col[i + 2] = c[2] * bright;
+      const k = bright * lerp(0.32, 1.75, Math.pow(Math.min(1, Math.max(0, u)), 0.9));
+      col[i] = c[0] * k; col[i + 1] = c[1] * k; col[i + 2] = c[2] * k;
     }
     seaGeo.attributes.color.needsUpdate = true;
   }
@@ -197,7 +201,8 @@ export function buildWorld({ stage, labels }) {
     scene.add(g);
     const base = C(def.color);
     const mats = []; // 之後淡化用
-    const own = (m) => { m.userData.base = m.color.clone(); mats.push(m); return m; };
+    const tone = lerp(0.62, 1, (x - xMin) / (xMax - xMin || 1));
+    const own = (m) => { m.color.multiplyScalar(tone); m.userData.base = m.color.clone(); mats.push(m); return m; };
 
     const grass = own(std(mix(def.color, '#bfd59a', 0.55).getHex()));
     const ground = new THREE.Mesh(hexGeo(R, 0.3), grass);
@@ -328,7 +333,8 @@ export function buildWorld({ stage, labels }) {
     grp.rotation.y = Math.atan2(dir.x, dir.z);
     const rb = mulberry(11 + i);
     const mats = [];
-    const own = (m) => { m.userData.base = m.color.clone(); mats.push(m); return m; };
+    const tone = lerp(0.62, 1, ((a.x + b.x) / 2 - xMin) / (xMax - xMin || 1));
+    const own = (m) => { m.color.multiplyScalar(tone); m.userData.base = m.color.clone(); mats.push(m); return m; };
     const width = scary ? 0.8 : naihe ? 0.9 : 0.62;
     const segs = scary ? 10 : naihe ? 10 : 4;
     const arch = BRIDGE_ARCH[style];
@@ -518,11 +524,14 @@ export function buildWorld({ stage, labels }) {
 
   // ── 時間 ──────────────────────────────────────────────────────────────
   const tmpC = new THREE.Color();
+  const DARK_TOP = new THREE.Color(0x12163a), DARK_BOT = new THREE.Color(0x2b2650), BRIGHT_TOP = new THREE.Color(0x8ccaf5), BRIGHT_BOT = new THREE.Color(0xffdca6);
   function setTime(minutes) {
     const sky = skyAt(minutes);
     const lp = lightPos(minutes);
-    skyU.top.value.setRGB(...sky.top); skyU.bottom.value.setRGB(...sky.bottom);
-    scene.fog.color.setRGB(...sky.bottom).lerp(tmpC.set(0x31405e), 0.3);
+    // 起點（-x）那側偏暗沉、橋之後（+x）偏明亮：往前走就是往光走
+    skyU.top.value.setRGB(...sky.top).lerp(DARK_TOP, 0.7); skyU.bottom.value.setRGB(...sky.bottom).lerp(DARK_BOT, 0.65);
+    skyU.topB.value.setRGB(...sky.top).lerp(BRIGHT_TOP, 0.5); skyU.bottomB.value.setRGB(...sky.bottom).lerp(BRIGHT_BOT, 0.7);
+    scene.fog.color.copy(skyU.bottom.value).lerp(skyU.bottomB.value, 0.5);
     hemi.intensity = sky.hemiI; hemi.color.setRGB(...sky.top).lerp(tmpC.set(0xffffff), 0.5); hemi.groundColor.setRGB(...sky.bottom).multiplyScalar(0.55);
     sun.color.setRGB(...sky.light); sun.intensity = sky.lightI;
     sun.position.set(lp.x, lp.y, lp.z);
