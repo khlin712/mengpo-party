@@ -14,7 +14,7 @@ const s = (label, q, body = '') => ({ label, q, body });
 // hex：六角格軸座標（q, r），只有島才有。
 export const ISLANDS = [
   {
-    id: 'start', n: 1, title: '崎嶇島：人生卡住的地方', short: '崎嶇島', tag: '人生的困境', color: '#e8a878', hex: [0, 0], kind: 'volcano',
+    id: 'start', n: 1, title: '崎嶇島：人生卡住的地方', short: '崎嶇島', tag: '人生的困境', color: '#e8a878', hex: [-1, 0], kind: 'volcano',
     intro: '旅程從這裡出發：人生常常卡在迴圈裡。',
     body: '人生常常卡在迴圈裡：關係、金錢、健康、事業……不知道自己到底發生了什麼事。崎嶇的山路比喻「卡住」：翻過崖邊會掉下去，攀著陡峭山壁也許到得了頂，但很慢，爬一爬還可能掉下來。想走出迴圈，要先走過一座橋：那座橋，是人們心中的疑問，橋的另一頭就是茶會。',
     steps: [
@@ -43,7 +43,7 @@ export const ISLANDS = [
     question: '我想先問清楚這是不是法事、是不是催眠，以及我適不適合參加。',
   },
   {
-    id: 'teacher', n: 3, title: '孟婆茶會在做什麼', short: '茶會', tag: '認識茶會', color: '#f2b5c8', hex: [1, 0], kind: 'pavilion',
+    id: 'teacher', n: 3, title: '孟婆茶會在做什麼', short: '茶會', tag: '認識茶會', color: '#f2b5c8', hex: [0, -1], kind: 'pavilion',
     intro: '參加茶會，用「上帝視角」看見自己卡住的地方。',
     body: '人生常常卡在迴圈裡，不知道自己到底發生了什麼事。孟婆茶會想做的，是在活動中陪你換一個更高的角度，從全知的視角，看見自己卡住的問題：關係、金錢、身體健康、事業，以及人生各種問題。以下是介紹架構，正式說法與場次細節由老師補充。',
     steps: [
@@ -71,7 +71,7 @@ export const ISLANDS = [
     question: '我想了解植物能量怎麼帶領，以及我全程是不是清醒的。',
   },
   {
-    id: 'stories', n: 5, title: '參加後的繽紛世界', short: '繽紛世界', tag: '體驗與回饋', color: '#ffc8e2', hex: [2, 0], kind: 'wheel',
+    id: 'stories', n: 5, title: '參加後的繽紛世界', short: '繽紛世界', tag: '體驗與回饋', color: '#ffc8e2', hex: [1, -1], kind: 'wheel',
     intro: '走過奈何橋，平凡的人生也能繽紛開心。',
     body: '走過奈何橋，象徵參加活動。橋的另一邊是參加完之後看到的繽紛世界：花開、漂亮的東西、一座摩天輪。這裡預留給參加者「前、中、後」的完整案例（遇到的困擾、過程中的發現、事後的改變）與客戶回饋；目前尚未收到真實案例，不展示虛構故事、回饋或數字。',
     steps: [
@@ -86,7 +86,7 @@ export const ISLANDS = [
     question: '我想看和我情況相近的參加者回饋，以及活動現場的照片。',
   },
   {
-    id: 'calendar', n: 6, title: '嘗試：活動場次（行事曆）', short: '場次', tag: '報名與聯繫', color: '#f6d88f', hex: [3, 0], kind: 'tents',
+    id: 'calendar', n: 6, title: '嘗試：活動場次（行事曆）', short: '場次', tag: '報名與聯繫', color: '#f6d88f', hex: [1, 0], kind: 'tents',
     intro: '走進繽紛世界之後，想試試看？先看近期場次。',
     body: '每期的日期與地點不同，名額可能「即將額滿」。先看看近期場次，再決定要不要報名。',
     steps: [
@@ -100,7 +100,7 @@ export const ISLANDS = [
     question: '我想知道近期場次的日期、地點與費用。',
   },
   {
-    id: 'signup', n: 7, title: 'LINE 報名與服務台', short: '報名', tag: '報名與聯繫', color: '#a8dd9a', hex: [4, 0], kind: 'kiosk',
+    id: 'signup', n: 7, title: 'LINE 報名與服務台', short: '報名', tag: '報名與聯繫', color: '#a8dd9a', hex: [0, 1], kind: 'kiosk',
     intro: '報名不用填表單，先私訊 LINE 就好。',
     body: '報名不用填表單：先私訊 LINE 官方帳號，由老師回覆，並索取報名連結。還沒打算報名、只是有問題嗎？來服務台詢問就好，不用先決定。',
     steps: [

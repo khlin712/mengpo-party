@@ -53,7 +53,7 @@ export function buildWorld({ stage, labels }) {
   scene.fog = new THREE.Fog(0xcfe8f8, 70, 220);
   const hemi = new THREE.HemisphereLight(0xdff0ff, 0xa0866a, 0.8);
   scene.add(hemi);
-  const dawn = new THREE.PointLight(0xffd9a0, 110, 80, 1.5); // 路的盡頭是亮的
+  const dawn = new THREE.PointLight(0xffd9a0, 90, 90, 1.2); // 路的盡頭是亮的
   scene.add(dawn);
   const sun = new THREE.DirectionalLight(0xffffff, 1.4);
   sun.castShadow = true;
@@ -112,7 +112,32 @@ export function buildWorld({ stage, labels }) {
   const seaBase = seaGeo.attributes.position.array.slice();
   const islandXs = ISLANDS.filter((t) => !t.type).map((t) => hexCenter(...t.hex).x);
   const xMin = Math.min(...islandXs), xMax = Math.max(...islandXs);
-  dawn.position.set(xMax + 5, 6, 3);
+  dawn.position.set(xMax + 10, 16, 2);
+  // ── 群山：環繞整圈島。前側（鏡頭這邊）壓低以免擋住視線，後側高聳；左暗右亮，呼應旅程 ──
+  {
+    const mr = mulberry(77), mtns = new THREE.Group();
+    const mk = (hex, x) => { const c = new THREE.Color(hex); return c.multiplyScalar(lerp(0.4, 1.15, Math.min(1, Math.max(0, (x + 70) / 140)))); };
+    const N = 64;
+    for (let i = 0; i < N; i++) {
+      const th = (i / N) * Math.PI * 2 + (mr() - 0.5) * 0.08;
+      const layer = i % 2 ? 1 : 0;
+      const rad = (layer ? 88 : 58) + mr() * 16;
+      const x = Math.cos(th) * rad * 1.25, z = Math.sin(th) * rad; // 稍微拉寬成橢圓
+      const back = 0.5 - 0.5 * Math.sin(th); // z 為負（遠處）→ 1；靠鏡頭（z 為正）→ 0
+      const hgt = (9 + mr() * 12) * (0.35 + 0.65 * back) * (layer ? 1.35 : 1);
+      const wid = hgt * (0.55 + mr() * 0.4);
+      const col = mk(layer ? 0x6b6f9a : 0x5e7a6a, x);
+      const m = new THREE.Mesh(new THREE.ConeGeometry(wid, hgt, 6 + Math.floor(mr() * 3), 1), new THREE.MeshStandardMaterial({ color: col, roughness: 1, flatShading: true }));
+      m.position.set(x, -0.6 + hgt / 2 - 0.8, z); m.rotation.y = mr() * 6; m.raycast = () => {};
+      mtns.add(m);
+      if (hgt > 14) { // 山頂的雲霧白
+        const cap = new THREE.Mesh(new THREE.ConeGeometry(wid * 0.34, hgt * 0.3, 6, 1), new THREE.MeshStandardMaterial({ color: mk(0xf4f1ff, x), roughness: 1, flatShading: true }));
+        cap.position.set(x, m.position.y + hgt * 0.35, z); cap.rotation.y = m.rotation.y; cap.raycast = () => {};
+        mtns.add(cap);
+      }
+    }
+    scene.add(mtns);
+  }
   // 旅程進度 0→1 對應的水色：疑問（暗沉）→ 茶（琥珀）→ 清澈
   const RIVER = [[0, 0x3a2f5a], [0.2, 0x453a66], [0.4, 0xd08a30], [0.62, 0xb8873a], [0.82, 0x4fc3d6], [1, 0x7fe0e8]].map(([k, c]) => [k, hexToRgb(c)]);
   const riverTint = (u) => {
@@ -201,7 +226,7 @@ export function buildWorld({ stage, labels }) {
     scene.add(g);
     const base = C(def.color);
     const mats = []; // 之後淡化用
-    const tone = lerp(0.42, 1.12, (x - xMin) / (xMax - xMin || 1));
+    const tone = lerp(0.42, 1.12, (def.n - 1) / 6); // 依旅程順序：越後面越亮
     const own = (m) => { m.color.multiplyScalar(tone); m.userData.base = m.color.clone(); mats.push(m); return m; };
 
     const grass = own(std(mix(def.color, '#bfd59a', 0.55).getHex()));
@@ -234,7 +259,7 @@ export function buildWorld({ stage, labels }) {
       } else {
         const tree = new THREE.Group();
         const h = 0.35 + rr() * 0.2;
-        const bare = (x - xMin) / (xMax - xMin || 1) < 0.1; // 起點：枯木；越往繽紛世界越有生氣
+        const bare = def.n <= 1; // 起點：枯木；越往繽紛世界越有生氣
         const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, h, 5), std(bare ? 0x4a3c44 : 0x7b5a44)); trunk.position.y = h / 2;
         const leaf = new THREE.Mesh(new THREE.ConeGeometry(bare ? 0.12 : 0.24, bare ? 0.28 : 0.5, 6), std(bare ? 0x5c4a62 : mix('#79b66a', def.color, 0.25).getHex())); leaf.position.y = h + (bare ? 0.1 : 0.2);
         leaf.castShadow = true;
@@ -333,7 +358,7 @@ export function buildWorld({ stage, labels }) {
     grp.rotation.y = Math.atan2(dir.x, dir.z);
     const rb = mulberry(11 + i);
     const mats = [];
-    const tone = lerp(0.42, 1.12, ((a.x + b.x) / 2 - xMin) / (xMax - xMin || 1));
+    const tone = lerp(0.42, 1.12, ((A.n + B.n) / 2 - 1) / 6);
     const own = (m) => { m.color.multiplyScalar(tone); m.userData.base = m.color.clone(); mats.push(m); return m; };
     const width = scary ? 0.8 : naihe ? 0.9 : 0.62;
     const segs = scary ? 10 : naihe ? 10 : 4;
